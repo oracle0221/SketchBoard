@@ -1,0 +1,115 @@
+input{
+  height: 22px;
+  border: 1px solid #ccc;
+  box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
+}
+.canvas{
+  width:100vw;
+  height:100vh;
+  position:relative;
+  canvas, svg{display:block;position:absolute;width:100%;height:100%;border:none;pointer-events:none;}
+  #copyCanvas{background:none;}
+}
+
+.path-select{
+  stroke-width:1;
+  stroke:rgba(0, 0, 255, 0.8);
+  fill:rgba(0, 0, 220, 0.1);
+}
+
+.path-text{
+  fill:black;
+}
+
+.contextMenu {
+	position: absolute;
+	z-index: 99999;
+	border: solid 1px rgba(0,0,0,.33);
+	background: rgba(255,255,255,.95);
+	padding: 5px 0;
+	margin: 0px;
+	display: none;
+	font: 12px/15px Lucida Sans, Helvetica, Verdana, sans-serif;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-moz-box-shadow: 2px 5px 10px rgba(0,0,0,.3);
+	-webkit-box-shadow: 2px 5px 10px rgba(0,0,0,.3);
+	box-shadow: 2px 5px 10px rgba(0,0,0,.3);
+
+  li {
+  	list-style: none;
+  	padding: 0px;
+  	margin: 0px;
+  }
+
+  .shortcut {
+  	width: 115px;
+  	text-align:right;
+  	float:right;
+  }
+  a {
+  	-moz-user-select: none;
+  	-webkit-user-select: none;
+  	color: #222;
+  	text-decoration: none;
+  	display: block;
+  	line-height: 20px;
+  	height: 20px;
+  	background-position: 6px center;
+  	background-repeat: no-repeat;
+  	outline: none;
+  	padding: 0px 15px 1px 20px;
+  }
+
+  li.hover a {
+  	background-color: #2e5dea;
+  	color: white;
+  	cursor: default;
+  }
+
+  li.disabled a {
+  	color: #999;
+  }
+
+  li.hover.disabled a {
+  	background-color: transparent;
+  }
+
+  li.separator {
+  	border-top: solid 1px #E3E3E3;
+  	padding-top: 5px;
+  	margin-top: 5px;
+  }
+}
+
+.batchGoods{
+  position: absolute;
+  padding:10px;
+	z-index: 99999;
+	border: solid 1px rgba(0,0,0,.33);
+	background: rgba(255,255,255,.95);
+	// padding: 5px 0;
+	margin: 0px;
+	display: none;
+	font: 12px/15px Lucida Sans, Helvetica, Verdana, sans-serif;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-moz-box-shadow: 2px 5px 10px rgba(0,0,0,.3);
+	-webkit-box-shadow: 2px 5px 10px rgba(0,0,0,.3);
+	box-shadow: 2px 5px 10px rgba(0,0,0,.3);
+  .tab-nav{
+    label{display:block;}
+    span{margin-right:4px;}
+    input{
+      vertical-align:-6px;margin-right:4px;
+    }
+    input+div{display:none;}
+    input:checked+div{display:block;}
+  }
+
+  .footer{
+    padding-top:4px;
+    text-align:right;
+    button{margin-right:2px;}
+  }
+}

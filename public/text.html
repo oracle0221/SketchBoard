@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+svg{border: 1px solid black;}
+div{margin-top:30px;border:1px solid black;padding:10px;height:14px;}
+div.active{border:1px solid red;}
+</style>
+</head>
+<body>
+<input type="" name="" value="" id="input1" style="opacity:1;position:-absolute;z-index:-1;" />
+<div id="div1" ></div>
+<script>
+
+// document.onkeydown = e=>{
+//
+// };
+
+let input1 = document.getElementById("input1");
+let div1 = document.getElementById("div1");
+
+div1.onclick = function(){
+  input1.focus();
+};
+
+input1.onfocus = function(){
+  div1.className = 'active'
+}
+
+input1.oninput = function(){
+  div1.innerHTML = input1.value;
+};
+
+</script>
+</body>
+</html>

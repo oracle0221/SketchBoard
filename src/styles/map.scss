@@ -1,0 +1,96 @@
+
+.menu-bar{text-align:center;}
+.menu-bar button{width:60px;height:30px;font-size:32px;line-height:30px;}
+canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
+
+.editor-box{position: relative;width:100vw;height: 100vh;}
+/* 头部 */
+.tools-top{height:50px;padding-left: 5px;padding-top: 10px;display:flex;}
+.tools-top .sep{width: 2px; background: #999; border-left: 1px outset #EEE; margin: 2px 4px; padding: 0; height: 30px;}
+.tools-top input{padding:4px;height:28px;}
+.search_bar ul{display:flex;}
+.main_button{
+    width:100px; height:32px;line-height: 30px;
+    padding-left: 32px;
+    box-shadow: inset 1px 1px 2px white, 1px 1px 1px rgba(0,0,0,0.3);
+    border-radius: 3px;
+    background:#E8E8E8 url(../assets/logo_save.svg)2px center no-repeat;
+}
+.main_button a{color:black;font-weight: bold;font-size:12px;}
+/* 左边 */
+.tools-left{
+    position: absolute;
+    border-right: none;
+    width: 50px;
+    top: 50px;
+    left: 1px;
+    /* margin-top: -2px; */
+    padding-left: 2px;
+    background: #D0D0D0;
+    z-index: 4;
+    /* transform: scale(1.5, 1.5); */
+}
+
+.tools-left ul{}
+.tools-left li{
+    padding:8px;background-color: #E8E8E8;cursor: pointer;border-radius: 3px;margin:2px 2px 4px;
+    box-shadow: inset 1px 1px 2px white, 1px 1px 1px rgba(0,0,0,0.3);
+    width:40px;height: 40px;
+
+}
+.tools-left .img{
+
+    width:24px;
+    height: 24px;
+}
+
+.tools-left .select{background:url(../assets/tool_select.svg) center no-repeat;}
+.tools-left .location{background:url(../assets/tool_location.svg) center no-repeat;}
+.tools-left .barrier{background:url(../assets/tool_barrier.svg) center no-repeat;}
+.tools-left .text{background:url(../assets/tool_text.svg) center no-repeat;}
+.tools-left .zoom{background:url(../assets/tool_zoom.svg) center no-repeat;}
+.tool_button:hover{background-color:#ffc;}
+.tool_button.current{background-color: #f4e284;box-shadow: inset 1px 1px 2px rgba(0,0,0,0.4), 1px 1px 0 white;}
+
+
+/* 主工作区域 */
+.workarea{
+    position:absolute;
+    top:50px;
+    left: 50px;
+    right: 0px;
+    bottom: 40px;
+    z-index: 6;
+}
+
+.workarea canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
+
+.tools-bottom{
+    position: absolute;
+    left: 50px;
+    right: 0;
+    bottom: 0;
+    height: 40px;
+    font-size:22px;
+}
+
+.tools-bottom input{
+    width:80px;height: 26px;
+    /* padding-left: 26px; */
+    border: 1px solid black;
+    text-align: center;
+    /* background:white url(./assets/tool_zoom.svg) left center no-repeat;background-size: 20px; */
+}
+.tools-bottom span{cursor: pointer;}
+
+#J_fill_text{
+  display:none;
+  position:absolute;
+  z-index: 7;
+  background: transparent;
+  border:0;
+  outline:none;
+  height:32px;
+}
+
+.coordinate{position: absolute;font-size:18px;top:100px;left:200px;z-index:7;pointer-events:none;display:none;}

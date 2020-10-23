@@ -1,0 +1,9 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" xmlns:xlink="http://www.w3.org/1999/xlink" class="svg_icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <defs>
+        <linearGradient y2="1" x2="1" y1="0.10156" x1="0.36328" id="lg_loc">
+          <stop stop-color="#ffffff" offset="0"/>
+          <stop stop-color="#f47395" offset="1"/>
+        </linearGradient>
+      </defs>
+      <rect stroke="#e86f8d" fill="url(#lg_loc)" id="svg_1" height="20" width="12" y="1.5" x="5.5"/>
+    </svg></svg>
