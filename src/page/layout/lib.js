@@ -7,7 +7,9 @@ let zoomLevel = 1.0;
 
 let beBatch = true; // 需要批量操作
 let beBatchEnd = false; // 批量操作结束
-let batchPrevieData={value:'', num:0};
+let batchPreviewData={value:'', num:0};
+let batchTmpData=[]; // 在预览时的临时数据
+
 // 世界
 let worldPosition={x:0, y:0, width:2000, height:2000};
 
@@ -55,6 +57,9 @@ export function handleEvents(){
 export function drawScene(mainGd){
   let mainCanvas = mainGd.canvas;
   mainGd.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+
+  mainGd.fillStyle='white';
+  mainGd.fillRect( worldPosition.x, worldPosition.y, worldPosition.width, worldPosition.height );
 
 }
 
@@ -139,60 +144,61 @@ function handleBatchCreate(){
     top = svgRectData.y + svgRectData.height - divH;
   }
 
-  const J_batchGoods = $('J_batchGoods');
-  // J_batchGoods
-  J_batchGoods.style.display='block';
-  J_batchGoods.style.left=left+'px';
-  J_batchGoods.style.top=top+'px';
+  displayJ_batchGoods(left, top);
   beBatchEnd = true; // 说明要批处理生成了
 
 }
 
 function J_batchGoodsEvents(){
   const batch_row = $('batch_row'), batch_col=$('batch_col');
-  const batch_row_num = $('batch_row_num'), batch_col_num=$('batch_col_num');
   const batch_shut = $('batch_shut'), batch_save=$('batch_save');
   const J_batchGoods = $('J_batchGoods');
+  const batch_num_value = $('batch_num_value');
 
   batch_row.onchange = function(){
-    // alert(batch_row.checked)
     if(this.checked){
-      batchPrevieData['value']='row'
+      batchPreviewData['value']='row';
+      createBatchTmpData();
     }
   };
 
   batch_col.onchange = function(){
-    // alert(batch_col.checked)
     if(this.checked){
-      batchPrevieData['value']='col'
+      batchPreviewData['value']='col';
+      createBatchTmpData();
     }
   };
 
-  batch_row_num.oninput=function(){
-    batchPrevieData['num'] = +this.value.trim();
-  };
-
-  batch_col_num.oninput=function(){
-    batchPrevieData['num'] = +this.value.trim();
+  batch_num_value.oninput=function(){
+    batchPreviewData['num'] = +this.value.trim();
+    createBatchTmpData();
   };
 
   batch_shut.onclick = ()=>{
     clearSvgRectData();
+    createBatchTmpData();
   }
 
   batch_save.onclick = ()=>{
     clearSvgRectData();
+    createBatchTmpData();
   }
 
 
 }
 
 function clearSvgRectData(){
+  const batch_row = $('batch_row'), batch_col=$('batch_col');
+  batch_row.checked = false;
+  batch_col.checked = false;
+  const batch_num_value = $('batch_num_value');
+  batch_num_value.value='';
+
   const J_batchGoods = $('J_batchGoods');
   J_batchGoods.style.display='none';
   beBatchEnd = false;
   svgRectData={x:0, y:0, width:0, height:0};
-  batchPrevieData={value:'', num:0};
+  batchPreviewData={value:'', num:0};
 }
 
 // 就中间临时的批量生成一个预览图
@@ -200,18 +206,80 @@ function previewCanvas(copyGd){
   const gd = copyGd;
   if(!beBatchEnd) return; // 只有批量生成了，再往下走
 
-  // svgRectData, batchPrevieData
-  // 行 row
-  if( batchPrevieData['value'] === 'row' ){
+  for( let i = 0; i < batchTmpData.length; i ++ ){
 
-    // 30 * 10
-    let colNum = svgRectData.width / 30 | 0;
-    
+    let item = batchTmpData[i];
+    gd.fillStyle = 'rgba(255, 170, 170, 0.8)';
+    gd.strokeStyle='#e86f8d';
+
+    gd.fillRect( item.x, item.y, item.width, item.height );
+    gd.strokeRect( item.x, item.y, item.width, item.height );
+
+  } // for i
+
+}
+
+function displayJ_batchGoods(left, top){
+  const J_batchGoods = $('J_batchGoods');
+
+  // J_batchGoods
+  J_batchGoods.style.display='block';
+  J_batchGoods.style.left=left+'px';
+  J_batchGoods.style.top=top+'px';
+
+}
+
+// 得到中途临时的预览数据
+function createBatchTmpData(){
+  batchTmpData = [];
+
+  if( batchPreviewData['value'] === 'row' && batchPreviewData['num'] > 0 ){
+    let sizeW = 80, sizeH = 40, spaceV = svgRectData.height / batchPreviewData['num'] - sizeH * 2;
+    if( spaceV <= 1 ){
+     return;
+    }
+
+    let colNum = svgRectData.width / sizeW | 0;
+    let rowNum = svgRectData.height / (sizeH * 2 + spaceV) | 0;
+
+    for( let r = 0; r < rowNum; r ++ ){
+
+      for( let c = 0; c < colNum; c ++ ){
+
+        batchTmpData.push({
+          x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV), width:sizeW, height:sizeH
+        });
+        batchTmpData.push({
+          x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV, width:sizeW, height:sizeH
+        });
+
+      } // for c
+
+    } // for r
 
   }
 
-  if( batchPrevieData['value'] === 'col' ){
+  if( batchPreviewData['value'] === 'col' && batchPreviewData['num'] > 0 ){
+    let sizeW = 40, sizeH = 80, spaceH = svgRectData.width / batchPreviewData['num'] - sizeW * 2;
 
+    if( spaceH <= 1 ){
+      return;
+    }
+
+    let colNum = svgRectData.width / (sizeW * 2 + spaceH) | 0;
+    let rowNum = svgRectData.height / sizeH | 0;
+
+    for( let c = 0; c < colNum; c ++ ){
+      for( let r = 0; r < rowNum; r ++ ){
+
+        batchTmpData.push({
+          x:svgRectData.x + c * (sizeW * 2 + spaceH), y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
+        });
+        batchTmpData.push({
+          x:svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH, y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
+        });
+
+      } // for r
+    } // for c
   }
-
 }

@@ -30,17 +30,12 @@ export default ()=>{
             <label>
               <span>横向</span>
               <input type="radio" name="radio_input" value="row" id="batch_row" />
-              <div>
-                <div><input type="number" defaultValue="" id="batch_row_num" />行</div>
-              </div>
             </label>
             <label>
               <span>纵向</span>
               <input type="radio" name="radio_input" value="col" id="batch_col" />
-              <div>
-                <div><input type="number" defaultValue="" id="batch_col_num" />列</div>
-              </div>
             </label>
+            <div><input type="number" defaultValue="" id="batch_num_value" />排</div>
           </div>
           <div className="footer" >
             <button type="button" id="batch_shut" >关闭</button>

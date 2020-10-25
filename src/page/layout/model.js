@@ -1,5 +1,6 @@
 export default {
-  commandStack:[],
+  undoStack:[],
+  redoStack:[],
   data:{
     goods:[],
     obstacle:[],
