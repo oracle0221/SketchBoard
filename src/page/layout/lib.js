@@ -180,6 +180,11 @@ function J_batchGoodsEvents(){
   }
 
   batch_save.onclick = ()=>{
+
+    //
+    model.data.goods.push( ...batchTmpData );
+    console.log('goods: ', model.data.goods)
+
     clearSvgRectData();
     createBatchTmpData();
   }
