@@ -36,6 +36,14 @@ export default ()=>{
               <input type="radio" name="radio_input" value="col" id="batch_col" />
             </label>
             <div><input type="number" defaultValue="" id="batch_num_value" />排</div>
+            <div className="w_h_div" >
+              <div>
+                长: <div><input type="number" defaultValue={80} id="batch_size_w" /></div>
+              </div>
+              <div>
+                宽: <div><input type="number" defaultValue={40} id="batch_size_h" /></div>
+              </div>
+            </div>
           </div>
           <div className="footer" >
             <button type="button" id="batch_shut" >关闭</button>

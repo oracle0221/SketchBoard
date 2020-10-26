@@ -105,6 +105,10 @@ input{
     }
     input+div{display:none;}
     input:checked+div{display:block;}
+    input[type=number]{width:50px;}
+    .w_h_div{
+      display: flex;
+    }
   }
 
   .footer{
