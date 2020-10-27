@@ -1,8 +1,7 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil} from './util'
-import Var from './constants'
-
+import {SizeUtil, inView, mouseInRect} from './util'
+import Var, {EdgeTop, EdgeLeft} from './constants'
 
 const $ = document.getElementById.bind(document);
 let svgRectData={x:0, y:0, width:0, height:0};
@@ -15,13 +14,14 @@ const Property={
   }
 };
 
-const EdgeTop = 50, EdgeLeft = 50;
-
 // 画布与svg初始化
 export function resetCanvas(mainGd, copyGd, svg){
   let mainCanvas = mainGd.canvas, copyCanvas = copyGd.canvas;
   mainCanvas.width = mainCanvas.getBoundingClientRect().width;
   mainCanvas.height = mainCanvas.getBoundingClientRect().height;
+
+  Var.screen.width = mainCanvas.width;
+  Var.screen.height = mainCanvas.height;
 
   copyCanvas.width = copyCanvas.getBoundingClientRect().width;
   copyCanvas.height = copyCanvas.getBoundingClientRect().height;
@@ -38,19 +38,23 @@ export function handleEvents(){
   const oCanvas = $('canvas');
 
   const svgHandle = new SvgHandle();
+  const dragRect = new DragRect();
 
   oCanvas.onmousedown = e=>{
 
     let touchStartX = e.clientX - EdgeLeft, touchStartY = e.clientY - EdgeTop;
 
     svgHandle.start(e);
+    dragRect.start(e);
 
     document.onmousemove =e=>{
       svgHandle.move(e);
+      dragRect.move(e);
     };
 
     document.onmouseup = e=>{
       svgHandle.end(e);
+      dragRect.end(e);
       document.onmousemove = document.onmouseup = null;
     };
 
@@ -325,5 +329,37 @@ function createBatchTmpData(){
 
       } // for r
     } // for c
+  }
+}
+
+// 拖动相关
+function DragRect(){
+
+  this.start = function(e){
+    let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
+    // inView()
+
+    for( let i = 0; i < model.data.goods.length; i ++ ){
+
+      let itemRect = model.data.goods[i];
+      if( !inView(itemRect) ){
+        continue;
+      }
+
+      if(mouseInRect( e, itemRect )){
+        
+        break;
+      }
+
+    } // for i
+
+  }
+
+  this.move = function(e){
+
+  }
+
+  this.end = function(e){
+
   }
 }

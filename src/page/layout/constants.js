@@ -24,6 +24,9 @@ export const Mode_Zoom=4;
 export const Mode_Batch=5;
 export const Mode_Pan=6;
 
+export const EdgeTop = 50;
+export const EdgeLeft = 50;
+
 export const ModeEnum={
   0:Mode_Select,
   1:Mode_Location,
@@ -42,7 +45,7 @@ let Var = {
   batchPreviewData:{value:'', num:0},
   batchTmpData:[], // 在预览时的临时数据
   worldPosition:{x:0, y:0, width:2000, height:2000}, // 世界坐标
-
+  screen:{width:0, height:0}, // 画布在屏幕上的尺寸
 
   // 左边菜单变量
   Menu_Mode_Left:Mode_Select
