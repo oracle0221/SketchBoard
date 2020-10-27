@@ -1,3 +1,39 @@
+//
+// const GoodsType=0, BarrierType=1;
+// const Mode_Select = 0, Mode_Location = 1, Mode_Barrier=2, Mode_Text = 3, Mode_Zoom = 4, Mode_Batch = 5, Mode_Pan = 6;
+//
+// export GoodsType
+// export BarrierType
+//
+// export Mode_Select
+// export Mode_Location
+// export Mode_Barrier
+// export Mode_Text
+// export Mode_Zoom
+// export Mode_Batch
+// export Mode_Pan
+
+export const GoodsType=0;
+export const BarrierType=0;
+
+export const Mode_Select=0;
+export const Mode_Location=1;
+export const Mode_Barrier=2;
+export const Mode_Text=3;
+export const Mode_Zoom=4;
+export const Mode_Batch=5;
+export const Mode_Pan=6;
+
+export const ModeEnum={
+  0:Mode_Select,
+  1:Mode_Location,
+  2:Mode_Barrier,
+  3:Mode_Text,
+  4:Mode_Zoom,
+  5:Mode_Batch,
+  6:Mode_Pan,
+};
+
 
 let Var = {
   zoomLevel:1.0,
@@ -6,6 +42,10 @@ let Var = {
   batchPreviewData:{value:'', num:0},
   batchTmpData:[], // 在预览时的临时数据
   worldPosition:{x:0, y:0, width:2000, height:2000}, // 世界坐标
+
+
+  // 左边菜单变量
+  Menu_Mode_Left:Mode_Select
 };
 
 export default Var;
