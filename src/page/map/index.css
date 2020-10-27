@@ -72,6 +72,7 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
     bottom: 0;
     height: 40px;
     font-size:22px;
+    z-index:7;
 }
 
 .tools-bottom input{

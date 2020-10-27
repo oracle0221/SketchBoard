@@ -1,14 +1,11 @@
 /* eslint-disable */
 import model from './model'
+import {SizeUtil} from './util'
+import Var from './constants'
+
 
 const $ = document.getElementById.bind(document);
 let svgRectData={x:0, y:0, width:0, height:0};
-let zoomLevel = 1.0;
-
-let beBatch = true; // 需要批量操作
-let beBatchEnd = false; // 批量操作结束
-let batchPreviewData={value:'', num:0};
-let batchTmpData=[]; // 在预览时的临时数据
 
 // 颜色变量
 const Property={
@@ -18,31 +15,7 @@ const Property={
   }
 };
 
-// 世界
-let worldPosition={x:0, y:0, width:2000, height:2000};
-
-const Size = {
-  // 得到画布中物块的绝对尺寸
-  calc( size ){
-    return zoomLevel * (+size);
-  },
-  // 屏幕坐标转为世界坐标
-  screenToWorldX(x){
-    return x / zoomLevel - worldPosition.x;
-  },
-  screenToWorldY(y){
-    return y / zoomLevel - worldPosition.y;
-  },
-
-  // 世界坐标转屏幕坐标
-  worldToScreenX(x){
-    return (x + worldPosition.x) * zoomLevel;
-  },
-  worldToScreenY(y){
-    return (y + worldPosition.y) * zoomLevel;
-  },
-
-}
+const EdgeTop = 50, EdgeLeft = 50;
 
 // 画布与svg初始化
 export function resetCanvas(mainGd, copyGd, svg){
@@ -55,6 +28,9 @@ export function resetCanvas(mainGd, copyGd, svg){
 
   svg.setAttribute('width', svg.getBoundingClientRect().width);
   svg.setAttribute('height', svg.getBoundingClientRect().height);
+
+  const oCanvas = $('canvas');
+  oCanvas.oncontextmenu=()=>false; // 先屏掉右键菜单
 }
 
 export function handleEvents(){
@@ -65,7 +41,7 @@ export function handleEvents(){
 
   oCanvas.onmousedown = e=>{
 
-    let touchStartX = e.clientX, touchStartY = e.clientY;
+    let touchStartX = e.clientX - EdgeLeft, touchStartY = e.clientY - EdgeTop;
 
     svgHandle.start(e);
 
@@ -90,7 +66,7 @@ export function drawScene(mainGd){
   mainGd.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
 
   mainGd.fillStyle='white';
-  mainGd.fillRect( worldPosition.x, worldPosition.y, worldPosition.width, worldPosition.height );
+  mainGd.fillRect( Var.worldPosition.x, Var.worldPosition.y, Var.worldPosition.width, Var.worldPosition.height );
 
   const gd = mainGd;
   // 绘制柜子
@@ -98,10 +74,10 @@ export function drawScene(mainGd){
 
     let rectItem = model.data.goods[i];
 
-    let x = Size.worldToScreenX(rectItem.x),
-        y = Size.worldToScreenY(rectItem.y),
-        width = Size.calc(rectItem.width),
-        height = Size.calc(rectItem.height);
+    let x = SizeUtil.worldToScreenX(rectItem.x),
+        y = SizeUtil.worldToScreenY(rectItem.y),
+        width = SizeUtil.calc(rectItem.width),
+        height = SizeUtil.calc(rectItem.height);
 
     gd.fillStyle = Property.goods.fill;
     gd.strokeStyle = Property.goods.stroke;
@@ -143,23 +119,23 @@ function SvgHandle(){
 
   this.start = function(ev){
 
-    if( beBatchEnd ){
+    if( Var.beBatchEnd ){
       return;
     }
 
-    touchStartX = ev.clientX;
-    touchStartY = ev.clientY;
+    touchStartX = ev.clientX - EdgeLeft;
+    touchStartY = ev.clientY - EdgeTop;
     svgRectData.x = touchStartX;
     svgRectData.y = touchStartY;
   };
 
   this.move = function(ev){
-    if( beBatchEnd ){
+    if( Var.beBatchEnd ){
       return;
     }
 
-    touchMoveX = ev.clientX;
-    touchMoveY = ev.clientY;
+    touchMoveX = ev.clientX - EdgeLeft;
+    touchMoveY = ev.clientY - EdgeTop;
 
     let x = Math.min( touchStartX, touchMoveX ), y = Math.min( touchStartY, touchMoveY );
     let width = Math.abs( touchStartX - touchMoveX ), height = Math.abs( touchStartY - touchMoveY );
@@ -169,7 +145,7 @@ function SvgHandle(){
   this.end = function(ev){
 
     // 先查看是否需要处理批量生成
-    if(beBatch && svgRectData.width > 200 && svgRectData.height > 200){
+    if(Var.beBatch && svgRectData.width > 200 && svgRectData.height > 200){
       handleBatchCreate();
     }else{
       clearSvgRectData();
@@ -194,7 +170,7 @@ function handleBatchCreate(){
   }
 
   displayJ_batchGoods(left, top);
-  beBatchEnd = true; // 说明要批处理生成了
+  Var.beBatchEnd = true; // 说明要批处理生成了
 
 }
 
@@ -207,20 +183,20 @@ function J_batchGoodsEvents(){
 
   batch_row.onchange = function(){
     if(this.checked){
-      batchPreviewData['value']='row';
+      Var.batchPreviewData['value']='row';
       createBatchTmpData();
     }
   };
 
   batch_col.onchange = function(){
     if(this.checked){
-      batchPreviewData['value']='col';
+      Var.batchPreviewData['value']='col';
       createBatchTmpData();
     }
   };
 
   batch_num_value.oninput=function(){
-    batchPreviewData['num'] = +this.value.trim();
+    Var.batchPreviewData['num'] = +this.value.trim();
     createBatchTmpData();
   };
 
@@ -240,7 +216,7 @@ function J_batchGoodsEvents(){
   batch_save.onclick = ()=>{
 
     //
-    model.data.goods.push( ...batchTmpData );
+    model.data.goods.push( ...Var.batchTmpData );
     console.log('goods: ', model.data.goods)
 
     clearSvgRectData();
@@ -263,24 +239,24 @@ function clearSvgRectData(){
 
   const J_batchGoods = $('J_batchGoods');
   J_batchGoods.style.display='none';
-  beBatchEnd = false;
+  Var.beBatchEnd = false;
   svgRectData={x:0, y:0, width:0, height:0};
-  batchPreviewData={value:'', num:0};
+  Var.batchPreviewData={value:'', num:0};
 }
 
 // 就中间临时的批量生成一个预览图
 function previewCanvas(copyGd){
   const gd = copyGd;
-  if(!beBatchEnd) return; // 只有批量生成了，再往下走
+  if(!Var.beBatchEnd) return; // 只有批量生成了，再往下走
 
-  for( let i = 0; i < batchTmpData.length; i ++ ){
+  for( let i = 0; i < Var.batchTmpData.length; i ++ ){
 
-    let item = batchTmpData[i];
+    let item = Var.batchTmpData[i];
     gd.fillStyle = Property.goods.fill;
     gd.strokeStyle=Property.goods.stroke;
 
-    gd.fillRect( item.x, item.y, Size.calc(item.width), Size.calc(item.height) );
-    gd.strokeRect( item.x, item.y, Size.calc(item.width), Size.calc(item.height) );
+    gd.fillRect( item.x, item.y, SizeUtil.calc(item.width), SizeUtil.calc(item.height) );
+    gd.strokeRect( item.x, item.y, SizeUtil.calc(item.width), SizeUtil.calc(item.height) );
 
   } // for i
 
@@ -298,26 +274,26 @@ function displayJ_batchGoods(left, top){
 
 // 得到中途临时的预览数据
 function createBatchTmpData(){
-  batchTmpData = [];
+  Var.batchTmpData = [];
   const batch_size_w = $('batch_size_w'), batch_size_h = $('batch_size_h');
 
-  if( batchPreviewData['value'] === 'row' && batchPreviewData['num'] > 0 ){
-    let sizeW = Size.calc(batch_size_w.value), sizeH = Size.calc(batch_size_h.value), spaceV = svgRectData.height / batchPreviewData['num'] - Size.calc(sizeH * 2);
+  if( Var.batchPreviewData['value'] === 'row' && Var.batchPreviewData['num'] > 0 ){
+    let sizeW = SizeUtil.calc(batch_size_w.value), sizeH = SizeUtil.calc(batch_size_h.value), spaceV = svgRectData.height / Var.batchPreviewData['num'] - SizeUtil.calc(sizeH * 2);
     if( spaceV <= 1 ){
      return;
     }
 
-    let colNum = svgRectData.width / Size.calc(sizeW) | 0;
-    let rowNum = svgRectData.height / Size.calc(sizeH * 2 + spaceV) | 0;
+    let colNum = svgRectData.width / SizeUtil.calc(sizeW) | 0;
+    let rowNum = svgRectData.height / SizeUtil.calc(sizeH * 2 + spaceV) | 0;
 
     for( let r = 0; r < rowNum; r ++ ){
 
       for( let c = 0; c < colNum; c ++ ){
 
-        batchTmpData.push({
+        Var.batchTmpData.push({
           x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV), width:sizeW, height:sizeH
         });
-        batchTmpData.push({
+        Var.batchTmpData.push({
           x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV, width:sizeW, height:sizeH
         });
 
@@ -327,23 +303,23 @@ function createBatchTmpData(){
 
   }
 
-  if( batchPreviewData['value'] === 'col' && batchPreviewData['num'] > 0 ){
-    let sizeW = Size.calc(batch_size_w.value), sizeH = Size.calc(batch_size_h.value), spaceH = svgRectData.width / batchPreviewData['num'] - Size.calc(sizeW * 2);
+  if( Var.batchPreviewData['value'] === 'col' && Var.batchPreviewData['num'] > 0 ){
+    let sizeW = SizeUtil.calc(batch_size_w.value), sizeH = SizeUtil.calc(batch_size_h.value), spaceH = svgRectData.width / Var.batchPreviewData['num'] - SizeUtil.calc(sizeW * 2);
 
     if( spaceH <= 1 ){
       return;
     }
 
-    let colNum = svgRectData.width / Size.calc(sizeW * 2 + spaceH) | 0;
-    let rowNum = svgRectData.height / Size.calc(sizeH) | 0;
+    let colNum = svgRectData.width / SizeUtil.calc(sizeW * 2 + spaceH) | 0;
+    let rowNum = svgRectData.height / SizeUtil.calc(sizeH) | 0;
 
     for( let c = 0; c < colNum; c ++ ){
       for( let r = 0; r < rowNum; r ++ ){
 
-        batchTmpData.push({
+        Var.batchTmpData.push({
           x:svgRectData.x + c * (sizeW * 2 + spaceH), y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
         });
-        batchTmpData.push({
+        Var.batchTmpData.push({
           x:svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH, y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
         });
 
