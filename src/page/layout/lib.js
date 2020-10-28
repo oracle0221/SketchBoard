@@ -1,7 +1,7 @@
 /* eslint-disable */
 import model from './model'
 import {SizeUtil, inView, mouseInRect} from './util'
-import Var, {EdgeTop, EdgeLeft} from './constants'
+import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Barrier, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan} from './constants'
 
 const $ = document.getElementById.bind(document);
 let svgRectData={x:0, y:0, width:0, height:0};
@@ -30,7 +30,15 @@ export function resetCanvas(mainGd, copyGd, svg){
   svg.setAttribute('height', svg.getBoundingClientRect().height);
 
   const oCanvas = $('canvas');
-  oCanvas.oncontextmenu=()=>false; // 先屏掉右键菜单
+  oCanvas.oncontextmenu=(e)=>{
+
+    if( Var.Menu_Mode_Left ===  Mode_Batch){ // 如果是批处理 则开启右键菜单
+      console.log(e);
+      createContextForBatch(e);
+    }
+
+    return false;
+  };
 }
 
 export function handleEvents(){
@@ -148,11 +156,17 @@ function SvgHandle(){
 
   this.end = function(ev){
 
-    // 先查看是否需要处理批量生成
-    if(Var.beBatch && svgRectData.width > 200 && svgRectData.height > 200){
-      handleBatchCreate();
-    }else{
+    if( Var.Menu_Mode_Left === Mode_Select ){
       clearSvgRectData();
+    }else if( Var.Menu_Mode_Left === Mode_Batch ){
+      // 先查看是否需要处理批量生成
+      if(Var.beBatch && svgRectData.width > 100 && svgRectData.height > 100){
+        handleBatchCreate();
+      }else{
+        if( !Var.batchContext ){
+          clearSvgRectData();
+        }
+      }
     }
   };
 }
@@ -335,9 +349,12 @@ function createBatchTmpData(){
 // 拖动相关
 function DragRect(){
 
+  let beDrag = false;
+
   this.start = function(e){
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
     // inView()
+    Var.selectedRects = [];
 
     for( let i = 0; i < model.data.goods.length; i ++ ){
 
@@ -347,7 +364,8 @@ function DragRect(){
       }
 
       if(mouseInRect( e, itemRect )){
-        
+        beDrag = true;
+        Var.selectedRects = [itemRect];
         break;
       }
 
@@ -356,10 +374,23 @@ function DragRect(){
   }
 
   this.move = function(e){
+    let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
+
+    if(!beDrag) return;
+
+
 
   }
 
   this.end = function(e){
-
+    beDrag = false;
   }
+}
+
+
+function createContextForBatch(e){
+  let left = e.clientX - EdgeLeft, top = e.clientY - EdgeTop;
+  Var.batchContext = true;
+  displayJ_batchGoods(left, top);
+  Var.beBatchEnd = true; // 说明要批处理生成了
 }

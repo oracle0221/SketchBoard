@@ -44,11 +44,17 @@ let Var = {
   beBatchEnd: false,  // 批量操作结束
   batchPreviewData:{value:'', num:0},
   batchTmpData:[], // 在预览时的临时数据
+  batchContext:false, // 批处理右键菜单
+
   worldPosition:{x:0, y:0, width:2000, height:2000}, // 世界坐标
   screen:{width:0, height:0}, // 画布在屏幕上的尺寸
 
   // 左边菜单变量
-  Menu_Mode_Left:Mode_Select
+  Menu_Mode_Left:Mode_Select,
+
+  // 记录当前选择了多少方块
+  selectedRects:[],
+
 };
 
 export default Var;

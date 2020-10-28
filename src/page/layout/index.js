@@ -75,6 +75,7 @@ export default ()=>{
                     <span>纵向</span>
                     <input type="radio" name="radio_input" value="col" id="batch_col" />
                   </label>
+                  <div><input type="number" defaultValue="" id="batch_cell_value" />单元格</div>
                   <div><input type="number" defaultValue="" id="batch_num_value" />排</div>
                   <div className="w_h_div" >
                     <div>
@@ -82,6 +83,12 @@ export default ()=>{
                     </div>
                     <div>
                       宽: <div><input type="number" defaultValue={40} id="batch_size_h" /></div>
+                    </div>
+                  </div>
+                  <div>
+                    过道:
+                    <div>
+                      <input type="number" defaultValue="" id="" /> aisle
                     </div>
                   </div>
                 </div>
