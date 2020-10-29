@@ -163,7 +163,8 @@ function SvgHandle(){
       if(Var.beBatch && svgRectData.width > 100 && svgRectData.height > 100){
         handleBatchCreate();
       }else{
-        if( !Var.batchContext ){
+        // console.log(svgRectData)
+        if( !Var.batchContext || svgRectData.width + svgRectData.height > 0 ){
           clearSvgRectData();
         }
       }
@@ -198,6 +199,8 @@ function J_batchGoodsEvents(){
   const J_batchGoods = $('J_batchGoods');
   const batch_num_value = $('batch_num_value');
   const batch_size_w = $('batch_size_w'), batch_size_h = $('batch_size_h');
+  const batch_cell_value = $('batch_cell_value');
+  const batch_aisle = $('batch_aisle');
 
   batch_row.onchange = function(){
     if(this.checked){
@@ -225,6 +228,14 @@ function J_batchGoodsEvents(){
   batch_size_h.oninput = function(){
     createBatchTmpData();
   }
+
+  batch_cell_value.oninput = function(){
+    createBatchTmpData();
+  };
+
+  batch_aisle.oninput = function(){
+    createBatchTmpData();
+  };
 
   batch_shut.onclick = ()=>{
     clearSvgRectData();
@@ -259,7 +270,7 @@ function clearSvgRectData(){
   J_batchGoods.style.display='none';
   Var.beBatchEnd = false;
   svgRectData={x:0, y:0, width:0, height:0};
-  Var.batchPreviewData={value:'', num:0};
+  Var.batchPreviewData={value:'', num:0, cells:0};
 }
 
 // 就中间临时的批量生成一个预览图
@@ -294,55 +305,130 @@ function displayJ_batchGoods(left, top){
 function createBatchTmpData(){
   Var.batchTmpData = [];
   const batch_size_w = $('batch_size_w'), batch_size_h = $('batch_size_h');
+  const batch_cell_value = $('batch_cell_value');
+  const batch_aisle = $('batch_aisle');
 
   if( Var.batchPreviewData['value'] === 'row' && Var.batchPreviewData['num'] > 0 ){
-    let sizeW = SizeUtil.calc(batch_size_w.value), sizeH = SizeUtil.calc(batch_size_h.value), spaceV = svgRectData.height / Var.batchPreviewData['num'] - SizeUtil.calc(sizeH * 2);
-    if( spaceV <= 1 ){
-     return;
+
+    let colNum, rowNum;
+
+    if( !Var.batchContext ){  // 框选
+      let sizeW = SizeUtil.calc(batch_size_w.value), sizeH = SizeUtil.calc(batch_size_h.value), spaceV = svgRectData.height / Var.batchPreviewData['num'] - SizeUtil.calc(sizeH * 2);
+      if( spaceV <= 1 ){
+       return;
+      }
+
+      colNum = svgRectData.width / SizeUtil.calc(sizeW) | 0;
+      rowNum = svgRectData.height / SizeUtil.calc(sizeH * 2 + spaceV) | 0;
+
+      for( let r = 0; r < rowNum; r ++ ){
+
+        for( let c = 0; c < colNum; c ++ ){
+
+          Var.batchTmpData.push({
+            x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV), width:sizeW, height:sizeH
+          });
+          Var.batchTmpData.push({
+            x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV, width:sizeW, height:sizeH
+          });
+
+        } // for c
+
+      } // for r
+    }else{
+      // 右键点击
+      let cells_value = +batch_cell_value.value.trim();
+      if( cells_value == 0 ){
+        return;
+      }
+
+      if( !batch_aisle.value.trim() ){
+        return;
+      }
+
+      let spaceV = +batch_aisle.value.trim();
+
+      let sizeW = SizeUtil.calc(batch_size_w.value), sizeH = SizeUtil.calc(batch_size_h.value)
+
+      colNum = cells_value;
+      rowNum = +Var.batchPreviewData['num'];
+
+      for( let r = 0; r < rowNum; r ++ ){
+
+        for( let c = 0; c < colNum; c ++ ){
+
+          Var.batchTmpData.push({
+            x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV), width:sizeW, height:sizeH
+          });
+          Var.batchTmpData.push({
+            x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV, width:sizeW, height:sizeH
+          });
+
+        } // for c
+
+      } // for r
+
     }
-
-    let colNum = svgRectData.width / SizeUtil.calc(sizeW) | 0;
-    let rowNum = svgRectData.height / SizeUtil.calc(sizeH * 2 + spaceV) | 0;
-
-    for( let r = 0; r < rowNum; r ++ ){
-
-      for( let c = 0; c < colNum; c ++ ){
-
-        Var.batchTmpData.push({
-          x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV), width:sizeW, height:sizeH
-        });
-        Var.batchTmpData.push({
-          x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV, width:sizeW, height:sizeH
-        });
-
-      } // for c
-
-    } // for r
 
   }
 
   if( Var.batchPreviewData['value'] === 'col' && Var.batchPreviewData['num'] > 0 ){
-    let sizeW = SizeUtil.calc(batch_size_w.value), sizeH = SizeUtil.calc(batch_size_h.value), spaceH = svgRectData.width / Var.batchPreviewData['num'] - SizeUtil.calc(sizeW * 2);
+    let colNum, rowNum;
 
-    if( spaceH <= 1 ){
-      return;
+    if(!Var.batchContext){ // 框选
+      let sizeW = SizeUtil.calc(batch_size_w.value), sizeH = SizeUtil.calc(batch_size_h.value), spaceH = svgRectData.width / Var.batchPreviewData['num'] - SizeUtil.calc(sizeW * 2);
+
+      if( spaceH <= 1 ){
+        return;
+      }
+
+      colNum = svgRectData.width / SizeUtil.calc(sizeW * 2 + spaceH) | 0;
+      rowNum = svgRectData.height / SizeUtil.calc(sizeH) | 0;
+
+      for( let c = 0; c < colNum; c ++ ){
+        for( let r = 0; r < rowNum; r ++ ){
+
+          Var.batchTmpData.push({
+            x:svgRectData.x + c * (sizeW * 2 + spaceH), y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
+          });
+          Var.batchTmpData.push({
+            x:svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH, y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
+          });
+
+        } // for r
+      } // for c
+    }else{
+
+      // 右键点击
+      let cells_value = +batch_cell_value.value.trim();
+      if( cells_value == 0 ){
+        return;
+      }
+
+      if( !batch_aisle.value.trim() ){
+        return;
+      }
+
+      let spaceH = +batch_aisle.value.trim()
+
+      let sizeW = SizeUtil.calc(batch_size_w.value), sizeH = SizeUtil.calc(batch_size_h.value)
+      colNum = +Var.batchPreviewData['num'];
+      rowNum = cells_value;
+
+      for( let c = 0; c < colNum; c ++ ){
+        for( let r = 0; r < rowNum; r ++ ){
+
+          Var.batchTmpData.push({
+            x:svgRectData.x + c * (sizeW * 2 + spaceH), y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
+          });
+          Var.batchTmpData.push({
+            x:svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH, y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
+          });
+
+        } // for r
+      } // for c
+
     }
-
-    let colNum = svgRectData.width / SizeUtil.calc(sizeW * 2 + spaceH) | 0;
-    let rowNum = svgRectData.height / SizeUtil.calc(sizeH) | 0;
-
-    for( let c = 0; c < colNum; c ++ ){
-      for( let r = 0; r < rowNum; r ++ ){
-
-        Var.batchTmpData.push({
-          x:svgRectData.x + c * (sizeW * 2 + spaceH), y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
-        });
-        Var.batchTmpData.push({
-          x:svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH, y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
-        });
-
-      } // for r
-    } // for c
   }
 }
 
@@ -391,6 +477,10 @@ function DragRect(){
 function createContextForBatch(e){
   let left = e.clientX - EdgeLeft, top = e.clientY - EdgeTop;
   Var.batchContext = true;
+
+  svgRectData.x = left;
+  svgRectData.y = top;
+
   displayJ_batchGoods(left, top);
   Var.beBatchEnd = true; // 说明要批处理生成了
 }

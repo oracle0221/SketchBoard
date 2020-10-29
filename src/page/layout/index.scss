@@ -104,11 +104,16 @@ input[type=text],input[type=number]{
     input{
       vertical-align:-6px;margin-right:4px;
     }
+    input[type=radio]{vertical-align:-2px;}
     input+div{display:none;}
     input:checked+div{display:block;}
     input[type=number]{width:50px;}
     .w_h_div{
       display: flex;
+    }
+
+    .section{
+      margin-bottom: 4px;
     }
   }
 

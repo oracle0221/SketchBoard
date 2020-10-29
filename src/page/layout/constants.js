@@ -42,7 +42,7 @@ let Var = {
   zoomLevel:1.0,
   beBatch: false, // 需要批量操作
   beBatchEnd: false,  // 批量操作结束
-  batchPreviewData:{value:'', num:0},
+  batchPreviewData:{value:'', num:0, cells:0},
   batchTmpData:[], // 在预览时的临时数据
   batchContext:false, // 批处理右键菜单
 
