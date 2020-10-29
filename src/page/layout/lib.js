@@ -358,10 +358,10 @@ function createBatchTmpData(){
         for( let c = 0; c < colNum; c ++ ){
 
           Var.batchTmpData.push({
-            x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV), width:sizeW, height:sizeH
+            x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV)), width:(sizeW), height:(sizeH)
           });
           Var.batchTmpData.push({
-            x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV, width:sizeW, height:sizeH
+            x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV), width:(sizeW), height:(sizeH)
           });
 
         } // for c
@@ -419,10 +419,10 @@ function createBatchTmpData(){
         for( let r = 0; r < rowNum; r ++ ){
 
           Var.batchTmpData.push({
-            x:svgRectData.x + c * (sizeW * 2 + spaceH), y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
+            x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH)), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:sizeW, height:sizeH
           });
           Var.batchTmpData.push({
-            x:svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH, y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
+            x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:sizeW, height:sizeH
           });
 
         } // for r

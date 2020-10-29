@@ -88,7 +88,7 @@ export default ()=>{
                   <div className="section" >
                     过道:
                     <div>
-                      <input type="number" defaultValue="" id="batch_aisle" /> aisle
+                      <input type="number" defaultValue={50} id="batch_aisle" /> aisle
                     </div>
                   </div>
                 </div>
