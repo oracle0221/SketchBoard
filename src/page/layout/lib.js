@@ -1,7 +1,8 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, inView, mouseInRect, drawDashedRect} from './util'
+import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Barrier, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan} from './constants'
+import {setMenu} from './sidebar'
 
 const $ = document.getElementById.bind(document);
 let svgRectData={x:0, y:0, width:0, height:0};
@@ -52,8 +53,8 @@ export function handleEvents(){
 
     let touchStartX = e.clientX - EdgeLeft, touchStartY = e.clientY - EdgeTop;
 
-    svgHandle.start(e);
-    dragRect.start(e);
+    svgHandle.start(e); // 选择框
+    dragRect.start(e); // 拖动
 
     document.onmousemove =e=>{
       svgHandle.move(e);
@@ -140,24 +141,22 @@ function SvgHandle(){
 
   this.start = function(ev){
 
-    if(Var.selectedDrag) return;
-
-    if( Var.beBatchEnd )return;
-
     touchStartX = ev.clientX - EdgeLeft;
     touchStartY = ev.clientY - EdgeTop;
     svgRectData.x = touchStartX;
     svgRectData.y = touchStartY;
+
+    if(Var.selectedDrag) return;
+    if(Var.beBatchEnd)return;
   };
 
   this.move = function(ev){
-    if(Var.selectedDrag) return;
-    if( Var.beBatchEnd ){
-      return;
-    }
 
     touchMoveX = ev.clientX - EdgeLeft;
     touchMoveY = ev.clientY - EdgeTop;
+
+    if(Var.selectedDrag) return;
+    if(Var.beBatchEnd) return;
 
     let x = Math.min( touchStartX, touchMoveX ), y = Math.min( touchStartY, touchMoveY );
     let width = Math.abs( touchStartX - touchMoveX ), height = Math.abs( touchStartY - touchMoveY );
@@ -167,6 +166,11 @@ function SvgHandle(){
   this.end = function(ev){
 
     if( Var.Menu_Mode_Left === Mode_Select ){
+      // 查看目前框选了有多少柜子
+      if( Var.selectedRects.length === 0 ){
+        Var.selectedRects = getSelectedRects(svgRectData, model.data.goods);
+      }
+
       clearSvgRectData();
     }else if( Var.Menu_Mode_Left === Mode_Batch ){
       // 先查看是否需要处理批量生成
@@ -253,10 +257,11 @@ function J_batchGoodsEvents(){
   }
 
   batch_save.onclick = ()=>{
-
     //
     model.data.goods.push( ...Var.batchTmpData );
-    console.log('goods: ', model.data.goods)
+    // console.log('goods: ', model.data.goods)
+    // 当批量设好后, 把左侧菜单切换为Mode_Select模式
+    setMenu(Mode_Select);
 
     clearSvgRectData();
     createBatchTmpData();
@@ -458,9 +463,10 @@ function DragRect(){
   this.start = function(e){
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
     // inView()
-    Var.selectedRects = [];
-    Var.selectedRectsOffset=[];
-    Var.selectedDrag = false;
+    // Var.selectedRects = [];
+    // Var.selectedRectsOffset=[];
+    // Var.selectedDrag = false;
+    let bHit = false;
 
     for( let i = 0; i < model.data.goods.length; i ++ ){
 
@@ -471,21 +477,41 @@ function DragRect(){
 
       if(mouseInRect( e, itemRect )){
         beDrag = true;
+        bHit = true;
         Var.selectedDrag = true;
-        Var.selectedRects = [itemRect];
+
+        if( Var.selectedRects.length === 0 ){
+          Var.selectedRects = [itemRect];
+
+          Var.selectedRectsOffset = [
+            {
+              x : x - SizeUtil.worldToScreenX(itemRect.x),
+              y : y - SizeUtil.worldToScreenY(itemRect.y),
+            }
+          ];
+        }else{
+          Var.selectedRectsOffset = Var.selectedRects.map(itemRect=>{
+            return {
+              x : x - SizeUtil.worldToScreenX(itemRect.x),
+              y : y - SizeUtil.worldToScreenY(itemRect.y),
+            };
+          });
+        }
+
         Var.selectedRects.forEach(itemRect=>{
           itemRect.zIndex = ++Var.zIndex;
         });
-        Var.selectedRectsOffset = [
-          {
-            x : x - SizeUtil.worldToScreenX(itemRect.x),
-            y : y - SizeUtil.worldToScreenY(itemRect.y),
-          }
-        ];
+
         break;
       }
 
     } // for i
+
+    if(!bHit){
+      Var.selectedDrag = false;
+      Var.selectedRects = [];
+      Var.selectedRectsOffset=[];
+    }
 
   }
 
@@ -503,7 +529,7 @@ function DragRect(){
 
   this.end = function(e){
     beDrag = false;
-    Var.selectedDrag = false;
+    // Var.selectedDrag = false;
   }
 }
 

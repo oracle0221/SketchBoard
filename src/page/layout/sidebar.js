@@ -27,3 +27,12 @@ export function leftNavHandle(){
       }
   });
 }
+
+// 将menu设成另外一个
+export function setMenu( mode ){
+  const J_tools_ul = $('J_tools_ul');
+  const a_tools_li = Array.from(J_tools_ul.getElementsByTagName('li'));
+
+  // 触发点击
+  a_tools_li[mode].onclick();
+}

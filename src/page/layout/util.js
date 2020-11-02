@@ -65,6 +65,33 @@ export function mouseInRect(ev, rect){
   return false;
 }
 
+// 查看框选区域内选择了多少柜子
+export function getSelectedRects(selectRegion, arr){
+  let res=[];
+
+  for( let i = 0; i < arr.length; i ++ ){
+    let itemRect = arr[i];
+
+    if( !inView(itemRect) ){
+      continue;
+    }
+
+    let x = SizeUtil.worldToScreenX(itemRect.x), y = SizeUtil.worldToScreenY(itemRect.y),
+        width = SizeUtil.calc( itemRect.width ), height = SizeUtil.calc( itemRect.height );
+
+    let rx = selectRegion.x, ry = selectRegion.y, rwidth=selectRegion.width, rheight=selectRegion.height;
+
+    let bHit = getCollideTest( selectRegion, {x, y, width, height} );
+
+    if(bHit){
+      res.push(itemRect);
+    }
+
+  } // end for i
+
+  return res;
+}
+
 export function drawDashedRect(gd, rectItem){
 
   let x = SizeUtil.worldToScreenX(rectItem.x),
@@ -109,4 +136,17 @@ export function drawDashedRect(gd, rectItem){
   } // for i
 
   gd.restore();
+}
+
+// 两个矩形方块的碰撞检测  tolerance=2是容差值
+export function getCollideTest(rect1, rect2){
+    const tolerance = 2;
+    if( rect1.x + rect1.width - tolerance <= rect2.x  ||
+        rect1.y + rect1.height - tolerance <= rect2.y ||
+        rect1.x >= rect2.x + rect2.width - tolerance ||
+        rect1.y >= rect2.y + rect2.height - tolerance
+    ){
+        return false;
+    }
+    return true;
 }
