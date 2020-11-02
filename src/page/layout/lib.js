@@ -381,6 +381,7 @@ function createBatchTmpData(){
       }
 
       let spaceV = +batch_aisle.value.trim();
+      spaceV *= Var.zoomLevel;
 
       let sizeW = SizeUtil.calc(batch_size_w.value), sizeH = SizeUtil.calc(batch_size_h.value)
 
@@ -392,11 +393,11 @@ function createBatchTmpData(){
         for( let c = 0; c < colNum; c ++ ){
 
           Var.batchTmpData.push({
-            x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV)), width:(sizeW), height:(sizeH),
+            x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV)), width:+batch_size_w.value, height:+batch_size_h.value,
             zIndex:Var.zIndex,
           });
           Var.batchTmpData.push({
-            x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV), width:(sizeW), height:(sizeH),
+            x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV) + sizeH), width:+batch_size_w.value, height:+batch_size_h.value,
             zIndex:Var.zIndex,
           });
 
@@ -448,6 +449,7 @@ function createBatchTmpData(){
       }
 
       let spaceH = +batch_aisle.value.trim()
+      spaceH = spaceH * Var.zoomLevel;
 
       let sizeW = SizeUtil.calc(batch_size_w.value), sizeH = SizeUtil.calc(batch_size_h.value)
       colNum = +Var.batchPreviewData['num'];
@@ -457,11 +459,11 @@ function createBatchTmpData(){
         for( let r = 0; r < rowNum; r ++ ){
 
           Var.batchTmpData.push({
-            x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH)), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:sizeW, height:sizeH,
+            x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH)), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:+batch_size_w.value, height:+batch_size_h.value,
             zIndex:Var.zIndex,
           });
           Var.batchTmpData.push({
-            x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:sizeW, height:sizeH,
+            x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:+batch_size_w.value, height:+batch_size_h.value,
             zIndex:Var.zIndex,
           });
 
@@ -594,9 +596,7 @@ function PanMove(){
     Var.worldPosition.y = (startWorldY + (moveY - startY)) / Var.zoomLevel;
   };
 
-  this.end = function(e){
-
-  };
+  this.end = function(e){};
 
 }
 

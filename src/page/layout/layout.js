@@ -9,7 +9,7 @@ export default function layout(){
   const mainGd = mainCanvas.getContext('2d'), copyGd = copyCanvas.getContext('2d');
 
   leftNavHandle(); // 工具与菜单栏
-  PanZoom();
+  PanZoom(); // 视图放大与缩小
 
   resetCanvas(mainGd, copyGd, svg);
 
