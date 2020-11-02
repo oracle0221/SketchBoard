@@ -48,6 +48,7 @@ export function handleEvents(){
 
   const svgHandle = new SvgHandle();
   const dragRect = new DragRect();
+  const panMove = new PanMove();
 
   oCanvas.onmousedown = e=>{
 
@@ -55,15 +56,18 @@ export function handleEvents(){
 
     svgHandle.start(e); // 选择框
     dragRect.start(e); // 拖动
+    panMove.start(e); // Pan 拖动视图
 
     document.onmousemove =e=>{
       svgHandle.move(e);
       dragRect.move(e);
+      panMove.move(e);
     };
 
     document.onmouseup = e=>{
       svgHandle.end(e);
       dragRect.end(e);
+      panMove.end(e);
       document.onmousemove = document.onmouseup = null;
     };
 
@@ -141,6 +145,11 @@ function SvgHandle(){
 
   this.start = function(ev){
 
+    // 只有选择或批量模式下才有框选
+    if( !(Var.Menu_Mode_Left === Mode_Select  ||  Var.Menu_Mode_Left === Mode_Batch) ){
+      return;
+    }
+
     touchStartX = ev.clientX - EdgeLeft;
     touchStartY = ev.clientY - EdgeTop;
     svgRectData.x = touchStartX;
@@ -151,6 +160,11 @@ function SvgHandle(){
   };
 
   this.move = function(ev){
+
+    // 只有选择或批量模式下才有框选
+    if( !(Var.Menu_Mode_Left === Mode_Select  ||  Var.Menu_Mode_Left === Mode_Batch) ){
+      return;
+    }
 
     touchMoveX = ev.clientX - EdgeLeft;
     touchMoveY = ev.clientY - EdgeTop;
@@ -461,11 +475,14 @@ function DragRect(){
   let beDrag = false;
 
   this.start = function(e){
+
+    // 只有选择才有后续的拖动
+    if( !(Var.Menu_Mode_Left === Mode_Select ) ){
+      return;
+    }
+
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
-    // inView()
-    // Var.selectedRects = [];
-    // Var.selectedRectsOffset=[];
-    // Var.selectedDrag = false;
+
     let bHit = false;
 
     for( let i = 0; i < model.data.goods.length; i ++ ){
@@ -475,12 +492,13 @@ function DragRect(){
         continue;
       }
 
+      // if( !Var.selectedRects.includes(itemRect) ){
       if(mouseInRect( e, itemRect )){
         beDrag = true;
         bHit = true;
         Var.selectedDrag = true;
 
-        if( Var.selectedRects.length === 0 ){
+        if( Var.selectedRects.length === 0 || !Var.selectedRects.includes(itemRect) ){
           Var.selectedRects = [itemRect];
 
           Var.selectedRectsOffset = [
@@ -490,12 +508,14 @@ function DragRect(){
             }
           ];
         }else{
+
           Var.selectedRectsOffset = Var.selectedRects.map(itemRect=>{
             return {
               x : x - SizeUtil.worldToScreenX(itemRect.x),
               y : y - SizeUtil.worldToScreenY(itemRect.y),
             };
           });
+
         }
 
         Var.selectedRects.forEach(itemRect=>{
@@ -504,6 +524,7 @@ function DragRect(){
 
         break;
       }
+
 
     } // for i
 
@@ -516,13 +537,19 @@ function DragRect(){
   }
 
   this.move = function(e){
+
+    // 只有选择才有后续的拖动
+    if( !(Var.Menu_Mode_Left === Mode_Select ) ){
+      return;
+    }
+
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
 
     if(!beDrag) return;
 
     Var.selectedRectsOffset.forEach((itemRectOffset, index)=>{
-      Var.selectedRects[index].x = x - itemRectOffset.x;
-      Var.selectedRects[index].y = y - itemRectOffset.y;
+      Var.selectedRects[index].x = SizeUtil.screenToWorldX(x - itemRectOffset.x);
+      Var.selectedRects[index].y = SizeUtil.screenToWorldY(y - itemRectOffset.y);
     });
 
   }
@@ -531,6 +558,43 @@ function DragRect(){
     beDrag = false;
     // Var.selectedDrag = false;
   }
+}
+
+// Pan Move拖动视图
+function PanMove(){
+
+  let startX, startY, moveX, moveY;
+  let startWorldX, startWorldY;
+
+  this.start = function(e){
+    if( !(Var.Menu_Mode_Left === Mode_Pan ) ){
+      return;
+    }
+
+    startX = e.clientX - EdgeLeft;
+    startY = e.clientY - EdgeTop;
+
+    startWorldX = Var.worldPosition.x;
+    startWorldY = Var.worldPosition.y;
+
+  };
+
+  this.move = function(e){
+    if( !(Var.Menu_Mode_Left === Mode_Pan ) ){
+      return;
+    }
+
+    moveX = e.clientX - EdgeLeft;
+    moveY = e.clientY - EdgeTop;
+
+    Var.worldPosition.x = startWorldX + (moveX - startX);
+    Var.worldPosition.y = startWorldY + (moveY - startY);
+  };
+
+  this.end = function(e){
+
+  };
+
 }
 
 

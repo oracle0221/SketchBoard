@@ -1,5 +1,5 @@
 // 处理上边与左边以下边这三条栏
-import Var, {ModeEnum, Mode_Batch} from './constants'
+import Var, {ModeEnum, Mode_Batch, Mode_Pan} from './constants'
 
 const $ = document.getElementById.bind(document);
 
@@ -9,6 +9,7 @@ export function leftNavHandle(){
 
   a_tools_li.forEach((objLi, index)=>{
       objLi.onclick=()=>{
+          document.body.style.cursor = 'default';
           a_tools_li.forEach(obj=>obj.classList.remove('current'));
           objLi.classList.add('current');
 
@@ -22,7 +23,10 @@ export function leftNavHandle(){
           if( Var.Menu_Mode_Left === Mode_Batch ){
             Var.beBatch = true; // 打开批量生成模式
           }
-          // currMode = ModeEnum[index];
+
+          if( Var.Menu_Mode_Left === Mode_Pan ){
+            document.body.style.cursor = 'move';
+          }
 
       }
   });
