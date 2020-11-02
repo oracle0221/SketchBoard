@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects} from './util'
+import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Barrier, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan} from './constants'
 import {setMenu} from './sidebar'
 
@@ -83,9 +83,12 @@ export function drawScene(mainGd){
   mainGd.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
 
   mainGd.fillStyle='white';
-  mainGd.fillRect( Var.worldPosition.x, Var.worldPosition.y, Var.worldPosition.width, Var.worldPosition.height );
+  mainGd.fillRect( Var.worldPosition.x * Var.zoomLevel, Var.worldPosition.y * Var.zoomLevel, Var.worldPosition.width * Var.zoomLevel, Var.worldPosition.height * Var.zoomLevel );
 
   const gd = mainGd;
+  // 绘制辅助线
+  drawBackgroundLines(gd);
+
   // model.data.goods
   let goodsArr = getSortedZindexArray(model.data.goods);
   // 绘制柜子

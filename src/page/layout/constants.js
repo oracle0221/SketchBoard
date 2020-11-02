@@ -46,8 +46,9 @@ let Var = {
   batchTmpData:[], // 在预览时的临时数据
   batchContext:false, // 批处理右键菜单
 
-  worldPosition:{x:0, y:0, width:2000, height:2000}, // 世界坐标
-  screen:{width:0, height:0}, // 画布在屏幕上的尺寸
+  worldPosition:{x:0, y:0, width:2000, height:2000}, // 世界坐标, 世界大小
+  screen:{width:0, height:0}, // canvas画布在屏幕上的尺寸
+  ruleUnit:50, // 背景辅助线 单元格宽高
 
   // 左边菜单变量
   Menu_Mode_Left:Mode_Select,

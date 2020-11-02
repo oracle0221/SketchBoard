@@ -138,6 +138,44 @@ export function drawDashedRect(gd, rectItem){
   gd.restore();
 }
 
+// 绘制底部辅助线条
+export function drawBackgroundLines(gd){
+  // #D5D5D5
+  let rowLines = (Var.worldPosition.height / Var.ruleUnit | 0) - 1;
+  let colLines = (Var.worldPosition.width / Var.ruleUnit | 0) - 1;
+
+  // 横向
+  for( let i = 1; i <= rowLines; i++ ){
+    gd.beginPath();
+    gd.strokeStyle='#D5D5D5';
+    gd.lineWidth = 1;
+
+    let x0 = Var.worldPosition.x * Var.zoomLevel, y0 = Var.ruleUnit * Var.zoomLevel * i + Var.worldPosition.y * Var.zoomLevel;
+    let x1 = Var.worldPosition.x * Var.zoomLevel + Var.worldPosition.width * Var.zoomLevel,
+        y1 = Var.ruleUnit * Var.zoomLevel * i + Var.worldPosition.y * Var.zoomLevel;
+    gd.moveTo( x0, y0+.5 );
+    gd.lineTo( x1, y1+.5 );
+    gd.stroke();
+  } // end for i
+
+  // 纵向
+  for( let i = 1; i <= colLines; i++ ){
+    gd.beginPath();
+    gd.strokeStyle='#D5D5D5';
+    gd.lineWidth = 1;
+
+    let x0 = Var.worldPosition.x * Var.zoomLevel + i * Var.ruleUnit * Var.zoomLevel,
+        y0 = Var.worldPosition.y * Var.zoomLevel,
+        x1 = Var.worldPosition.x * Var.zoomLevel + i * Var.ruleUnit * Var.zoomLevel,
+        y1 = Var.worldPosition.y * Var.zoomLevel + Var.worldPosition.height * Var.zoomLevel;
+
+    gd.moveTo( x0+.5, y0 );
+    gd.lineTo( x1+.5, y1 );
+    gd.stroke();
+  } // end for i
+
+}
+
 // 两个矩形方块的碰撞检测  tolerance=2是容差值
 export function getCollideTest(rect1, rect2){
     const tolerance = 2;
