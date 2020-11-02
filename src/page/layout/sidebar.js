@@ -46,13 +46,25 @@ export function PanZoom(){
   const J_input_zoom = $('J_input_zoom'), ZoomOut = $('ZoomOut'), ZoomIn = $('ZoomIn');
 
   ZoomOut.onclick = ()=>{
-    Var.zoomLevel += 1;
-    J_input_zoom.value = Var.zoomLevel+'';
+
+    if( Var.zoomLevel >= 1 ){
+        Var.zoomLevel = ++Var.zoomLevel
+    }else{
+        Var.zoomLevel += 0.2
+    }
+
+    J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
   };
 
   ZoomIn.onclick = ()=>{
-    Var.zoomLevel -= 1;
-    J_input_zoom.value = Var.zoomLevel+'';
+
+    if(Var.zoomLevel > 1){
+        Var.zoomLevel = --Var.zoomLevel
+    }else{
+        Var.zoomLevel -= 0.2
+    }
+
+    J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
   };
 
 }

@@ -577,8 +577,8 @@ function PanMove(){
     startX = e.clientX - EdgeLeft;
     startY = e.clientY - EdgeTop;
 
-    startWorldX = Var.worldPosition.x;
-    startWorldY = Var.worldPosition.y;
+    startWorldX = Var.worldPosition.x * Var.zoomLevel;
+    startWorldY = Var.worldPosition.y * Var.zoomLevel;
 
   };
 
@@ -590,8 +590,8 @@ function PanMove(){
     moveX = e.clientX - EdgeLeft;
     moveY = e.clientY - EdgeTop;
 
-    Var.worldPosition.x = startWorldX + (moveX - startX);
-    Var.worldPosition.y = startWorldY + (moveY - startY);
+    Var.worldPosition.x = (startWorldX + (moveX - startX)) / Var.zoomLevel;
+    Var.worldPosition.y = (startWorldY + (moveY - startY)) / Var.zoomLevel;
   };
 
   this.end = function(e){

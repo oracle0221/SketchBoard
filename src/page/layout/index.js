@@ -102,7 +102,7 @@ export default ()=>{
           </div>
           <div className="tools-bottom">
               <span className="btn" id="ZoomOut" >+</span>
-              <input type="number" defaultValue={1} id="J_input_zoom" />
+              <input type="number" defaultValue={1} id="J_input_zoom" readOnly={true} />
               <span className="btn" id="ZoomIn" >-</span>
           </div>
       </div>
