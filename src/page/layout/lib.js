@@ -34,7 +34,7 @@ export function resetCanvas(mainGd, copyGd, svg){
   oCanvas.oncontextmenu=(e)=>{
 
     if( Var.Menu_Mode_Left ===  Mode_Batch){ // 如果是批处理 则开启右键菜单
-      console.log(e);
+      // console.log(e);
       createContextForBatch(e);
     }
 
@@ -313,8 +313,8 @@ function previewCanvas(copyGd){
     gd.fillStyle = Property.goods.fill;
     gd.strokeStyle=Property.goods.stroke;
 
-    gd.fillRect( item.x, item.y, SizeUtil.calc(item.width), SizeUtil.calc(item.height) );
-    gd.strokeRect( item.x, item.y, SizeUtil.calc(item.width), SizeUtil.calc(item.height) );
+    gd.fillRect( SizeUtil.worldToScreenX(item.x), SizeUtil.worldToScreenY(item.y), SizeUtil.calc(item.width), SizeUtil.calc(item.height) );
+    gd.strokeRect( SizeUtil.worldToScreenX(item.x), SizeUtil.worldToScreenY(item.y), SizeUtil.calc(item.width), SizeUtil.calc(item.height) );
 
   } // for i
 

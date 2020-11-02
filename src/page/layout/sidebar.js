@@ -40,3 +40,19 @@ export function setMenu( mode ){
   // 触发点击
   a_tools_li[mode].onclick();
 }
+
+// 视图放大与缩小
+export function PanZoom(){
+  const J_input_zoom = $('J_input_zoom'), ZoomOut = $('ZoomOut'), ZoomIn = $('ZoomIn');
+
+  ZoomOut.onclick = ()=>{
+    Var.zoomLevel += 1;
+    J_input_zoom.value = Var.zoomLevel+'';
+  };
+
+  ZoomIn.onclick = ()=>{
+    Var.zoomLevel -= 1;
+    J_input_zoom.value = Var.zoomLevel+'';
+  };
+
+}
