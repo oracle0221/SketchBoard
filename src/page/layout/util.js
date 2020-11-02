@@ -64,3 +64,49 @@ export function mouseInRect(ev, rect){
 
   return false;
 }
+
+export function drawDashedRect(gd, rectItem){
+
+  let x = SizeUtil.worldToScreenX(rectItem.x),
+      y = SizeUtil.worldToScreenY(rectItem.y),
+      width = SizeUtil.calc(rectItem.width),
+      height = SizeUtil.calc(rectItem.height);
+
+  gd.save();
+  gd.beginPath()
+  gd.strokeStyle = '#22C'
+  gd.lineWidth = 1;
+  gd.setLineDash([2, 2]);
+  gd.rect(x, y, width, height);
+  gd.stroke();
+  gd.restore();
+
+  gd.save();
+
+  // 生成8个小圆圈
+  // 上面3个
+  for( let i = 0; i < 3; i ++ ){
+      gd.beginPath();
+      gd.arc(x + width / 2 * i, y, 4, 0, Math.PI * 2, false);
+      gd.fillStyle='#22C';
+      gd.fill();
+  } // for i
+
+  // 中间2个
+  for( let i = 0; i < 2; i ++ ){
+      gd.beginPath();
+      gd.arc(x + width * i, y + height/2, 4, 0, Math.PI * 2, false);
+      gd.fillStyle='#22C';
+      gd.fill();
+  } // for i
+
+  // 下面3个
+  for( let i = 0; i < 3; i ++ ){
+      gd.beginPath();
+      gd.arc(x + width / 2 * i, y + height, 4, 0, Math.PI * 2, false);
+      gd.fillStyle='#22C';
+      gd.fill();
+  } // for i
+
+  gd.restore();
+}

@@ -53,7 +53,10 @@ let Var = {
   Menu_Mode_Left:Mode_Select,
 
   // 记录当前选择了多少方块
+  zIndex:1,
   selectedRects:[],
+  selectedRectsOffset:[],
+  selectedDrag:false, // 选择状态下,就只要拖动就好了
 
 };
 

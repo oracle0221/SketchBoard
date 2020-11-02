@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, inView, mouseInRect} from './util'
+import {SizeUtil, inView, mouseInRect, drawDashedRect} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Barrier, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan} from './constants'
 
 const $ = document.getElementById.bind(document);
@@ -81,10 +81,12 @@ export function drawScene(mainGd){
   mainGd.fillRect( Var.worldPosition.x, Var.worldPosition.y, Var.worldPosition.width, Var.worldPosition.height );
 
   const gd = mainGd;
+  // model.data.goods
+  let goodsArr = getSortedZindexArray(model.data.goods);
   // 绘制柜子
-  for( let i = 0; i < model.data.goods.length; i ++ ){
+  for( let i = 0; i < goodsArr.length; i ++ ){
 
-    let rectItem = model.data.goods[i];
+    let rectItem = goodsArr[i];
 
     let x = SizeUtil.worldToScreenX(rectItem.x),
         y = SizeUtil.worldToScreenY(rectItem.y),
@@ -97,6 +99,13 @@ export function drawScene(mainGd){
     gd.strokeRect( x, y, width, height );
 
   } // for i end
+
+  // 如果有选择项, 那么绘制选择标记
+  Var.selectedRects.forEach( itemRect=>{
+
+    drawDashedRect(gd, itemRect);
+
+  } );
 
 }
 
@@ -131,9 +140,9 @@ function SvgHandle(){
 
   this.start = function(ev){
 
-    if( Var.beBatchEnd ){
-      return;
-    }
+    if(Var.selectedDrag) return;
+
+    if( Var.beBatchEnd )return;
 
     touchStartX = ev.clientX - EdgeLeft;
     touchStartY = ev.clientY - EdgeTop;
@@ -142,6 +151,7 @@ function SvgHandle(){
   };
 
   this.move = function(ev){
+    if(Var.selectedDrag) return;
     if( Var.beBatchEnd ){
       return;
     }
@@ -326,10 +336,12 @@ function createBatchTmpData(){
         for( let c = 0; c < colNum; c ++ ){
 
           Var.batchTmpData.push({
-            x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV), width:sizeW, height:sizeH
+            x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV), width:sizeW, height:sizeH,
+            zIndex:Var.zIndex,
           });
           Var.batchTmpData.push({
-            x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV, width:sizeW, height:sizeH
+            x : svgRectData.x + c * sizeW, y : svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV, width:sizeW, height:sizeH,
+            zIndex:Var.zIndex,
           });
 
         } // for c
@@ -358,10 +370,12 @@ function createBatchTmpData(){
         for( let c = 0; c < colNum; c ++ ){
 
           Var.batchTmpData.push({
-            x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV)), width:(sizeW), height:(sizeH)
+            x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV)), width:(sizeW), height:(sizeH),
+            zIndex:Var.zIndex,
           });
           Var.batchTmpData.push({
-            x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV), width:(sizeW), height:(sizeH)
+            x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV) + sizeH + spaceV), width:(sizeW), height:(sizeH),
+            zIndex:Var.zIndex,
           });
 
         } // for c
@@ -389,10 +403,12 @@ function createBatchTmpData(){
         for( let r = 0; r < rowNum; r ++ ){
 
           Var.batchTmpData.push({
-            x:svgRectData.x + c * (sizeW * 2 + spaceH), y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
+            x:svgRectData.x + c * (sizeW * 2 + spaceH), y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH,
+            zIndex:Var.zIndex,
           });
           Var.batchTmpData.push({
-            x:svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH, y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH
+            x:svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH, y:svgRectData.y + r * sizeH, width:sizeW, height:sizeH,
+            zIndex:Var.zIndex,
           });
 
         } // for r
@@ -419,10 +435,12 @@ function createBatchTmpData(){
         for( let r = 0; r < rowNum; r ++ ){
 
           Var.batchTmpData.push({
-            x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH)), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:sizeW, height:sizeH
+            x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH)), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:sizeW, height:sizeH,
+            zIndex:Var.zIndex,
           });
           Var.batchTmpData.push({
-            x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:sizeW, height:sizeH
+            x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW + spaceH), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:sizeW, height:sizeH,
+            zIndex:Var.zIndex,
           });
 
         } // for r
@@ -441,6 +459,8 @@ function DragRect(){
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
     // inView()
     Var.selectedRects = [];
+    Var.selectedRectsOffset=[];
+    Var.selectedDrag = false;
 
     for( let i = 0; i < model.data.goods.length; i ++ ){
 
@@ -451,7 +471,17 @@ function DragRect(){
 
       if(mouseInRect( e, itemRect )){
         beDrag = true;
+        Var.selectedDrag = true;
         Var.selectedRects = [itemRect];
+        Var.selectedRects.forEach(itemRect=>{
+          itemRect.zIndex = ++Var.zIndex;
+        });
+        Var.selectedRectsOffset = [
+          {
+            x : x - SizeUtil.worldToScreenX(itemRect.x),
+            y : y - SizeUtil.worldToScreenY(itemRect.y),
+          }
+        ];
         break;
       }
 
@@ -464,12 +494,16 @@ function DragRect(){
 
     if(!beDrag) return;
 
-
+    Var.selectedRectsOffset.forEach((itemRectOffset, index)=>{
+      Var.selectedRects[index].x = x - itemRectOffset.x;
+      Var.selectedRects[index].y = y - itemRectOffset.y;
+    });
 
   }
 
   this.end = function(e){
     beDrag = false;
+    Var.selectedDrag = false;
   }
 }
 
@@ -483,4 +517,11 @@ function createContextForBatch(e){
 
   displayJ_batchGoods(left, top);
   Var.beBatchEnd = true; // 说明要批处理生成了
+}
+
+// 得到排序zIndex后的数组
+function getSortedZindexArray(arr){
+  let res = [...arr];
+  res.sort( (obj1, obj2)=>obj1.zIndex - obj2.zIndex );
+  return res;
 }
