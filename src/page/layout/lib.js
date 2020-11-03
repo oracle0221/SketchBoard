@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines} from './util'
+import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Barrier, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan} from './constants'
 import {setMenu} from './sidebar'
 
@@ -474,10 +474,11 @@ function createBatchTmpData(){
   }
 }
 
-// 拖动相关
+// 拖动柜子相关
 function DragRect(){
 
   let beDrag = false;
+  let oldPosArr=[];
 
   this.start = function(e){
 
@@ -497,7 +498,6 @@ function DragRect(){
         continue;
       }
 
-      // if( !Var.selectedRects.includes(itemRect) ){
       if(mouseInRect( e, itemRect )){
         beDrag = true;
         bHit = true;
@@ -527,9 +527,11 @@ function DragRect(){
           itemRect.zIndex = ++Var.zIndex;
         });
 
-        break;
-      }
+        // 存一下老位置,后面如果与其它柜子碰撞了,则复位
+        oldPosArr = Var.selectedRects.map(item=>({x:item.x, y:item.y}));
 
+        break;
+      } //  if(mouseInRect( e, itemRect ))
 
     } // for i
 
@@ -562,6 +564,18 @@ function DragRect(){
   this.end = function(e){
     beDrag = false;
     // Var.selectedDrag = false;
+
+    // 释放鼠标一刻, 需要检测有无碰撞,如果有,则复位
+    let bool = testHitInGoods( [...model.data.goods], [...Var.selectedRects] );
+    // console.log('是否碰了: ', bool)
+    if(bool){
+      Var.selectedRects.forEach((itemRect, index)=>{
+        Var.selectedRects[index].x=oldPosArr[index].x;
+        Var.selectedRects[index].y=oldPosArr[index].y;
+      });
+    }
+    oldPosArr=[];
+
   }
 }
 

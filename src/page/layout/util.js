@@ -188,3 +188,47 @@ export function getCollideTest(rect1, rect2){
     }
     return true;
 }
+
+// 对世界中两个矩形柜子的碰撞检测 tolerance=2是容差值
+export function getWorldCollideTest( rect1, rect2 ){
+  let obj1={
+    x : SizeUtil.worldToScreenX(rect1.x),
+    y : SizeUtil.worldToScreenX(rect1.y),
+    width: SizeUtil.calc(rect1.width),
+    height: SizeUtil.calc(rect1.height),
+  },
+  obj2={
+    x : SizeUtil.worldToScreenX(rect2.x),
+    y : SizeUtil.worldToScreenX(rect2.y),
+    width: SizeUtil.calc(rect2.width),
+    height: SizeUtil.calc(rect2.height),
+  };
+
+  return getCollideTest(obj1, obj2);
+}
+
+export function testHitInGoods(arr, compareArr){
+
+  for( let i = 0; i < arr.length; i ++ ){
+    let itemRect = arr[i];
+
+    if(!inView(itemRect)) continue;
+
+    for( let ii = 0; ii < compareArr.length; ii ++ ){
+
+      let compareItemRect = compareArr[ii];
+
+      if( compareItemRect == itemRect ){
+        continue;
+      }
+
+      if( getWorldCollideTest(compareItemRect, itemRect) ){
+        return true;
+      }
+
+    } // end for ii
+
+  } // end for i
+
+  return false;
+}
