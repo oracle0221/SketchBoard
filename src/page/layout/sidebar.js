@@ -51,6 +51,9 @@ export function PanZoom(){
         Var.zoomLevel = ++Var.zoomLevel
     }else{
         Var.zoomLevel += 0.2
+        // zoomLevel小于1,让世界居中摆放
+        Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
+        Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
     }
 
     J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
@@ -62,6 +65,9 @@ export function PanZoom(){
         Var.zoomLevel = --Var.zoomLevel
     }else{
         Var.zoomLevel -= 0.2
+        // zoomLevel小于1,让世界居中摆放
+        Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
+        Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
     }
 
     J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';

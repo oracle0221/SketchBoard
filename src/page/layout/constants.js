@@ -37,6 +37,18 @@ export const ModeEnum={
   6:Mode_Pan,
 };
 
+// 颜色变量
+export const Property={
+  goods:{
+    fill:'rgba(255, 170, 170, 0.8)',
+    stroke:'#e86f8d',
+  },
+  obstacle:{
+    fill:'rgba(127, 127, 127, 0.8)',
+    stroke:'rgba(0, 0, 0, 0.5)',
+  },
+};
+
 
 let Var = {
   zoomLevel:1.0,
@@ -53,12 +65,19 @@ let Var = {
   // 左边菜单变量
   Menu_Mode_Left:Mode_Select,
 
-  // 记录当前选择了多少方块
+  // 柜子
   zIndex:1,
   selectedRects:[],
   selectedRectsOffset:[],
   selectedRectsIndex:[], // 选中的柜子在大数据中的下标
   selectedDrag:false, // 选择状态下,就只要拖动就好了
+
+  // 障碍物
+  currBarrierRect:null,
+  selectedBarrierRects:[],
+  selectedBarrierRectsOffset:[],
+  selectedBarrierRectsIndex:[], // 选中的柜子在大数据中的下标
+  selectedBarrierDrag:false, // 选择状态下,就只要拖动就好了
 
 };
 

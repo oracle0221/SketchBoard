@@ -1,19 +1,11 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects} from './util'
-import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Barrier, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan} from './constants'
+import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject} from './util'
+import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Barrier, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan, Property} from './constants'
 import {setMenu} from './sidebar'
 
 const $ = document.getElementById.bind(document);
 let svgRectData={x:0, y:0, width:0, height:0};
-
-// 颜色变量
-const Property={
-  goods:{
-    fill:'rgba(255, 170, 170, 0.8)',
-    stroke:'#e86f8d',
-  }
-};
 
 // 画布与svg初始化
 export function resetCanvas(mainGd, copyGd, svg){
@@ -49,6 +41,7 @@ export function handleEvents(){
   const svgHandle = new SvgHandle();
   const dragRect = new DragRect();
   const panMove = new PanMove();
+  const barrierObject = new BarrierObject();
 
   oCanvas.onmousedown = e=>{
 
@@ -57,17 +50,20 @@ export function handleEvents(){
     svgHandle.start(e); // 选择框
     dragRect.start(e); // 拖动
     panMove.start(e); // Pan 拖动视图
+    barrierObject.start(e); // 生成障碍物
 
     document.onmousemove =e=>{
       svgHandle.move(e);
       dragRect.move(e);
       panMove.move(e);
+      barrierObject.move(e);
     };
 
     document.onmouseup = e=>{
       svgHandle.end(e);
       dragRect.end(e);
       panMove.end(e);
+      barrierObject.end(e);
       document.onmousemove = document.onmouseup = null;
     };
 
@@ -104,6 +100,11 @@ export function drawScene(mainGd){
 
     let rectItem = goodsArr[i];
 
+    // 在视野中,才进行绘制
+    if( !inView(rectItem) ){
+      continue;
+    }
+
     let x = SizeUtil.worldToScreenX(rectItem.x),
         y = SizeUtil.worldToScreenY(rectItem.y),
         width = SizeUtil.calc(rectItem.width),
@@ -118,10 +119,25 @@ export function drawScene(mainGd){
 
   // 如果有选择项, 那么绘制选择标记
   Var.selectedRects.forEach( itemRect=>{
-
     drawDashedRect(gd, itemRect);
-
   } );
+
+  Var.selectedBarrierRects.forEach( itemRect=>{
+    drawDashedRect(gd, itemRect);
+  } );
+
+  // 障碍物
+  // 1.拖动过程中的障碍物
+  if( Var.currBarrierRect ){
+    drawBarrierObject(gd, Var.currBarrierRect);
+  }
+
+  // 2. 遍历障碍物数组,绘制障碍物
+  for( let i = 0; i < model.data.obstacle.length; i ++ ){
+    let itemBarrierRect = model.data.obstacle[i];
+    drawBarrierObject(gd, itemBarrierRect);
+
+  } // end for obstacle
 
 }
 
@@ -155,11 +171,14 @@ function SvgHandle(){
   let touchStartX, touchStartY, touchMoveX, touchMoveY;
 
   this.start = function(ev){
+    if(Var.Menu_Mode_Left === Mode_Barrier) return; // 拖动绘制障碍物不需要走框选
 
     // 只有选择或批量模式下才有框选
-    if( !(Var.Menu_Mode_Left === Mode_Select  ||  Var.Menu_Mode_Left === Mode_Batch) ){
+    if( !(Var.Menu_Mode_Left === Mode_Select  ||  Var.Menu_Mode_Left === Mode_Batch || Var.Menu_Mode_Left === Mode_Barrier) ){
       return;
     }
+
+
 
     touchStartX = ev.clientX - EdgeLeft;
     touchStartY = ev.clientY - EdgeTop;
@@ -167,10 +186,14 @@ function SvgHandle(){
     svgRectData.y = touchStartY;
 
     if(Var.selectedDrag) return;
+    if(Var.selectedBarrierDrag) return;
     if(Var.beBatchEnd)return;
+
   };
 
   this.move = function(ev){
+
+    if(Var.Menu_Mode_Left === Mode_Barrier) return; // 拖动绘制障碍物不需要走框选
 
     // 只有选择或批量模式下才有框选
     if( !(Var.Menu_Mode_Left === Mode_Select  ||  Var.Menu_Mode_Left === Mode_Batch) ){
@@ -181,6 +204,7 @@ function SvgHandle(){
     touchMoveY = ev.clientY - EdgeTop;
 
     if(Var.selectedDrag) return;
+    if(Var.selectedBarrierDrag) return;
     if(Var.beBatchEnd) return;
 
     let x = Math.min( touchStartX, touchMoveX ), y = Math.min( touchStartY, touchMoveY );
@@ -487,8 +511,8 @@ function createBatchTmpData(){
 // 拖动柜子相关
 function DragRect(){
 
-  let beDrag = false;
-  let oldPosArr=[];
+  let beDrag = false, beBarrierDrag = false;
+  let oldPosArr=[], oldPosBarrierArr = [];
 
   this.start = function(e){
 
@@ -500,7 +524,7 @@ function DragRect(){
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
 
     let bHit = false;
-
+    // 先处理普通柜子
     for( let i = 0; i < model.data.goods.length; i ++ ){
 
       let itemRect = model.data.goods[i];
@@ -550,6 +574,49 @@ function DragRect(){
       clearSelectedRects();
     }
 
+    if(bHit) return; // 既然拖动了柜子了,说明障碍物就不用再拖动了
+
+    // 接下来处理障碍物
+    let bBarrierHit = false;
+    let oldBarrierPosArr=[];
+
+    for( let i = 0; i < model.data.obstacle.length; i ++ ){
+      let itemRect = model.data.obstacle[i];
+      if( !inView(itemRect) ){
+        continue;
+      }
+
+      if(mouseInRect( e, itemRect )){
+        beBarrierDrag = true;
+        bBarrierHit = true;
+        Var.selectedBarrierDrag = true;
+
+        Var.selectedBarrierRects = [itemRect];
+        Var.selectedBarrierRectsIndex = [i]; // 生成Var.selectedRects之余需要同步Var.selectedRectsIndex
+
+        Var.selectedBarrierRectsOffset = [
+          {
+            x : x - SizeUtil.worldToScreenX(itemRect.x),
+            y : y - SizeUtil.worldToScreenY(itemRect.y),
+          }
+        ];
+
+        Var.selectedBarrierRects.forEach(itemRect=>{
+          itemRect.zIndex = ++Var.zIndex;
+        });
+
+        // 存一下老位置,后面如果与其它柜子碰撞了,则复位
+        oldPosBarrierArr = Var.selectedBarrierRects.map(item=>({x:item.x, y:item.y}));
+
+        break;
+
+      }
+    } // for i
+
+    if(!bBarrierHit){
+      clearSelectedBarrierRects();
+    }
+
   }
 
   this.move = function(e){
@@ -561,30 +628,46 @@ function DragRect(){
 
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
 
-    if(!beDrag) return;
+    if( beDrag ){
+      Var.selectedRectsOffset.forEach((itemRectOffset, index)=>{
+        Var.selectedRects[index].x = SizeUtil.screenToWorldX(x - itemRectOffset.x);
+        Var.selectedRects[index].y = SizeUtil.screenToWorldY(y - itemRectOffset.y);
+      });
+    }
 
-    Var.selectedRectsOffset.forEach((itemRectOffset, index)=>{
-      Var.selectedRects[index].x = SizeUtil.screenToWorldX(x - itemRectOffset.x);
-      Var.selectedRects[index].y = SizeUtil.screenToWorldY(y - itemRectOffset.y);
-    });
+    if( beBarrierDrag ){
+      Var.selectedBarrierRectsOffset.forEach((itemRectOffset, index)=>{
+        Var.selectedBarrierRects[index].x = SizeUtil.screenToWorldX(x - itemRectOffset.x);
+        Var.selectedBarrierRects[index].y = SizeUtil.screenToWorldY(y - itemRectOffset.y);
+      });
+    }
 
   }
 
   this.end = function(e){
     beDrag = false;
-    // Var.selectedDrag = false;
+    beBarrierDrag = false;
 
     // 释放鼠标一刻, 需要检测有无碰撞,如果有,则复位
-    let bool = testHitInGoods( [...model.data.goods], [...Var.selectedRects] );
+    let bool1 = testHitInGoods( [...model.data.goods], [...Var.selectedRects] );
+    let bool2 = testHitInGoods( [...model.data.goods], [...Var.selectedBarrierRects] );
+    let bool3 = testHitInGoods( [...model.data.obstacle], [...Var.selectedBarrierRects] );
+    let bool4 = testHitInGoods( [...model.data.obstacle], [...Var.selectedRects] );
     // console.log('是否碰了: ', bool)
-    if(bool){
+    if(bool1 || bool2 || bool3 || bool4){
       Var.selectedRects.forEach((itemRect, index)=>{
         Var.selectedRects[index].x=oldPosArr[index].x;
         Var.selectedRects[index].y=oldPosArr[index].y;
       });
-    }
-    oldPosArr=[];
 
+      Var.selectedBarrierRects.forEach((itemRect, index)=>{
+        Var.selectedBarrierRects[index].x=oldPosBarrierArr[index].x;
+        Var.selectedBarrierRects[index].y=oldPosBarrierArr[index].y;
+      });
+    }
+
+    oldPosArr=[];
+    oldPosBarrierArr = [];
   }
 }
 
@@ -621,6 +704,55 @@ function PanMove(){
 
   this.end = function(e){};
 
+}
+
+// 拖动生成障碍物
+function BarrierObject(){
+
+  let startX, startY, moveX, moveY;
+
+  this.start = function(e){
+    if( Var.Menu_Mode_Left != Mode_Barrier ){
+      return;
+    }
+
+    startX = e.clientX - EdgeLeft;
+    startY = e.clientY - EdgeTop;
+  };
+
+  this.move = function(e){
+    if( Var.Menu_Mode_Left != Mode_Barrier ){
+      return;
+    }
+
+    moveX = e.clientX - EdgeLeft;
+    moveY = e.clientY - EdgeTop;
+
+    let x = Math.min( startX, moveX );
+    let y = Math.min( startY, moveY );
+    let width = Math.abs( startX - moveX );
+    let height = Math.abs( startY - moveY );
+
+    // let x = SizeUtil.
+    Var.currBarrierRect = {
+      x : SizeUtil.screenToWorldX(x),
+      y : SizeUtil.screenToWorldY(y),
+      width:width / Var.zoomLevel,
+      height:height / Var.zoomLevel,
+    };
+
+  };
+
+  this.end = function(e){
+    if( Var.Menu_Mode_Left != Mode_Barrier ){
+      return;
+    }
+
+    model.data.obstacle.push({...Var.currBarrierRect});
+
+    setMenu(Mode_Select);
+    Var.currBarrierRect = null;
+  };
 }
 
 
@@ -673,6 +805,7 @@ function keyboardForGoods(e){
       model.data.goods.splice(sortedIndexArr[i], 1);
     }
     clearSelectedRects();
+    clearSelectedBarrierRects();
   }
 
 }

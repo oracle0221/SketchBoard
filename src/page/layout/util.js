@@ -1,4 +1,4 @@
-import Var, {EdgeTop, EdgeLeft} from './constants'
+import Var, {EdgeTop, EdgeLeft, Property} from './constants'
 
 export const SizeUtil = {
   // 得到画布中物块的绝对尺寸
@@ -240,4 +240,32 @@ export function clearSelectedRects(){
   Var.selectedRects = [];
   Var.selectedRectsIndex = [];
   Var.selectedRectsOffset=[];
+}
+
+export function clearSelectedBarrierRects(){
+  Var.selectedBarrierDrag = false;
+  Var.selectedBarrierRects = [];
+  Var.selectedBarrierRectsIndex = [];
+  Var.selectedBarrierRectsOffset=[];
+}
+
+// 绘制障碍物
+export function drawBarrierObject( gd, itemBarrierRect ){
+
+  let x = SizeUtil.worldToScreenX(itemBarrierRect.x),
+      y = SizeUtil.worldToScreenY(itemBarrierRect.y),
+      width = SizeUtil.calc(itemBarrierRect.width),
+      height = SizeUtil.calc(itemBarrierRect.height);
+  gd.fillStyle = Property.obstacle.fill;
+  gd.strokeStyle = Property.obstacle.stroke;
+  gd.fillRect( x, y, width, height );
+  gd.strokeRect( x, y, width, height );
+
+  gd.beginPath();
+  gd.moveTo( x, y );
+  gd.lineTo( x + width, y + height );
+
+  gd.moveTo( x+width, y );
+  gd.lineTo( x, y + height );
+  gd.stroke();
 }
