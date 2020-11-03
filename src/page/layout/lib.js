@@ -574,7 +574,10 @@ function DragRect(){
       clearSelectedRects();
     }
 
-    if(bHit) return; // 既然拖动了柜子了,说明障碍物就不用再拖动了
+    if(bHit){
+      clearSelectedBarrierRects();
+      return; // 既然拖动了柜子了,说明障碍物就不用再拖动了
+    }
 
     // 接下来处理障碍物
     let bBarrierHit = false;
@@ -659,7 +662,7 @@ function DragRect(){
         Var.selectedRects[index].x=oldPosArr[index].x;
         Var.selectedRects[index].y=oldPosArr[index].y;
       });
-
+      console.log('Var.selectedBarrierRects: ', Var.selectedBarrierRects);
       Var.selectedBarrierRects.forEach((itemRect, index)=>{
         Var.selectedBarrierRects[index].x=oldPosBarrierArr[index].x;
         Var.selectedBarrierRects[index].y=oldPosBarrierArr[index].y;
