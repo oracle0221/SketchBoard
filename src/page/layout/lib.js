@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods} from './util'
+import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Barrier, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan} from './constants'
 import {setMenu} from './sidebar'
 
@@ -72,6 +72,14 @@ export function handleEvents(){
     };
 
     return false;
+  };
+
+  document.onkeyup = e=>{
+    let tag = e.target.tagName.toLowerCase();
+    if(tag === 'input') return;
+
+    // 通过键盘移动柜子
+    keyboardForGoods(e);
   };
 
   // 处理弹框中的事件
@@ -185,7 +193,9 @@ function SvgHandle(){
     if( Var.Menu_Mode_Left === Mode_Select ){
       // 查看目前框选了有多少柜子
       if( Var.selectedRects.length === 0 ){
-        Var.selectedRects = getSelectedRects(svgRectData, model.data.goods);
+        let [vRes, vResIndex] = getSelectedRects(svgRectData, model.data.goods);
+        Var.selectedRects = vRes;
+        Var.selectedRectsIndex = vResIndex;
       }
 
       clearSvgRectData();
@@ -505,6 +515,7 @@ function DragRect(){
 
         if( Var.selectedRects.length === 0 || !Var.selectedRects.includes(itemRect) ){
           Var.selectedRects = [itemRect];
+          Var.selectedRectsIndex = [i]; // 生成Var.selectedRects之余需要同步Var.selectedRectsIndex
 
           Var.selectedRectsOffset = [
             {
@@ -536,9 +547,7 @@ function DragRect(){
     } // for i
 
     if(!bHit){
-      Var.selectedDrag = false;
-      Var.selectedRects = [];
-      Var.selectedRectsOffset=[];
+      clearSelectedRects();
     }
 
   }
@@ -631,4 +640,39 @@ function getSortedZindexArray(arr){
   let res = [...arr];
   res.sort( (obj1, obj2)=>obj1.zIndex - obj2.zIndex );
   return res;
+}
+
+// 通过键盘移动柜子 微调
+function keyboardForGoods(e){
+  let code = e.keyCode;
+  // 37 38 39 40 方向键
+  if( code == 37 ){
+    Var.selectedRects.forEach(itemRect=>{
+      itemRect.x --;
+    })
+  }else if( code == 38 ){
+    Var.selectedRects.forEach(itemRect=>{
+      itemRect.y --;
+    })
+  }else if( code == 39 ){
+    Var.selectedRects.forEach(itemRect=>{
+      itemRect.x ++;
+    })
+  }else if( code == 40 ){
+    Var.selectedRects.forEach(itemRect=>{
+      itemRect.y ++;
+    })
+  }
+
+  // 8 退格键
+  if( code == 8 ){
+    let sortedIndexArr = [...Var.selectedRectsIndex];
+    sortedIndexArr.sort((a, b)=>b-a);
+
+    for( let i = 0; i < sortedIndexArr.length; i ++ ){
+      model.data.goods.splice(sortedIndexArr[i], 1);
+    }
+    clearSelectedRects();
+  }
+
 }

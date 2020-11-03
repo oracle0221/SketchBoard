@@ -68,6 +68,7 @@ export function mouseInRect(ev, rect){
 // 查看框选区域内选择了多少柜子
 export function getSelectedRects(selectRegion, arr){
   let res=[];
+  let resIndex=[];
 
   for( let i = 0; i < arr.length; i ++ ){
     let itemRect = arr[i];
@@ -85,11 +86,12 @@ export function getSelectedRects(selectRegion, arr){
 
     if(bHit){
       res.push(itemRect);
+      resIndex.push(i);
     }
 
   } // end for i
 
-  return res;
+  return [res, resIndex];
 }
 
 export function drawDashedRect(gd, rectItem){
@@ -231,4 +233,11 @@ export function testHitInGoods(arr, compareArr){
   } // end for i
 
   return false;
+}
+
+export function clearSelectedRects(){
+  Var.selectedDrag = false;
+  Var.selectedRects = [];
+  Var.selectedRectsIndex = [];
+  Var.selectedRectsOffset=[];
 }

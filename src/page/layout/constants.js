@@ -57,6 +57,7 @@ let Var = {
   zIndex:1,
   selectedRects:[],
   selectedRectsOffset:[],
+  selectedRectsIndex:[], // 选中的柜子在大数据中的下标
   selectedDrag:false, // 选择状态下,就只要拖动就好了
 
 };
