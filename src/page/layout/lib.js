@@ -42,6 +42,7 @@ export function handleEvents(){
   const dragRect = new DragRect();
   const panMove = new PanMove();
   const barrierObject = new BarrierObject();
+  const goodsLocation = new GoodsLocation();
 
   oCanvas.onmousedown = e=>{
 
@@ -51,6 +52,7 @@ export function handleEvents(){
     dragRect.start(e); // 拖动
     panMove.start(e); // Pan 拖动视图
     barrierObject.start(e); // 生成障碍物
+    goodsLocation.start(e); // 点击生成柜子
 
     document.onmousemove =e=>{
       svgHandle.move(e);
@@ -758,6 +760,24 @@ function BarrierObject(){
   };
 }
 
+// 点击生成柜子 Mode_Location
+function GoodsLocation(){
+  this.start = function(e){
+
+    if(Var.Menu_Mode_Left != Mode_Location) return; // 只有在 Mode_Location模式时，才有点击生成柜子
+
+    let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
+
+    let width = +$('goods_form_w').value.trim(), height=+$('goods_form_h').value.trim();
+
+    model.data.goods.push({
+      x:SizeUtil.screenToWorldX(x),
+      y:SizeUtil.screenToWorldY(y),
+      width:SizeUtil.calc(width),
+      height:SizeUtil.calc(height),
+    });
+  }
+}
 
 function createContextForBatch(e){
   let left = e.clientX - EdgeLeft, top = e.clientY - EdgeTop;

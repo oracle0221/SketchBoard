@@ -83,6 +83,26 @@ input[type=text],input[type=number]{
   }
 }
 
+.goods_form{
+  // top:100px;
+  // left:200px;
+  display:none;
+  position: fixed;
+  padding:10px;
+	z-index: 99999;
+  background:#FFF;
+  border:1px solid #999;
+  border-radius:4px;
+  >div:first-child{
+    padding-bottom:10px;
+  }
+
+  >div:last-child{
+    padding-top:10px;
+    text-align:right;
+  }
+}
+
 .batchGoods{
   position: absolute;
   padding:10px;

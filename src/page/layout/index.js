@@ -65,6 +65,23 @@ export default ()=>{
               <ul className="contextMenu" >
                 <li><a href="#paste">粘贴</a></li>
               </ul>
+              <div className="goods_form" id="J_goods_form" >
+                <div>
+                  <label>
+                    宽:
+                    <input type="number" id="goods_form_w" defaultValue={80} />
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    高:
+                    <input type="number" id="goods_form_h" defaultValue={40} />
+                  </label>
+                </div>
+                <div>
+                  <button type="button">关闭</button>
+                </div>
+              </div>
               <div className="batchGoods" id="J_batchGoods" >
                 <div className="tab-nav">
                   <label>

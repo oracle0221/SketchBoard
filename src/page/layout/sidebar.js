@@ -1,5 +1,5 @@
 // 处理上边与左边以下边这三条栏
-import Var, {ModeEnum, Mode_Batch, Mode_Pan} from './constants'
+import Var, {ModeEnum, Mode_Location, Mode_Batch, Mode_Pan} from './constants'
 
 const $ = document.getElementById.bind(document);
 
@@ -26,6 +26,16 @@ export function leftNavHandle(){
 
           if( Var.Menu_Mode_Left === Mode_Pan ){
             document.body.style.cursor = 'move';
+          }
+
+          if( Var.Menu_Mode_Left === Mode_Location ){
+            $('J_goods_form').style.display='block';
+            let rect = objLi.getBoundingClientRect();
+            $('J_goods_form').style.top = rect.top+'px';
+            $('J_goods_form').style.left = rect.right+10+'px';
+            $('J_goods_form').querySelector('button').onclick=()=>{
+              $('J_goods_form').style.display='none';
+            };
           }
 
       }
