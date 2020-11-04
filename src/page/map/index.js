@@ -7,6 +7,10 @@ export default ()=>{
 
   useEffect(()=>{
     createDigitalMap();
+
+    return ()=>{
+      window.onresize = null;
+    };
   }, []);
 
   return (

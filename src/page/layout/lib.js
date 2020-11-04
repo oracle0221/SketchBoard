@@ -773,8 +773,8 @@ function GoodsLocation(){
     model.data.goods.push({
       x:SizeUtil.screenToWorldX(x),
       y:SizeUtil.screenToWorldY(y),
-      width:SizeUtil.calc(width),
-      height:SizeUtil.calc(height),
+      width,
+      height,
     });
   }
 }
