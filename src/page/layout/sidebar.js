@@ -29,13 +29,13 @@ export function leftNavHandle(){
           }
 
           if( Var.Menu_Mode_Left === Mode_Location ){
-            $('J_goods_form').style.display='block';
-            let rect = objLi.getBoundingClientRect();
-            $('J_goods_form').style.top = rect.top+'px';
-            $('J_goods_form').style.left = rect.right+10+'px';
-            $('J_goods_form').querySelector('button').onclick=()=>{
-              $('J_goods_form').style.display='none';
-            };
+            // $('J_goods_form').style.display='block';
+            // let rect = objLi.getBoundingClientRect();
+            // $('J_goods_form').style.top = rect.top+'px';
+            // $('J_goods_form').style.left = rect.right+10+'px';
+            // $('J_goods_form').querySelector('button').onclick=()=>{
+            //   $('J_goods_form').style.display='none';
+            // };
           }
 
       }

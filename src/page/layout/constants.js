@@ -13,6 +13,8 @@
 // export Mode_Batch
 // export Mode_Pan
 
+export const FontSize = 28;
+
 export const GoodsType=0;
 export const BarrierType=0;
 

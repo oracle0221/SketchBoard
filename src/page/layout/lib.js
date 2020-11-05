@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject} from './util'
+import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Barrier, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan, Property} from './constants'
 import {setMenu} from './sidebar'
 
@@ -24,10 +24,14 @@ export function resetCanvas(mainGd, copyGd, svg){
 
   const oCanvas = $('canvas');
   oCanvas.oncontextmenu=(e)=>{
-
+    e.preventDefault();
+    e.stopPropagation();
     if( Var.Menu_Mode_Left ===  Mode_Batch){ // 如果是批处理 则开启右键菜单
-      // console.log(e);
       createContextForBatch(e);
+    }
+
+    if( Var.Menu_Mode_Left === Mode_Location ){
+      createContextForGoodsLocation(e);
     }
 
     return false;
@@ -118,6 +122,9 @@ export function drawScene(mainGd){
     gd.strokeRect( x, y, width, height );
 
   } // for i end
+
+  // 绘制文字
+  drawGoodsText(gd);
 
   // 如果有选择项, 那么绘制选择标记
   Var.selectedRects.forEach( itemRect=>{
@@ -763,8 +770,10 @@ function BarrierObject(){
 // 点击生成柜子 Mode_Location
 function GoodsLocation(){
   this.start = function(e){
-
     if(Var.Menu_Mode_Left != Mode_Location) return; // 只有在 Mode_Location模式时，才有点击生成柜子
+
+    // 如果是鼠标右键点下来的话,返回
+    if(isRightMouseClick(e)) return;
 
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
 
@@ -831,4 +840,17 @@ function keyboardForGoods(e){
     clearSelectedBarrierRects();
   }
 
+}
+
+function createContextForGoodsLocation(e){
+  $('J_goods_form').style.display='block';
+
+
+  let left = e.clientX - EdgeLeft, top = e.clientY - EdgeTop;
+
+  $('J_goods_form').style.top = top+'px';
+  $('J_goods_form').style.left = left+10+'px';
+  $('J_goods_form').querySelector('button').onclick=()=>{
+    $('J_goods_form').style.display='none';
+  };
 }

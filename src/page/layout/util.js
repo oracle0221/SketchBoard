@@ -1,4 +1,9 @@
-import Var, {EdgeTop, EdgeLeft, Property} from './constants'
+/* eslint-disable */
+
+import Var, {EdgeTop, EdgeLeft, Property, FontSize} from './constants'
+import model from './model'
+
+const $ = document.getElementById.bind(document);
 
 export const SizeUtil = {
   // 得到画布中物块的绝对尺寸
@@ -268,4 +273,37 @@ export function drawBarrierObject( gd, itemBarrierRect ){
   gd.moveTo( x+width, y );
   gd.lineTo( x, y + height );
   gd.stroke();
+}
+
+// 判断是否是鼠标右键点击
+export function isRightMouseClick(e){
+  let isRightMB = false;
+
+  if ("which" in e)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+      isRightMB = e.which == 3;
+  else if ("button" in e)  // IE, Opera
+      isRightMB = e.button == 2;
+
+  return isRightMB;
+}
+
+// 渲染文字
+export function drawGoodsText(gd){
+  let data = model.data.goods;
+
+  for( let i = 0; i < data.length; i ++ ){
+    let itemRect = data[i];
+    if(!inView(itemRect)) continue;
+
+    let fontStyle=`${FontSize * Var.zoomLevel}px Arial`;
+    gd.font=fontStyle;
+    gd.fillStyle='black';
+
+    let x = SizeUtil.worldToScreenX(itemRect.x),
+        y = SizeUtil.worldToScreenY(itemRect.y+FontSize * Var.zoomLevel);
+
+    gd.fillText( ''+i, x, y );
+
+  }
+
 }
