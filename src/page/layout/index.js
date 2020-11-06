@@ -115,7 +115,7 @@ export default ()=>{
                 </div>
               </div>
             </div>
-              {/*<input type="text" autoComplete="off"  id="J_fill_text" />*/}
+            <textarea type="text" autoComplete="off"  id="J_fill_text" />
           </div>
           <div className="tools-bottom">
               <span className="btn" id="ZoomOut" >+</span>

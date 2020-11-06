@@ -1,5 +1,5 @@
 // 处理上边与左边以下边这三条栏
-import Var, {ModeEnum, Mode_Location, Mode_Batch, Mode_Pan} from './constants'
+import Var, {ModeEnum, Mode_Location, Mode_Text, Mode_Batch, Mode_Pan} from './constants'
 
 const $ = document.getElementById.bind(document);
 
@@ -15,10 +15,12 @@ export function leftNavHandle(){
 
           Var.Menu_Mode_Left = ModeEnum[index]
 
+          // 菜单Menu切换后,若干变量需要重置
           Var.beBatch = false
           Var.beBatchEnd = false
           Var.batchPreviewData = {value:'', num:0}
           Var.batchTmpData = []
+          Var.editGoodsTextIndex = -1
 
           if( Var.Menu_Mode_Left === Mode_Batch ){
             Var.beBatch = true; // 打开批量生成模式
@@ -36,6 +38,10 @@ export function leftNavHandle(){
             // $('J_goods_form').querySelector('button').onclick=()=>{
             //   $('J_goods_form').style.display='none';
             // };
+          }
+
+          if( Var.Menu_Mode_Left === Mode_Text ){
+            document.body.style.cursor = 'text';
           }
 
       }

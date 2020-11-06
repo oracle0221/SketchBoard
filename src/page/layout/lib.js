@@ -1,7 +1,7 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText} from './util'
-import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Barrier, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan, Property} from './constants'
+import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText} from './util'
+import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Text, Mode_Barrier, Mode_Zoom, Mode_Batch, Mode_Pan, Property} from './constants'
 import {setMenu} from './sidebar'
 
 const $ = document.getElementById.bind(document);
@@ -47,6 +47,7 @@ export function handleEvents(){
   const panMove = new PanMove();
   const barrierObject = new BarrierObject();
   const goodsLocation = new GoodsLocation();
+  const editText = new EditText();
 
   oCanvas.onmousedown = e=>{
 
@@ -57,6 +58,7 @@ export function handleEvents(){
     panMove.start(e); // Pan 拖动视图
     barrierObject.start(e); // 生成障碍物
     goodsLocation.start(e); // 点击生成柜子
+    editText.start(e); // 点击柜子编辑文字
 
     document.onmousemove =e=>{
       svgHandle.move(e);
@@ -78,9 +80,11 @@ export function handleEvents(){
 
   document.onkeyup = e=>{
     let tag = e.target.tagName.toLowerCase();
-    if(tag === 'input') return;
+    if(tag === 'input' || tag === 'textarea') return;
 
     // 通过键盘移动柜子
+    // 要在移动模式下才做键盘行为
+    if(Var.Menu_Mode_Left != Mode_Select)return;
     keyboardForGoods(e);
   };
 
@@ -778,7 +782,6 @@ function GoodsLocation(){
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
 
     let width = +$('goods_form_w').value.trim(), height=+$('goods_form_h').value.trim();
-
     model.data.goods.push({
       x:SizeUtil.screenToWorldX(x),
       y:SizeUtil.screenToWorldY(y),
@@ -786,6 +789,33 @@ function GoodsLocation(){
       height,
     });
   }
+}
+
+function EditText(){
+  this.start = function(e){
+    if(Var.Menu_Mode_Left != Mode_Text)return;
+    let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
+
+    resetEditText();
+    let oTxtRect = null;
+    // Var.editGoodsTextIndex = -1; // 已在 resetEditText内
+    // 文字只能在柜子上,故只需要处理柜子数据就好了
+    for( let i = 0; i < model.data.goods.length; i ++ ){
+      let itemRect = model.data.goods[i];
+      if( !inView(itemRect) ){
+        continue;
+      }
+
+      if(mouseInRect( e, itemRect )){
+        oTxtRect = itemRect;
+        Var.editGoodsTextIndex = i;
+        startEditText(itemRect, i);
+        break;
+      }
+
+    }
+
+  };
 }
 
 function createContextForBatch(e){

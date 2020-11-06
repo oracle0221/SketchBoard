@@ -296,14 +296,63 @@ export function drawGoodsText(gd){
     if(!inView(itemRect)) continue;
 
     let fontStyle=`${FontSize * Var.zoomLevel}px Arial`;
-    gd.font=fontStyle;
-    gd.fillStyle='black';
 
-    let x = SizeUtil.worldToScreenX(itemRect.x),
-        y = SizeUtil.worldToScreenY(itemRect.y+FontSize * Var.zoomLevel);
+    if( Var.editGoodsTextIndex === i && Var.zoomLevel > 0.7 ){
 
-    gd.fillText( ''+i, x, y );
+      drawDashedRect(gd, itemRect);
+      // startEditText(itemRect, i);
+
+    }else{
+
+      gd.font=fontStyle;
+      gd.fillStyle='black';
+
+      let x = SizeUtil.worldToScreenX(itemRect.x),
+          y = SizeUtil.worldToScreenY(itemRect.y+FontSize);
+
+      gd.fillText( ''+(itemRect.text||i), x, y );
+    }
 
   }
 
+}
+
+export function resetEditText(){
+  const J_fill_text = $('J_fill_text');
+  J_fill_text.style.display='none';
+  Var.editGoodsTextIndex = -1;
+  J_fill_text.value='';
+}
+
+export function startEditText(itemRect, index){
+  const J_fill_text = $('J_fill_text');
+  let left = SizeUtil.worldToScreenX(itemRect.x),
+      top  = SizeUtil.worldToScreenY(itemRect.y);
+
+  J_fill_text.style.display='block';
+  J_fill_text.style.left=`${left}px`;
+  J_fill_text.style.top=`${top}px`;
+  J_fill_text.style.width = `${SizeUtil.calc(itemRect.width)}px`;
+  J_fill_text.style.height = `${SizeUtil.calc(itemRect.height)}px`;
+  J_fill_text.style.fontSize = `${FontSize * Var.zoomLevel}px`;
+  J_fill_text.focus();
+  J_fill_text.value = itemRect.text || (index+'');
+
+  J_fill_text.onblur=()=>{
+    resetEditText();
+    // console.log('blur')
+  };
+
+  J_fill_text.onkeydown=e=>{
+    if( e.keyCode === 13 ){
+
+      // 回车键确认编辑
+      if( J_fill_text.value.trim() != '' ){
+        itemRect.text = J_fill_text.value.trim();
+        resetEditText();
+      }
+      return false;
+    }
+
+  };
 }
