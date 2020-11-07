@@ -28,6 +28,58 @@ export const SizeUtil = {
 
 }
 
+// 对齐
+export const AlignUtil = {
+  leftAlign(){
+    let minX = Number.MAX_VALUE;
+
+    for( let i = 0; i < Var.selectedRects.length; i ++ ){
+      let itemRect = Var.selectedRects[i];
+      if( minX > itemRect.x ) minX = itemRect.x;
+    }
+
+    Var.selectedRects.forEach(itemRect=>{
+      itemRect.x = minX;
+    });
+  },
+  rightAlign(){
+    let maxX = Number.MIN_VALUE;
+
+    for( let i = 0; i < Var.selectedRects.length; i ++ ){
+      let itemRect = Var.selectedRects[i];
+      if( maxX < itemRect.x ) maxX = itemRect.x;
+    }
+
+    Var.selectedRects.forEach(itemRect=>{
+      itemRect.x = maxX;
+    });
+  },
+  topAlign(){
+    let minY = Number.MAX_VALUE;
+
+    for( let i = 0; i < Var.selectedRects.length; i ++ ){
+      let itemRect = Var.selectedRects[i];
+      if( minY > itemRect.y ) minY = itemRect.y;
+    }
+
+    Var.selectedRects.forEach(itemRect=>{
+      itemRect.y = minY;
+    });
+  },
+  bottomAlign(){
+    let maxY = Number.MIN_VALUE;
+
+    for( let i = 0; i < Var.selectedRects.length; i ++ ){
+      let itemRect = Var.selectedRects[i];
+      if( maxY < itemRect.y ) maxY = itemRect.y;
+    }
+
+    Var.selectedRects.forEach(itemRect=>{
+      itemRect.y = maxY;
+    });
+  },
+};
+
 // 判断物体是否在视图中
 export function inView( rect ){
   let x = SizeUtil.worldToScreenX(rect.x), y = SizeUtil.worldToScreenY(rect.y)

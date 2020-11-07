@@ -1,5 +1,6 @@
 // 处理上边与左边以下边这三条栏
 import Var, {ModeEnum, Mode_Location, Mode_Text, Mode_Batch, Mode_Pan} from './constants'
+import {clearSelectedRects, clearSelectedBarrierRects} from './util'
 
 const $ = document.getElementById.bind(document);
 
@@ -21,6 +22,9 @@ export function leftNavHandle(){
           Var.batchPreviewData = {value:'', num:0}
           Var.batchTmpData = []
           Var.editGoodsTextIndex = -1
+          clearSelectedRects();
+          clearSelectedBarrierRects();
+          $('J_select_contextAlign').style.display='none';
 
           if( Var.Menu_Mode_Left === Mode_Batch ){
             Var.beBatch = true; // 打开批量生成模式

@@ -24,8 +24,8 @@ textarea{resize:none;text-indent:2px;}
   fill:black;
 }
 
-.contextMenu {
-	position: absolute;
+.contextAlign {
+	position: fixed;
 	z-index: 99999;
 	border: solid 1px rgba(0,0,0,.33);
 	background: rgba(255,255,255,.95);
@@ -64,7 +64,7 @@ textarea{resize:none;text-indent:2px;}
   	padding: 0px 15px 1px 20px;
   }
 
-  li.hover a {
+  li:hover a {
   	background-color: #2e5dea;
   	color: white;
   	cursor: default;

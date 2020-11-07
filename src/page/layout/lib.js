@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText} from './util'
+import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Text, Mode_Barrier, Mode_Zoom, Mode_Batch, Mode_Pan, Property} from './constants'
 import {setMenu} from './sidebar'
 
@@ -32,6 +32,10 @@ export function resetCanvas(mainGd, copyGd, svg){
 
     if( Var.Menu_Mode_Left === Mode_Location ){
       createContextForGoodsLocation(e);
+    }
+
+    if( Var.Menu_Mode_Left === Mode_Select ){
+      createContextForSelectAlign(e);
     }
 
     return false;
@@ -534,6 +538,13 @@ function DragRect(){
       return;
     }
 
+    // 如果是鼠标右键点下来的话,返回
+    if(!isRightMouseClick(e)){
+      $('J_select_contextAlign').style.display='none';
+    }else{
+      return;
+    }
+
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
 
     let bHit = false;
@@ -875,7 +886,6 @@ function keyboardForGoods(e){
 function createContextForGoodsLocation(e){
   $('J_goods_form').style.display='block';
 
-
   let left = e.clientX - EdgeLeft, top = e.clientY - EdgeTop;
 
   $('J_goods_form').style.top = top+'px';
@@ -883,4 +893,27 @@ function createContextForGoodsLocation(e){
   $('J_goods_form').querySelector('button').onclick=()=>{
     $('J_goods_form').style.display='none';
   };
+}
+
+function createContextForSelectAlign(e){
+
+  // 当所选择超出1个时,可以做对齐选项了
+  if( Var.selectedRects.length > 1 ){
+    $('J_select_contextAlign').style.display='block';
+    let left = e.clientX, top = e.clientY;
+
+    $('J_select_contextAlign').style.top = top+'px';
+    $('J_select_contextAlign').style.left = left+10+'px';
+
+    // 绑定点击事件
+    Array.from($('J_select_contextAlign').getElementsByTagName('li')).forEach(itemLi=>{
+      itemLi.onclick = ()=>{
+        let alignFn = itemLi.dataset.align;
+        AlignUtil[alignFn]();
+        $('J_select_contextAlign').style.display='none';
+      };
+    });
+
+  }
+
 }

@@ -62,8 +62,11 @@ export default ()=>{
                   <text className="path-text" x="0" y="15" >100 X 300</text>
                 </svg>
               </div>
-              <ul className="contextMenu" >
-                <li><a href="#paste">粘贴</a></li>
+              <ul className="contextAlign" id="J_select_contextAlign" >
+                <li data-align="topAlign" ><a>顶部对齐</a></li>
+                <li data-align="leftAlign" ><a>居左对齐</a></li>
+                <li data-align="bottomAlign" ><a>底部对齐</a></li>
+                <li data-align="rightAlign" ><a>居右对齐</a></li>
               </ul>
               <div className="goods_form" id="J_goods_form" >
                 <div>
