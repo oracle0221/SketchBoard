@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText} from './util'
+import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText, scrollView} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Text, Mode_Barrier, Mode_Zoom, Mode_Batch, Mode_Pan, Property} from './constants'
 import {setMenu} from './sidebar'
 
@@ -660,6 +660,8 @@ function DragRect(){
         Var.selectedRects[index].x = SizeUtil.screenToWorldX(x - itemRectOffset.x);
         Var.selectedRects[index].y = SizeUtil.screenToWorldY(y - itemRectOffset.y);
       });
+
+      scrollView(e);
     }
 
     if( beBarrierDrag ){
@@ -667,6 +669,7 @@ function DragRect(){
         Var.selectedBarrierRects[index].x = SizeUtil.screenToWorldX(x - itemRectOffset.x);
         Var.selectedBarrierRects[index].y = SizeUtil.screenToWorldY(y - itemRectOffset.y);
       });
+      scrollView(e);
     }
 
   }

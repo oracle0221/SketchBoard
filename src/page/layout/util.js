@@ -426,3 +426,26 @@ export function startEditText(itemRect, index){
 
   };
 }
+
+export function scrollView(e){
+  let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
+  const deltaDist = 6, needScrollDist = 100;
+
+  let dx;
+  if( x > Var.screen.width - needScrollDist ){
+    dx = x - (Var.screen.width - needScrollDist);
+    Var.worldPosition.x -= deltaDist * dx / needScrollDist;
+  }else if( x < needScrollDist ){
+    dx = needScrollDist - x;
+    Var.worldPosition.x += deltaDist * dx / needScrollDist;
+  }
+
+  let dy;
+  if( y > Var.screen.height - needScrollDist ){
+    dy = y - (Var.screen.height - needScrollDist);
+    Var.worldPosition.y -= deltaDist * dy / needScrollDist;
+  }else if( y < needScrollDist ){
+    dy = needScrollDist - y;
+    Var.worldPosition.y += deltaDist * dy / needScrollDist;
+  }
+}
