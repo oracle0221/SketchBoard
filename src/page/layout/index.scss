@@ -211,6 +211,26 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
 .tool_button:hover{background-color:#ffc;}
 .tool_button.current{background-color: #f4e284;box-shadow: inset 1px 1px 2px rgba(0,0,0,0.4), 1px 1px 0 white;}
 
+.top_button{
+  margin: 2px 2px 4px;
+  width:30px;height:30px;
+  box-shadow: inset 1px 1px 2px white, 1px 1px 1px rgba(0,0,0,0.3);
+  background-color: #E8E8E8;
+  cursor: pointer;
+  border-radius: 3px;
+
+  &:hover{
+    background-color: #ffc !important;
+  }
+
+  &:active{
+  	background-color:#f4e284 !important;
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.4), 1px 1px 0 white !important;
+  }
+}
+
+.tool_undo{ background:url(../../assets/tool_undo.svg) center no-repeat;}
+.tool_redo{ background:url(../../assets/tool_redo.svg) center no-repeat;}
 
 /* 主工作区域 */
 .workarea{
