@@ -78,6 +78,24 @@ export const AlignUtil = {
       itemRect.y = maxY;
     });
   },
+  horizonAlign(){
+    AlignUtil.topAlign();
+    // 接下来开始一个挨着一个水平排
+    let startX = Var.selectedRects[0].x+Var.selectedRects[0].width;
+    for( let i = 1; i < Var.selectedRects.length; i ++ ){
+
+      Var.selectedRects[i].x = startX;
+      startX = Var.selectedRects[i].x + Var.selectedRects[i].width;
+    } // end for i
+  },
+  verticalAlign(){
+    AlignUtil.leftAlign();
+    let startY = Var.selectedRects[0].y + Var.selectedRects[0].height;
+    for( let i = 1; i < Var.selectedRects.length; i ++ ){
+      Var.selectedRects[i].y = startY;
+      startY = Var.selectedRects[i].y + Var.selectedRects[i].height;
+    }
+  },
 };
 
 // 判断物体是否在视图中

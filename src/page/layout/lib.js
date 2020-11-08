@@ -909,6 +909,8 @@ function createContextForSelectAlign(e){
     Array.from($('J_select_contextAlign').getElementsByTagName('li')).forEach(itemLi=>{
       itemLi.onclick = ()=>{
         let alignFn = itemLi.dataset.align;
+        if(!alignFn) return; // align=''为辅助线
+
         AlignUtil[alignFn]();
         $('J_select_contextAlign').style.display='none';
       };

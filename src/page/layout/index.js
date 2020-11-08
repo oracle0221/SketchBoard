@@ -67,6 +67,9 @@ export default ()=>{
                 <li data-align="leftAlign" ><a>居左对齐</a></li>
                 <li data-align="bottomAlign" ><a>底部对齐</a></li>
                 <li data-align="rightAlign" ><a>居右对齐</a></li>
+                <li data-align="" className="separator" ></li>
+                <li data-align="horizonAlign" ><a>水平对齐</a></li>
+                <li data-align="verticalAlign" ><a>竖直对齐</a></li>
               </ul>
               <div className="goods_form" id="J_goods_form" >
                 <div>
