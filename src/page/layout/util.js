@@ -449,3 +449,19 @@ export function scrollView(e){
     Var.worldPosition.y += deltaDist * dy / needScrollDist;
   }
 }
+
+// 得到当前的数据, 用于在undo, redo中穿梭
+export function getCurrentModel(){
+  if(model.undoStack.length){
+    let data = model.undoStack[model.undoStack.length - 1];
+    data = JSON.parse(data);
+    return {goods:data['goods'], obstacle:data['obstacle']};
+  }
+
+  return {goods:model.data.goods, obstacle:model.data.obstacle};
+}
+
+// push undo undoStack
+export function pushUndoStack(){
+  
+}
