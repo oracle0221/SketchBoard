@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText, scrollView} from './util'
+import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText, scrollView, pushUndoStack, mouseOverBarrierRect, mouseClickBarrierRect} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Text, Mode_Barrier, Mode_Zoom, Mode_Batch, Mode_Pan, Property} from './constants'
 import {setMenu} from './sidebar'
 
@@ -48,10 +48,15 @@ export function handleEvents(){
 
   const svgHandle = new SvgHandle();
   const dragRect = new DragRect();
+  const stretchBarrier = new StretchBarrier();
   const panMove = new PanMove();
   const barrierObject = new BarrierObject();
   const goodsLocation = new GoodsLocation();
   const editText = new EditText();
+
+  oCanvas.onmousemove = e=>{
+    stretchBarrier.move(e);
+  };
 
   oCanvas.onmousedown = e=>{
 
@@ -59,6 +64,7 @@ export function handleEvents(){
 
     svgHandle.start(e); // 选择框
     dragRect.start(e); // 拖动
+    stretchBarrier.start(e); // 如果需要,伸缩障碍物
     panMove.start(e); // Pan 拖动视图
     barrierObject.start(e); // 生成障碍物
     goodsLocation.start(e); // 点击生成柜子
@@ -67,6 +73,7 @@ export function handleEvents(){
     document.onmousemove =e=>{
       svgHandle.move(e);
       dragRect.move(e);
+      stretchBarrier.move(e);
       panMove.move(e);
       barrierObject.move(e);
     };
@@ -74,6 +81,7 @@ export function handleEvents(){
     document.onmouseup = e=>{
       svgHandle.end(e);
       dragRect.end(e);
+      stretchBarrier.end(e);
       panMove.end(e);
       barrierObject.end(e);
       document.onmousemove = document.onmouseup = null;
@@ -603,6 +611,11 @@ function DragRect(){
       return; // 既然拖动了柜子了,说明障碍物就不用再拖动了
     }
 
+    // 另外再加一条,就是障碍物存在伸缩的情况,如果在可伸缩的模式下,也不用再拖动了
+    if( Var.stretchBarrier ){
+      return;
+    }
+
     // 接下来处理障碍物
     let bBarrierHit = false;
     let oldBarrierPosArr=[];
@@ -664,7 +677,7 @@ function DragRect(){
       scrollView(e);
     }
 
-    if( beBarrierDrag ){
+    if( beBarrierDrag && !Var.stretchBarrier ){ // 不在伸缩模式下才可拖动障碍物
       Var.selectedBarrierRectsOffset.forEach((itemRectOffset, index)=>{
         Var.selectedBarrierRects[index].x = SizeUtil.screenToWorldX(x - itemRectOffset.x);
         Var.selectedBarrierRects[index].y = SizeUtil.screenToWorldY(y - itemRectOffset.y);
@@ -832,6 +845,132 @@ function EditText(){
   };
 }
 
+// 伸缩障碍物
+function StretchBarrier(){
+
+  this.mouseDown = false; // 是否鼠标按下
+  let oldW=0, oldH = 0, oldX = 0, oldY = 0;
+  let stretchDir = false; // 往哪个方向伸缩
+  let startX = 0, startY = 0;
+
+  this.start = function(e){
+    if(Var.Menu_Mode_Left != Mode_Select)return;
+
+    let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
+    startX = x;
+    startY = y;
+    //
+    this.mouseDown = false;
+    Var.stretchBarrier = false;
+
+    let bClickLocation = mouseClickBarrierRect(e);
+    stretchDir = bClickLocation;
+
+    // 存在方向指示同时也要选中
+    if( bClickLocation !== false && Var.selectedBarrierRects.length ){
+      this.mouseDown = true;
+      Var.stretchBarrier = true;
+      oldW = SizeUtil.calc(Var.selectedBarrierRects[0].width);
+      oldH = SizeUtil.calc(Var.selectedBarrierRects[0].height);
+      oldX = SizeUtil.worldToScreenX(Var.selectedBarrierRects[0].x);
+      oldY = SizeUtil.worldToScreenY(Var.selectedBarrierRects[0].y);
+    }
+
+  }
+
+  this.move = function(e){
+    if(Var.Menu_Mode_Left != Mode_Select)return;
+    let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
+
+    if( this.mouseDown ){
+
+      // 约束一下最小尺寸
+      if( Var.selectedBarrierRects[0].width < 50 || Var.selectedBarrierRects[0].height < 50 ){
+        return;
+      }
+
+      // 可以做伸缩动作
+      if(stretchDir === 0){ // 左上角
+
+        Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldY((x - startX) + oldX);
+        Var.selectedBarrierRects[0].y = SizeUtil.screenToWorldY((y - startY) + oldY);
+        Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldX + oldW - Var.selectedBarrierRects[0].x);
+        Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldY + oldH - Var.selectedBarrierRects[0].y);
+
+      }else if(stretchDir === 1){ // 右上角
+
+        Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldX(oldX);
+        Var.selectedBarrierRects[0].y = SizeUtil.screenToWorldY((y - startY) + oldY);
+        Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldW + (x - startX));
+        Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldH - (y - startY));
+
+      }else if(stretchDir === 2){ // 右下角
+        Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldX(oldX);
+        Var.selectedBarrierRects[0].y = SizeUtil.screenToWorldY(oldY);
+        Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldW + (x - startX));
+        Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldH + (y - startY));
+
+      }else if(stretchDir === 3){ // 左下角
+
+        Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldX(oldX + (x - startX));
+        Var.selectedBarrierRects[0].y = SizeUtil.screenToWorldY(oldY);
+        Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldW - (x - startX));
+        Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldH + (y - startY));
+
+      }else if(stretchDir === 4){ // 上方
+
+        Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldX(oldX);
+        Var.selectedBarrierRects[0].y = SizeUtil.screenToWorldY(oldY + (y - startY));
+        Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldW);
+        Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldH - (y - startY));
+
+      }else if(stretchDir === 5){  // 右方
+
+        Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldX(oldX);
+        Var.selectedBarrierRects[0].y = SizeUtil.screenToWorldY(oldY);
+        Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldW + (x - startX));
+        Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldH);
+
+      }else if(stretchDir === 6){ // 下方
+
+        Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldX(oldX);
+        Var.selectedBarrierRects[0].y = SizeUtil.screenToWorldY(oldY);
+        Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldW);
+        Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldH + (y - startY));
+
+      }else if(stretchDir === 7){ // 左方
+        Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldX(oldX + (x - startX));
+        Var.selectedBarrierRects[0].y = SizeUtil.screenToWorldY(oldY);
+        Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldW - (x - startX));
+        Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldH);
+      }
+
+    }else{
+      // 显示鼠标样式
+      mouseOverBarrierRect(e);
+    }
+  }
+
+  this.end = function(e){
+
+    if( this.mouseDown ){
+      if( Var.selectedBarrierRects[0].width < 50  ){
+        Var.selectedBarrierRects[0].width = 50;
+      }
+
+      if( Var.selectedBarrierRects[0].height < 50 ){
+        Var.selectedBarrierRects[0].height = 50;
+      }
+    }
+
+    this.mouseDown = false;
+    Var.stretchBarrier = false;
+    stretchDir = false;
+
+  }
+
+}
+
 function createContextForBatch(e){
   let left = e.clientX - EdgeLeft, top = e.clientY - EdgeTop;
   Var.batchContext = true;
@@ -874,12 +1013,22 @@ function keyboardForGoods(e){
 
   // 8 退格键
   if( code == 8 ){
+    // 普通柜子
     let sortedIndexArr = [...Var.selectedRectsIndex];
     sortedIndexArr.sort((a, b)=>b-a);
 
     for( let i = 0; i < sortedIndexArr.length; i ++ ){
       model.data.goods.splice(sortedIndexArr[i], 1);
     }
+
+    // 障碍物
+    let sortedBarrierIndexArr = [...Var.selectedBarrierRectsIndex];
+    sortedBarrierIndexArr.sort((a, b)=>b-a);
+
+    for( let i = 0; i < sortedBarrierIndexArr.length; i ++ ){
+      model.data.obstacle.splice(sortedBarrierIndexArr[i], 1);
+    }
+
     clearSelectedRects();
     clearSelectedBarrierRects();
   }

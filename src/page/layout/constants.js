@@ -80,6 +80,7 @@ let Var = {
   selectedBarrierRectsOffset:[],
   selectedBarrierRectsIndex:[], // 选中的柜子在大数据中的下标
   selectedBarrierDrag:false, // 选择状态下,就只要拖动就好了
+  stretchBarrier:false, // 是否在伸缩障碍物
 
   // 是否需要编辑文字
   editGoodsTextIndex:-1, // 当前在编辑哪一个柜子

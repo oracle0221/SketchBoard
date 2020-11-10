@@ -10,6 +10,10 @@ export const SizeUtil = {
   calc( size ){
     return Var.zoomLevel * (+size);
   },
+  // 从屏幕中给的尺寸计算真实柜子的尺寸
+  calcFromScreen(size){
+    return (+size) / Var.zoomLevel;
+  },
   // 屏幕坐标转为世界坐标
   screenToWorldX(x){
     return x / Var.zoomLevel - Var.worldPosition.x;
@@ -451,17 +455,164 @@ export function scrollView(e){
 }
 
 // 得到当前的数据, 用于在undo, redo中穿梭
-export function getCurrentModel(){
+export function setCurrentModel(){
   if(model.undoStack.length){
     let data = model.undoStack[model.undoStack.length - 1];
     data = JSON.parse(data);
-    return {goods:data['goods'], obstacle:data['obstacle']};
+    model.data.goods = data['goods'];
+    model.data.obstacle = data['obstacle'];
+    return;
+    // return {goods:data['goods'], obstacle:data['obstacle']};
   }
 
-  return {goods:model.data.goods, obstacle:model.data.obstacle};
+  model.data.goods = model.initData.goods;
+  model.data.obstacle = model.initData.obstacle;
+  // return {goods:model.data.goods, obstacle:model.data.obstacle};
 }
 
 // push undo undoStack
 export function pushUndoStack(){
-  
+  model.undoStack.push( JSON.stringify( model.data ) ); // 将当前的数据拷贝压入站
+  setCurrentModel();
+}
+
+// push redo redoStack
+export function pushRedoStack(){
+  model.redoStack.push( JSON.stringify( model.data ) );
+}
+
+// 鼠标是否划在了障碍物上 mouseOver
+/*
+
+0------4-----1
+|            |
+|            |
+7            5
+|            |
+|            |
+|            |
+3------6-----2
+
+每个数字代表一个方向如上图所示
+*/
+export function mouseOverBarrierRect(ev){
+
+  let x = ev.clientX - EdgeLeft, y = ev.clientY - EdgeTop;
+  let bClick = false;
+
+  for( let i = 0; i < model.data.obstacle.length; i ++ ){
+
+    document.body.style.cursor = 'default';
+    let itemRect = model.data.obstacle[i];
+    if( !inView(itemRect) ) continue;
+    if(!mouseInRect(ev, itemRect)) continue;
+
+    let x0 = itemRect.x, y0 = itemRect.y,
+        x1 = itemRect.x + itemRect.width, y1 = itemRect.y,
+        x2 = itemRect.x + itemRect.width, y2 = itemRect.y + itemRect.height,
+        x3 = itemRect.x, y3 = itemRect.y + itemRect.height;
+
+    let x01 = itemRect.x + itemRect.width / 2,
+        y01 = itemRect.y,
+        x12 = itemRect.x + itemRect.width,
+        y12 = itemRect.y + itemRect.height / 2,
+        x23 = itemRect.x + itemRect.width / 2,
+        y23 = itemRect.y + itemRect.height,
+        x30 = itemRect.x,
+        y30 = itemRect.y + itemRect.height / 2;
+
+
+    x0 = SizeUtil.worldToScreenX(x0);
+    y0 = SizeUtil.worldToScreenY(y0);
+
+    x1 = SizeUtil.worldToScreenX(x1);
+    y1 = SizeUtil.worldToScreenY(y1);
+
+    x2 = SizeUtil.worldToScreenX(x2);
+    y2 = SizeUtil.worldToScreenY(y2);
+
+    x3 = SizeUtil.worldToScreenX(x3);
+    y3 = SizeUtil.worldToScreenY(y3);
+
+    x01 = SizeUtil.worldToScreenX(x01);
+    y01 = SizeUtil.worldToScreenY(y01);
+
+    x12 = SizeUtil.worldToScreenX(x12);
+    y12 = SizeUtil.worldToScreenY(y12);
+
+    x23 = SizeUtil.worldToScreenX(x23);
+    y23 = SizeUtil.worldToScreenY(y23);
+
+    x30 = SizeUtil.worldToScreenX(x30);
+    y30 = SizeUtil.worldToScreenY(y30);
+
+    // x0 *= Var.zoomLevel;
+    // y0 *= Var.zoomLevel;
+    //
+    // x1 *= Var.zoomLevel;
+    // y1 *= Var.zoomLevel;
+    //
+    // x2 *= Var.zoomLevel;
+    // y2 *= Var.zoomLevel;
+    //
+    // x3 *= Var.zoomLevel;
+    // y3 *= Var.zoomLevel;
+    //
+    // x01 *= Var.zoomLevel;
+    // y01 *= Var.zoomLevel;
+    //
+    // x12 *= Var.zoomLevel;
+    // y12 *= Var.zoomLevel;
+    //
+    // x23 *= Var.zoomLevel;
+    // y23 *= Var.zoomLevel;
+    //
+    // x30 *= Var.zoomLevel;
+    // y30 *= Var.zoomLevel;
+
+
+
+    if( (x - x0)*(x - x0) + (y - y0)*(y - y0) < 50 ){ // 左上角
+      document.body.style.cursor = 'nwse-resize';
+      bClick = 0;
+      break;
+    }else if( (x - x1)*(x - x1) + (y - y1)*(y - y1) < 50 ){ // 右上角
+      document.body.style.cursor = 'nesw-resize';
+      bClick = 1;
+      break;
+    }else if( (x - x2)*(x - x2) + (y - y2)*(y - y2) < 50 ){ // 右下角
+      document.body.style.cursor = 'nwse-resize';
+      bClick = 2;
+      break;
+    }else if( (x - x3)*(x - x3) + (y - y3)*(y - y3) < 50 ){ // 左下角
+      document.body.style.cursor = 'nesw-resize';
+      bClick = 3;
+      break;
+    }else if( (x > x0 + 8) && (x < x1 - 8) && (y - y01)*(y - y01) < 70 ){ // 上方
+      document.body.style.cursor = 'ns-resize';
+      bClick = 4;
+      break;
+    }else if( (x - x12)*(x - x12) < 70 && ( y > y1 + 8 ) && ( y < y2 - 8 ) ){ // 右方
+      document.body.style.cursor = 'ew-resize';
+      bClick = 5;
+      break;
+    }else if( (x > x0 + 8) && (x < x1 - 8) && (y - y23)*(y - y23) < 70 ){ // 下方
+      document.body.style.cursor = 'ns-resize';
+      bClick = 6;
+      break;
+    }else if( (x - x30)*(x - x30) < 70 && ( y > y1 + 8 ) && ( y < y2 - 8 ) ){  // 左方
+      document.body.style.cursor = 'ew-resize';
+      bClick = 7;
+      break;
+    }
+
+  } // end for i
+
+  return bClick;
+}
+
+// 鼠标是否划在了障碍物上 mouseClick
+export function mouseClickBarrierRect(ev){
+  let bClick = mouseOverBarrierRect(ev);
+  return bClick; // false说明就不是点到了一个具体的指向上
 }
