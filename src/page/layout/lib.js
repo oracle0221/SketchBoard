@@ -702,7 +702,7 @@ function DragRect(){
         Var.selectedRects[index].x=oldPosArr[index].x;
         Var.selectedRects[index].y=oldPosArr[index].y;
       });
-      console.log('Var.selectedBarrierRects: ', Var.selectedBarrierRects);
+      // console.log('Var.selectedBarrierRects: ', Var.selectedBarrierRects);
       Var.selectedBarrierRects.forEach((itemRect, index)=>{
         Var.selectedBarrierRects[index].x=oldPosBarrierArr[index].x;
         Var.selectedBarrierRects[index].y=oldPosBarrierArr[index].y;
@@ -894,8 +894,8 @@ function StretchBarrier(){
 
         Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldY((x - startX) + oldX);
         Var.selectedBarrierRects[0].y = SizeUtil.screenToWorldY((y - startY) + oldY);
-        Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldX + oldW - Var.selectedBarrierRects[0].x);
-        Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldY + oldH - Var.selectedBarrierRects[0].y);
+        Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldW - (x - startX));
+        Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldH - (y - startY));
 
       }else if(stretchDir === 1){ // 右上角
 
