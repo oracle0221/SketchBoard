@@ -1,6 +1,7 @@
 // 处理上边与左边以下边这三条栏
 import Var, {ModeEnum, Mode_Location, Mode_Text, Mode_Batch, Mode_Pan} from './constants'
-import {clearSelectedRects, clearSelectedBarrierRects} from './util'
+import {clearSelectedRects, clearSelectedBarrierRects, restoreFromUndoStack} from './util'
+import model from './model'
 
 const $ = document.getElementById.bind(document);
 
@@ -93,7 +94,13 @@ export function PanZoom(){
 export function undoAction(){
   const J_tool_undo = $('J_tool_undo');
   J_tool_undo.onclick = ()=>{
-    alert(123);
+    let data = restoreFromUndoStack();
+    if( data ){
+      model.data = restoreFromUndoStack();
+    }else{
+      J_tool_undo.style.opacity = 0.5;
+    }
+
   };
 }
 

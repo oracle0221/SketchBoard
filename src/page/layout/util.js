@@ -471,15 +471,21 @@ export function setCurrentModel(){
   // return {goods:model.data.goods, obstacle:model.data.obstacle};
 }
 
+// 从undowStack中恢复
+export function restoreFromUndoStack(){
+  let dataStr = model.undoStack.pop();
+  model.redoStack.push(dataStr); // undo出栈的同时redo进栈
+
+  if(dataStr){
+    return JSON.parse(dataStr);
+  }
+  return null;
+}
+
 // push undo undoStack
 export function pushUndoStack(){
   model.undoStack.push( JSON.stringify( model.data ) ); // 将当前的数据拷贝压入站
-  setCurrentModel();
-}
-
-// push redo redoStack
-export function pushRedoStack(){
-  model.redoStack.push( JSON.stringify( model.data ) );
+  // setCurrentModel();
 }
 
 // 鼠标是否划在了障碍物上 mouseOver

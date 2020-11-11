@@ -741,8 +741,8 @@ function PanMove(){
     moveX = e.clientX - EdgeLeft;
     moveY = e.clientY - EdgeTop;
 
-    Var.worldPosition.x = (startWorldX + (moveX - startX)) / Var.zoomLevel;
-    Var.worldPosition.y = (startWorldY + (moveY - startY)) / Var.zoomLevel;
+    Var.worldPosition.x = SizeUtil.calcFromScreen(startWorldX + (moveX - startX));
+    Var.worldPosition.y = SizeUtil.calcFromScreen(startWorldY + (moveY - startY));
   };
 
   this.end = function(e){};
@@ -780,8 +780,8 @@ function BarrierObject(){
     Var.currBarrierRect = {
       x : SizeUtil.screenToWorldX(x),
       y : SizeUtil.screenToWorldY(y),
-      width:width / Var.zoomLevel,
-      height:height / Var.zoomLevel,
+      width:SizeUtil.calcFromScreen(width),
+      height:SizeUtil.calcFromScreen(height),
     };
 
   };
