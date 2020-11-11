@@ -96,7 +96,7 @@ export function undoAction(){
   J_tool_undo.onclick = ()=>{
     let data = restoreFromUndoStack();
     if( data ){
-      model.data = restoreFromUndoStack();
+      model.data = data;
     }else{
       J_tool_undo.style.opacity = 0.5;
     }

@@ -42,8 +42,8 @@ export const ModeEnum={
 // 颜色变量
 export const Property={
   goods:{
-    fill:'rgba(255, 170, 170, 0.8)',
-    stroke:'#e86f8d',
+    fill:'rgba(104, 103, 218, 0.7)',
+    stroke:'#8a88eb',
   },
   obstacle:{
     fill:'rgba(127, 127, 127, 0.8)',

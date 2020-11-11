@@ -60,8 +60,6 @@ export function handleEvents(){
 
   oCanvas.onmousedown = e=>{
 
-    let touchStartX = e.clientX - EdgeLeft, touchStartY = e.clientY - EdgeTop;
-
     svgHandle.start(e); // 选择框
     dragRect.start(e); // 拖动
     stretchBarrier.start(e); // 如果需要,伸缩障碍物
@@ -333,7 +331,8 @@ function J_batchGoodsEvents(){
   }
 
   batch_save.onclick = ()=>{
-    //
+    // 改变 update model.data
+    pushUndoStack();
     model.data.goods.push( ...Var.batchTmpData );
     // console.log('goods: ', model.data.goods)
     // 当批量设好后, 把左侧菜单切换为Mode_Select模式
@@ -791,6 +790,8 @@ function BarrierObject(){
       return;
     }
 
+    // 改变 update model.data
+    pushUndoStack();
     model.data.obstacle.push({...Var.currBarrierRect});
 
     setMenu(Mode_Select);
@@ -809,6 +810,9 @@ function GoodsLocation(){
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
 
     let width = +$('goods_form_w').value.trim(), height=+$('goods_form_h').value.trim();
+
+    // 改变 update model.data
+    pushUndoStack();
     model.data.goods.push({
       x:SizeUtil.screenToWorldX(x),
       y:SizeUtil.screenToWorldY(y),
@@ -1017,6 +1021,11 @@ function keyboardForGoods(e){
     let sortedIndexArr = [...Var.selectedRectsIndex];
     sortedIndexArr.sort((a, b)=>b-a);
 
+    if( sortedIndexArr.length ){
+      // 改变 update model.data
+      pushUndoStack();
+    }
+
     for( let i = 0; i < sortedIndexArr.length; i ++ ){
       model.data.goods.splice(sortedIndexArr[i], 1);
     }
@@ -1024,6 +1033,11 @@ function keyboardForGoods(e){
     // 障碍物
     let sortedBarrierIndexArr = [...Var.selectedBarrierRectsIndex];
     sortedBarrierIndexArr.sort((a, b)=>b-a);
+
+    if( sortedBarrierIndexArr.length ){
+      // 改变 update model.data
+      pushUndoStack();
+    }
 
     for( let i = 0; i < sortedBarrierIndexArr.length; i ++ ){
       model.data.obstacle.splice(sortedBarrierIndexArr[i], 1);
