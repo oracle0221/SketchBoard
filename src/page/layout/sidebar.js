@@ -35,7 +35,7 @@ export function leftNavHandle(){
           }
 
           if( Var.Menu_Mode_Left === Mode_Location ){
-            // 
+            //
           }
 
           if( Var.Menu_Mode_Left === Mode_Text ){
@@ -87,4 +87,19 @@ export function PanZoom(){
     J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
   };
 
+}
+
+// 撤消与重做按钮动作
+export function undoAction(){
+  const J_tool_undo = $('J_tool_undo');
+  J_tool_undo.onclick = ()=>{
+    alert(123);
+  };
+}
+
+export function redoAction(){
+  const J_tool_redo = $('J_tool_redo');
+  J_tool_redo.onclick = ()=>{
+    alert(456);
+  };
 }

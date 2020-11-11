@@ -17,10 +17,10 @@ export default ()=>{
                   <a >MENU</a>
               </div>
               <div className="sep" ></div>
-              <div className="top_button tool_undo" >
+              <div className="top_button tool_undo" id="J_tool_undo" >
                 <div className="img" ></div>
               </div>
-              <div className="top_button tool_redo" >
+              <div className="top_button tool_redo" id="J_tool_redo" >
                 <div className="img" ></div>
               </div>
               <div className="sep" ></div>

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import {resetCanvas, handleEvents, drawScene, drawCopyScene, drawSvg} from './lib'
-import {leftNavHandle, PanZoom} from './sidebar'
+import {leftNavHandle, PanZoom, undoAction, redoAction} from './sidebar'
 
 const $ = document.getElementById.bind(document);
 
@@ -10,6 +10,8 @@ export default function layout(){
 
   leftNavHandle(); // 工具与菜单栏
   PanZoom(); // 视图放大与缩小
+  undoAction(); // 撤消操作
+  redoAction(); // 重做操作
 
   resetCanvas(mainGd, copyGd, svg);
 

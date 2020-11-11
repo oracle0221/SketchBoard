@@ -431,6 +431,7 @@ export function startEditText(itemRect, index){
   };
 }
 
+// 拖动物块过程中的视图滚动
 export function scrollView(e){
   let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
   const deltaDist = 6, needScrollDist = 100;
@@ -545,32 +546,6 @@ export function mouseOverBarrierRect(ev){
 
     x30 = SizeUtil.worldToScreenX(x30);
     y30 = SizeUtil.worldToScreenY(y30);
-
-    // x0 *= Var.zoomLevel;
-    // y0 *= Var.zoomLevel;
-    //
-    // x1 *= Var.zoomLevel;
-    // y1 *= Var.zoomLevel;
-    //
-    // x2 *= Var.zoomLevel;
-    // y2 *= Var.zoomLevel;
-    //
-    // x3 *= Var.zoomLevel;
-    // y3 *= Var.zoomLevel;
-    //
-    // x01 *= Var.zoomLevel;
-    // y01 *= Var.zoomLevel;
-    //
-    // x12 *= Var.zoomLevel;
-    // y12 *= Var.zoomLevel;
-    //
-    // x23 *= Var.zoomLevel;
-    // y23 *= Var.zoomLevel;
-    //
-    // x30 *= Var.zoomLevel;
-    // y30 *= Var.zoomLevel;
-
-
 
     if( (x - x0)*(x - x0) + (y - y0)*(y - y0) < 50 ){ // 左上角
       document.body.style.cursor = 'nwse-resize';
