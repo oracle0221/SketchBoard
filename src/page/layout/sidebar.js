@@ -1,6 +1,6 @@
 // 处理上边与左边以下边这三条栏
 import Var, {ModeEnum, Mode_Location, Mode_Text, Mode_Batch, Mode_Pan} from './constants'
-import {clearSelectedRects, clearSelectedBarrierRects, restoreFromUndoStack} from './util'
+import {clearSelectedRects, clearSelectedBarrierRects, restoreFromUndoStack, restoreFromRedoStack} from './util'
 import model from './model'
 
 const $ = document.getElementById.bind(document);
@@ -107,6 +107,20 @@ export function undoAction(){
 export function redoAction(){
   const J_tool_redo = $('J_tool_redo');
   J_tool_redo.onclick = ()=>{
-    alert(456);
+    let data = restoreFromRedoStack();
+    if( data ){
+      model.data = data;
+    }else{
+      J_tool_redo.style.opacity = 0.5;
+    }
   };
+}
+
+// 撤消与重做 初始化
+export function initUndoRedo(){
+  const J_tool_undo = $('J_tool_undo');
+  const J_tool_redo = $('J_tool_redo');
+
+  J_tool_undo.style.opacity = 0.5;
+  J_tool_redo.style.opacity = 0.5;
 }

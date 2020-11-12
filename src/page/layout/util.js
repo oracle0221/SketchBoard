@@ -455,26 +455,20 @@ export function scrollView(e){
   }
 }
 
-// 得到当前的数据, 用于在undo, redo中穿梭
-export function setCurrentModel(){
-  if(model.undoStack.length){
-    let data = model.undoStack[model.undoStack.length - 1];
-    data = JSON.parse(data);
-    model.data.goods = data['goods'];
-    model.data.obstacle = data['obstacle'];
-    return;
-    // return {goods:data['goods'], obstacle:data['obstacle']};
-  }
-
-  model.data.goods = model.initData.goods;
-  model.data.obstacle = model.initData.obstacle;
-  // return {goods:model.data.goods, obstacle:model.data.obstacle};
-}
-
 // 从undowStack中恢复
 export function restoreFromUndoStack(){
   let dataStr = model.undoStack.pop();
-  model.redoStack.push(dataStr); // undo出栈的同时redo进栈
+  model.redoStack.push(JSON.stringify( model.data )); // undo出栈的同时redo进栈最新的数据
+
+  if(dataStr){
+    return JSON.parse(dataStr);
+  }
+  return null;
+}
+
+// 从 redoStack栈中恢复
+export function restoreFromRedoStack(){
+  let dataStr = model.redoStack.pop();
 
   if(dataStr){
     return JSON.parse(dataStr);
@@ -485,7 +479,6 @@ export function restoreFromUndoStack(){
 // push undo undoStack
 export function pushUndoStack(){
   model.undoStack.push( JSON.stringify( model.data ) ); // 将当前的数据拷贝压入站
-  // setCurrentModel();
 }
 
 // 鼠标是否划在了障碍物上 mouseOver
@@ -528,6 +521,7 @@ export function mouseOverBarrierRect(ev){
         x30 = itemRect.x,
         y30 = itemRect.y + itemRect.height / 2;
 
+      // 01: 上方  12: 右方  23: 下方  30: 左方
 
     x0 = SizeUtil.worldToScreenX(x0);
     y0 = SizeUtil.worldToScreenY(y0);

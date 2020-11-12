@@ -1,17 +1,4 @@
-//
-// const GoodsType=0, BarrierType=1;
-// const Mode_Select = 0, Mode_Location = 1, Mode_Barrier=2, Mode_Text = 3, Mode_Zoom = 4, Mode_Batch = 5, Mode_Pan = 6;
-//
-// export GoodsType
-// export BarrierType
-//
-// export Mode_Select
-// export Mode_Location
-// export Mode_Barrier
-// export Mode_Text
-// export Mode_Zoom
-// export Mode_Batch
-// export Mode_Pan
+/* eslint-disable */
 
 export const FontSize = 28;
 
