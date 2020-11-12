@@ -374,7 +374,6 @@ export function drawGoodsText(gd){
     if( Var.editGoodsTextIndex === i && Var.zoomLevel > 0.7 ){
 
       drawDashedRect(gd, itemRect);
-      // startEditText(itemRect, i);
 
     }else{
 
@@ -384,7 +383,22 @@ export function drawGoodsText(gd){
       let x = SizeUtil.worldToScreenX(itemRect.x),
           y = SizeUtil.worldToScreenY(itemRect.y+FontSize);
 
-      gd.fillText( ''+(itemRect.text||i), x, y );
+      // gdWrapText(gd, ''+(itemRect.text||i), x, y, 10, FontSize * Var.zoomLevel + 12 );
+      let str = ''+(itemRect.text||i);
+      // str = str.replace(/-/g, '-\n')
+      let arrTxt = str.split('-');
+      arrTxt.forEach((objStr, index)=>{
+        if(index == arrTxt.length - 1){
+          gd.fillText( objStr, x, y );
+        }else{
+          gd.fillText( objStr+'-', x, y );
+        }
+
+        y += FontSize*Var.zoomLevel;
+      });
+      // console.log(str);
+
+      // gd.fillText( ''+(itemRect.text||i), x, y );
     }
 
   }
@@ -605,4 +619,23 @@ export async function fetchMapJson(){
   let data = await res.json();
 
   return data;
+}
+
+// 绘制多行文字
+export function gdWrapText( gd, text, x, y, maxWidth, lineHeight ){
+   let words = text.split(' ');
+   let line = '';
+
+   for( let i = 0; i < words.length; i ++ ){
+       let txt = line + words[i] + ' ';
+
+       if( gd.measureText(txt).width >= maxWidth  ){
+           gd.fillText(line, x, y)
+           y += lineHeight
+           line=words[i]+' ';
+       }else{
+           line = txt;
+       }
+   } // for i
+   gd.fillText(line, x, y);
 }
