@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-export const FontSize = 28;
+export const FontSize = 12;
 
 export const GoodsType=0;
 export const BarrierType=0;

@@ -731,7 +731,7 @@ function DragRect(){
            break;
         }
       }
-      
+
       if(!bSame)
         model.undoStack.push(undoDataStr);
     }

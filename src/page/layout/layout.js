@@ -1,8 +1,16 @@
 /* eslint-disable */
 import {resetCanvas, handleEvents, drawScene, drawCopyScene, drawSvg} from './lib'
 import {leftNavHandle, PanZoom, undoAction, redoAction, initUndoRedo} from './sidebar'
+import {fetchMapJson} from './util'
+import model from './model'
 
 const $ = document.getElementById.bind(document);
+
+
+// 初始请求地图数据
+async function getMapJson(){
+  return await fetchMapJson();
+}
 
 export default function layout(){
   const mainCanvas = $('mainCanvas'), copyCanvas = $('copyCanvas'), svg = $('svg');
@@ -18,7 +26,17 @@ export default function layout(){
 
   handleEvents();
 
-  draw();
+  (async()=>{
+    let data = await getMapJson();
+
+    let goods = data.filter(item=>item.type === 'wdl_location').map(item=>({...item, text:item.name}));
+    let barriers = data.filter(item=>item.type === 'wdl_barrier');
+
+    model.data.goods = goods;
+    model.data.obstacle = barriers;
+
+    draw();
+  })();
 
   clearTimeout(window.resizeTimer);
   window.onresize = ()=>{

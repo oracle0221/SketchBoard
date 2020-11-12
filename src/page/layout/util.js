@@ -598,3 +598,11 @@ export function mouseClickBarrierRect(ev){
   let bClick = mouseOverBarrierRect(ev);
   return bClick; // false说明就不是点到了一个具体的指向上
 }
+
+// 从网络请求数据
+export async function fetchMapJson(){
+  let res = await fetch('/map.json')
+  let data = await res.json();
+
+  return data;
+}
