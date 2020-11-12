@@ -19,6 +19,14 @@ export default function layout(){
 
   draw();
 
+  clearTimeout(window.resizeTimer);
+  window.onresize = ()=>{
+    window.resizeTimer = setTimeout(()=>{
+      resetCanvas(mainGd, copyGd, svg);
+      draw();
+    }, 500);
+  };
+
   function draw(){
     drawScene(mainGd);
     drawCopyScene(copyGd);
