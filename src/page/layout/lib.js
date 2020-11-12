@@ -537,6 +537,7 @@ function DragRect(){
 
   let beDrag = false, beBarrierDrag = false;
   let oldPosArr=[], oldPosBarrierArr = [];
+  let undoDataStr = '';
 
   this.start = function(e){
 
@@ -567,6 +568,8 @@ function DragRect(){
         beDrag = true;
         bHit = true;
         Var.selectedDrag = true;
+
+        undoDataStr = JSON.stringify(model.data); // 老数据存储一下,如果能顺利改变位置,那么就可以进undoStack栈
 
         if( Var.selectedRects.length === 0 || !Var.selectedRects.includes(itemRect) ){
           Var.selectedRects = [itemRect];
@@ -633,6 +636,8 @@ function DragRect(){
         Var.selectedBarrierRects = [itemRect];
         Var.selectedBarrierRectsIndex = [i]; // 生成Var.selectedRects之余需要同步Var.selectedRectsIndex
 
+        undoDataStr = JSON.stringify(model.data); // 老数据存储一下,如果能顺利改变位置,那么就可以进undoStack栈
+
         Var.selectedBarrierRectsOffset = [
           {
             x : x - SizeUtil.worldToScreenX(itemRect.x),
@@ -687,8 +692,11 @@ function DragRect(){
   }
 
   this.end = function(e){
-    beDrag = false;
-    beBarrierDrag = false;
+
+    // 只有选择才有后续的拖动
+    if( !(Var.Menu_Mode_Left === Mode_Select ) ){
+      return;
+    }
 
     // 释放鼠标一刻, 需要检测有无碰撞,如果有,则复位
     let bool1 = testHitInGoods( [...model.data.goods], [...Var.selectedRects] );
@@ -706,7 +714,30 @@ function DragRect(){
         Var.selectedBarrierRects[index].x=oldPosBarrierArr[index].x;
         Var.selectedBarrierRects[index].y=oldPosBarrierArr[index].y;
       });
+    }else{
+      // 只有和老位置不同,才进栈
+      let bSame = true;
+
+      for( let i = 0; i < Var.selectedRects.length && beDrag; i ++ ){
+        if( Var.selectedRects[i].x!=oldPosArr[i].x || Var.selectedRects[i].y!=oldPosArr[i].y ){
+           bSame = false;
+           break;
+        }
+      }
+
+      for( let i = 0; i < Var.selectedBarrierRects.length && beBarrierDrag; i ++ ){
+        if( Var.selectedBarrierRects[i].x!=oldPosBarrierArr[i].x || Var.selectedBarrierRects[i].y!=oldPosBarrierArr[i].y ){
+           bSame = false;
+           break;
+        }
+      }
+      
+      if(!bSame)
+        model.undoStack.push(undoDataStr);
     }
+
+    beDrag = false;
+    beBarrierDrag = false;
 
     oldPosArr=[];
     oldPosBarrierArr = [];
@@ -856,6 +887,7 @@ function StretchBarrier(){
   let oldW=0, oldH = 0, oldX = 0, oldY = 0;
   let stretchDir = false; // 往哪个方向伸缩
   let startX = 0, startY = 0;
+  let undoDataStr = '';
 
   this.start = function(e){
     if(Var.Menu_Mode_Left != Mode_Select)return;

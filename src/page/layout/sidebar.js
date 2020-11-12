@@ -94,11 +94,21 @@ export function PanZoom(){
 export function undoAction(){
   const J_tool_undo = $('J_tool_undo');
   J_tool_undo.onclick = ()=>{
+
+    console.log(model.undoStack)
+
+    if( model.undoStack.length == 0 ){
+      $('J_tool_undo').className = $('J_tool_undo').className.replace(/\s*hover\s*/, ' ');
+      return;
+    }
+
     let data = restoreFromUndoStack();
     if( data ){
       model.data = data;
+      clearSelectedRects();
+      clearSelectedBarrierRects();
     }else{
-      J_tool_undo.style.opacity = 0.5;
+      $('J_tool_undo').className = $('J_tool_undo').className.replace(/\s*hover\s*/, ' ');
     }
 
   };
@@ -107,11 +117,21 @@ export function undoAction(){
 export function redoAction(){
   const J_tool_redo = $('J_tool_redo');
   J_tool_redo.onclick = ()=>{
+
+    if( model.redoStack.length == 0 ){
+      // J_tool_redo.style.opacity = 0.5;
+      $('J_tool_redo').className = $('J_tool_redo').className.replace(/\s*hover\s*/, ' ');
+      return;
+    }
+
     let data = restoreFromRedoStack();
     if( data ){
       model.data = data;
+      clearSelectedRects();
+      clearSelectedBarrierRects();
     }else{
-      J_tool_redo.style.opacity = 0.5;
+      // J_tool_redo.style.opacity = 0.5;
+      $('J_tool_redo').className = $('J_tool_redo').className.replace(/\s*hover\s*/, ' ');
     }
   };
 }
@@ -121,6 +141,26 @@ export function initUndoRedo(){
   const J_tool_undo = $('J_tool_undo');
   const J_tool_redo = $('J_tool_redo');
 
-  J_tool_undo.style.opacity = 0.5;
-  J_tool_redo.style.opacity = 0.5;
+  // J_tool_undo.style.opacity = 0.5;
+  // J_tool_redo.style.opacity = 0.5;
+
+  J_tool_undo.onmouseenter = function(){
+    if( model.undoStack.length ){
+      this.className += ' active';
+    }
+  };
+
+  J_tool_undo.onmouseleave = function(){
+    this.className = this.className.replace(/\s*active\s*/, ' ');
+  };
+
+  J_tool_redo.onmouseenter = function(){
+    if( model.redoStack.length ){
+      this.className += ' active';
+    }
+  };
+
+  J_tool_redo.onmouseleave = function(){
+    this.className = this.className.replace(/\s*active\s*/, ' ');
+  };
 }

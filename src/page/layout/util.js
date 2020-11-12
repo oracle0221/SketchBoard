@@ -458,10 +458,13 @@ export function scrollView(e){
 // 从undowStack中恢复
 export function restoreFromUndoStack(){
   let dataStr = model.undoStack.pop();
-  model.redoStack.push(JSON.stringify( model.data )); // undo出栈的同时redo进栈最新的数据
-
   if(dataStr){
+    model.redoStack.push(JSON.stringify( model.data )); // undo出栈的同时redo进栈最新的数据
+    $('J_tool_redo').className = $('J_tool_redo').className.replace(/\s*hover\s*/, ' ');
+    $('J_tool_redo').className += ' hover ';
     return JSON.parse(dataStr);
+  }else{
+    $('J_tool_undo').className = $('J_tool_undo').className.replace(/\s*hover\s*/, ' ');
   }
   return null;
 }
@@ -472,6 +475,8 @@ export function restoreFromRedoStack(){
 
   if(dataStr){
     return JSON.parse(dataStr);
+  }else{
+    $('J_tool_redo').className = $('J_tool_redo').className.replace(/\s*hover\s*/, ' ');
   }
   return null;
 }
@@ -479,6 +484,8 @@ export function restoreFromRedoStack(){
 // push undo undoStack
 export function pushUndoStack(){
   model.undoStack.push( JSON.stringify( model.data ) ); // 将当前的数据拷贝压入站
+  $('J_tool_undo').className = $('J_tool_undo').className.replace(/\s*hover\s*/, ' ');
+  $('J_tool_undo').className += ' hover ';
 }
 
 // 鼠标是否划在了障碍物上 mouseOver
