@@ -32,10 +32,16 @@ export default ()=>{
                       </li>
                   </ul>
               </div>
+              <div className="lang-div" >
+                <select id="J_language_select" defaultValue="en" >
+                  <option value="en" >ENG</option>
+                  <option value="ko" >한국어</option>
+                </select>
+              </div>
           </div>
           <div className="tools-left" >
               <ul id="J_tools_ul">
-                  <li id="J_tool_select" className="tool_button current" title="选择工具" >
+                  <li id="J_tool_select" className="tool_button current" title="选择工具" language="tool_select_button" >
                       <div className="img select" ></div>
                   </li>
                   <li id="J_tool_location" className="tool_button" title="Location" >
@@ -44,13 +50,13 @@ export default ()=>{
                   <li id="J_tool_barrier" className="tool_button" title="Barrier" >
                       <div className="img barrier" ></div>
                   </li>
-                  <li id="J_tool_text" className="tool_button" title="文字工具">
+                  <li id="J_tool_text" className="tool_button" title="文字工具" language="tool_text_button" >
                       <div className="img text" ></div>
                   </li>
-                  <li id="J_tool_zoom" className="tool_button" title="缩放工具">
+                  <li id="J_tool_zoom" className="tool_button" title="缩放工具" language="tool_zoom_button" >
                       <div className="img zoom" ></div>
                   </li>
-                  <li id="J_tool_batch" className="tool_button" title="批量生成">
+                  <li id="J_tool_batch" className="tool_button" title="批量生成" language="tool_batch_button" >
                       <div className="img batch" ></div>
                   </li>
                   <li id="J_tool_panning" className="tool_button" title="Panning">
@@ -70,13 +76,13 @@ export default ()=>{
                 </svg>
               </div>
               <ul className="contextAlign" id="J_select_contextAlign" >
-                <li data-align="topAlign" ><a>顶部对齐</a></li>
-                <li data-align="leftAlign" ><a>居左对齐</a></li>
-                <li data-align="bottomAlign" ><a>底部对齐</a></li>
-                <li data-align="rightAlign" ><a>居右对齐</a></li>
+                <li data-align="topAlign" ><a language="top_align" >顶部对齐</a></li>
+                <li data-align="leftAlign" ><a language="left_align" >居左对齐</a></li>
+                <li data-align="bottomAlign" ><a language="bottom_align" >底部对齐</a></li>
+                <li data-align="rightAlign" ><a language="right_align" >居右对齐</a></li>
                 <li data-align="" className="separator" ></li>
-                <li data-align="horizonAlign" ><a>水平对齐</a></li>
-                <li data-align="verticalAlign" ><a>竖直对齐</a></li>
+                <li data-align="horizonAlign" ><a language="horizon_align" >水平对齐</a></li>
+                <li data-align="verticalAlign" ><a language="vertical_align" >竖直对齐</a></li>
               </ul>
               <div className="goods_form" id="J_goods_form" >
                 <div>
@@ -92,39 +98,39 @@ export default ()=>{
                   </label>
                 </div>
                 <div>
-                  <button type="button">关闭</button>
+                  <button type="button" language="label_shut" >关闭</button>
                 </div>
               </div>
               <div className="batchGoods" id="J_batchGoods" >
                 <div className="tab-nav">
                   <label>
-                    <span>横向</span>
+                    <span language="label_horizon" >横向</span>
                     <input type="radio" name="radio_input" value="row" id="batch_row" />
                   </label>
                   <label>
-                    <span>纵向</span>
+                    <span language="label_vertical" >纵向</span>
                     <input type="radio" name="radio_input" value="col" id="batch_col" />
                   </label>
-                  <div className="section" ><input type="number" defaultValue="" id="batch_cell_value" />单元格</div>
-                  <div className="section" ><input type="number" defaultValue="" id="batch_num_value" />排</div>
+                  <div className="section" ><input type="number" defaultValue="" id="batch_cell_value" /><span language="label_cell" >单元格</span></div>
+                  <div className="section" ><input type="number" defaultValue="" id="batch_num_value" /><span language="label_Rows" >排</span></div>
                   <div className="w_h_div section" >
                     <div>
-                      长: <div><input type="number" defaultValue={80} id="batch_size_w" /></div>
+                      <span language="label_width" >宽</span>: <div><input type="number" defaultValue={80} id="batch_size_w" /></div>
                     </div>
                     <div>
-                      宽: <div><input type="number" defaultValue={40} id="batch_size_h" /></div>
+                      <span language="label_height" >高</span>: <div><input type="number" defaultValue={40} id="batch_size_h" /></div>
                     </div>
                   </div>
                   <div className="section" >
-                    过道:
+                    <span language="label_aisle" >过道</span>:
                     <div>
                       <input type="number" defaultValue={50} id="batch_aisle" /> aisle
                     </div>
                   </div>
                 </div>
                 <div className="footer" >
-                  <button type="button" id="batch_shut" >关闭</button>
-                  <button type="button" className="btn-primary" id="batch_save" >确定</button>
+                  <button type="button" id="batch_shut" language="label_cancel" >关闭</button>
+                  <button type="button" className="btn-primary" id="batch_save" language="label_ok" >确定</button>
                 </div>
               </div>
             </div>

@@ -212,8 +212,6 @@ function SvgHandle(){
       return;
     }
 
-
-
     touchStartX = ev.clientX - EdgeLeft;
     touchStartY = ev.clientY - EdgeTop;
     svgRectData.x = touchStartX;
@@ -553,7 +551,7 @@ function DragRect(){
   this.start = function(e){
 
     // 只有选择才有后续的拖动
-    if( !(Var.Menu_Mode_Left === Mode_Select ) ){
+    if( !(Var.Menu_Mode_Left === Mode_Select ) || Var.SelectMenuAndSpaceBar ){
       return;
     }
 
@@ -679,7 +677,7 @@ function DragRect(){
   this.move = function(e){
 
     // 只有选择才有后续的拖动
-    if( !(Var.Menu_Mode_Left === Mode_Select ) ){
+    if( !(Var.Menu_Mode_Left === Mode_Select ) || Var.SelectMenuAndSpaceBar ){
       return;
     }
 
@@ -707,7 +705,7 @@ function DragRect(){
   this.end = function(e){
 
     // 只有选择才有后续的拖动
-    if( !(Var.Menu_Mode_Left === Mode_Select ) ){
+    if( !(Var.Menu_Mode_Left === Mode_Select ) || Var.SelectMenuAndSpaceBar ){
       return;
     }
 

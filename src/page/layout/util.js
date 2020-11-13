@@ -2,6 +2,7 @@
 
 import Var, {EdgeTop, EdgeLeft, Property, FontSize} from './constants'
 import model from './model'
+import langJson from './lang'
 
 const $ = document.getElementById.bind(document);
 
@@ -639,3 +640,41 @@ export function gdWrapText( gd, text, x, y, maxWidth, lineHeight ){
    } // for i
    gd.fillText(line, x, y);
 }
+
+// 多语言
+export const LangUtil = {
+  // 对标签里的内容作多语言
+  translate(){
+
+    $('J_language_select').onchange = ()=>{
+      localStorage['lang'] = $('J_language_select').value;
+      handle();
+    };
+
+    handle();
+
+    function handle(){
+      localStorage['lang']= localStorage['lang'] || 'en';
+
+      let key = localStorage['lang'];
+
+      const aTag = Array.from( document.body.querySelectorAll('[language]') );
+
+      aTag.forEach(domTag=>{
+
+        let langName = domTag.getAttribute('language');
+
+        // 接着就是对标签上的title
+        let sTitle = domTag.getAttribute('title');
+        if(sTitle){
+          domTag.setAttribute('title',  langJson[langName][key] );
+        }else{
+          domTag.innerHTML = langJson[langName][key]; // 对标签里的内容
+        }
+
+      });
+    }
+    // $('J_language_select').value = localStorage['lang'];
+
+  }
+};
