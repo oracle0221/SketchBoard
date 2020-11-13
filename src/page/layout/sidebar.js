@@ -25,7 +25,7 @@ export function leftNavHandle(){
           Var.editGoodsTextIndex = -1
           clearSelectedRects();
           clearSelectedBarrierRects();
-          $('J_select_contextAlign').style.display='none';
+          beforeSwitchMenu();
 
           if( Var.Menu_Mode_Left === Mode_Batch ){
             Var.beBatch = true; // 打开批量生成模式
@@ -45,6 +45,14 @@ export function leftNavHandle(){
 
       }
   });
+
+  // 菜单切换时,作一些dom的清理操作
+  function beforeSwitchMenu(){
+    $('J_select_contextAlign').style.display='none';
+    $('J_batchGoods').style.display='none';
+    $('J_goods_form').style.display='none';
+  }
+
 }
 
 // 将menu设成另外一个
