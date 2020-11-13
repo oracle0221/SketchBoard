@@ -53,6 +53,7 @@ let Var = {
 
   // 左边菜单变量
   Menu_Mode_Left:Mode_Select,
+  SelectMenuAndSpaceBar:false, // 在选中模式下,并且空格键被按下
 
   // 柜子
   zIndex:1,

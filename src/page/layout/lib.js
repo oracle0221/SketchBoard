@@ -88,7 +88,17 @@ export function handleEvents(){
     return false;
   };
 
+  // 在选中模式下 Mode_Select, 同时按住空格SpaceBar即可换成拖动视图模式 Pan Move
+  document.onkeydown = e=>{
+
+    if( Var.Menu_Mode_Left === Mode_Select && e.keyCode === 32){
+      Var.SelectMenuAndSpaceBar = true;
+    }
+
+  };
+
   document.onkeyup = e=>{
+    Var.SelectMenuAndSpaceBar = false;
     let tag = e.target.tagName.toLowerCase();
     if(tag === 'input' || tag === 'textarea') return;
 
@@ -194,10 +204,11 @@ function SvgHandle(){
   let touchStartX, touchStartY, touchMoveX, touchMoveY;
 
   this.start = function(ev){
+    if(Var.SelectMenuAndSpaceBar) return; // 选择并且空格按下，就不用框选了
     if(Var.Menu_Mode_Left === Mode_Barrier) return; // 拖动绘制障碍物不需要走框选
 
     // 只有选择或批量模式下才有框选
-    if( !(Var.Menu_Mode_Left === Mode_Select  ||  Var.Menu_Mode_Left === Mode_Batch || Var.Menu_Mode_Left === Mode_Barrier) ){
+    if( !(Var.Menu_Mode_Left === Mode_Select  ||  Var.Menu_Mode_Left === Mode_Batch || Var.Menu_Mode_Left === Mode_Barrier ) ){
       return;
     }
 
@@ -215,11 +226,11 @@ function SvgHandle(){
   };
 
   this.move = function(ev){
-
+    if(Var.SelectMenuAndSpaceBar) return; // 选择并且空格按下，就不用框选了
     if(Var.Menu_Mode_Left === Mode_Barrier) return; // 拖动绘制障碍物不需要走框选
 
     // 只有选择或批量模式下才有框选
-    if( !(Var.Menu_Mode_Left === Mode_Select  ||  Var.Menu_Mode_Left === Mode_Batch) ){
+    if( !(Var.Menu_Mode_Left === Mode_Select  ||  Var.Menu_Mode_Left === Mode_Batch ) ){
       return;
     }
 
@@ -556,6 +567,8 @@ function DragRect(){
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
 
     let bHit = false;
+    beDrag = false;
+    beBarrierDrag = false;
     // 先处理普通柜子
     for( let i = 0; i < model.data.goods.length; i ++ ){
 
@@ -751,7 +764,7 @@ function PanMove(){
   let startWorldX, startWorldY;
 
   this.start = function(e){
-    if( !(Var.Menu_Mode_Left === Mode_Pan ) ){
+    if( Var.Menu_Mode_Left !== Mode_Pan && !Var.SelectMenuAndSpaceBar ){
       return;
     }
 
@@ -764,7 +777,7 @@ function PanMove(){
   };
 
   this.move = function(e){
-    if( !(Var.Menu_Mode_Left === Mode_Pan ) ){
+    if( Var.Menu_Mode_Left !== Mode_Pan && !Var.SelectMenuAndSpaceBar ){
       return;
     }
 
@@ -839,7 +852,6 @@ function GoodsLocation(){
     if(isRightMouseClick(e)) return;
 
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
-
     let width = +$('goods_form_w').value.trim(), height=+$('goods_form_h').value.trim();
 
     // 改变 update model.data
@@ -883,6 +895,8 @@ function EditText(){
 // 伸缩障碍物
 function StretchBarrier(){
 
+  const MinWidthHeight = 4;
+
   this.mouseDown = false; // 是否鼠标按下
   let oldW=0, oldH = 0, oldX = 0, oldY = 0;
   let stretchDir = false; // 往哪个方向伸缩
@@ -921,7 +935,7 @@ function StretchBarrier(){
     if( this.mouseDown ){
 
       // 约束一下最小尺寸
-      if( Var.selectedBarrierRects[0].width < 50 || Var.selectedBarrierRects[0].height < 50 ){
+      if( Var.selectedBarrierRects[0].width < MinWidthHeight || Var.selectedBarrierRects[0].height < MinWidthHeight ){
         return;
       }
 
@@ -990,19 +1004,18 @@ function StretchBarrier(){
   this.end = function(e){
 
     if( this.mouseDown ){
-      if( Var.selectedBarrierRects[0].width < 50  ){
-        Var.selectedBarrierRects[0].width = 50;
+      if( Var.selectedBarrierRects[0].width < MinWidthHeight  ){
+        Var.selectedBarrierRects[0].width = MinWidthHeight;
       }
 
-      if( Var.selectedBarrierRects[0].height < 50 ){
-        Var.selectedBarrierRects[0].height = 50;
+      if( Var.selectedBarrierRects[0].height < MinWidthHeight ){
+        Var.selectedBarrierRects[0].height = MinWidthHeight;
       }
     }
 
     this.mouseDown = false;
     Var.stretchBarrier = false;
     stretchDir = false;
-
   }
 
 }
