@@ -1,3 +1,5 @@
+// 多语言翻译
+
 export default {
   main_main_menu:{
     ko:'主菜单',

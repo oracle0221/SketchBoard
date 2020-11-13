@@ -893,7 +893,7 @@ function EditText(){
 // 伸缩障碍物
 function StretchBarrier(){
 
-  const MinWidthHeight = 4;
+  const MinWidthHeight = 4 * Var.zoomLevel;
 
   this.mouseDown = false; // 是否鼠标按下
   let oldW=0, oldH = 0, oldX = 0, oldY = 0;
