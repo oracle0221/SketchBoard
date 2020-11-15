@@ -707,6 +707,8 @@ function DragRect(){
 
     // 只有选择才有后续的拖动
     if( !(Var.Menu_Mode_Left === Mode_Select ) || Var.SelectMenuAndSpaceBar ){
+      clearSelectedRects();
+      clearSelectedBarrierRects();
       return;
     }
 

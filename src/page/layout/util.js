@@ -216,7 +216,7 @@ export function drawDashedRect(gd, rectItem){
   // 上面3个
   for( let i = 0; i < 3; i ++ ){
       gd.beginPath();
-      gd.arc(x + width / 2 * i, y, 4, 0, Math.PI * 2, false);
+      gd.arc(x + width / 2 * i, y, 4 * Var.zoomLevel, 0, Math.PI * 2, false);
       gd.fillStyle='#22C';
       gd.fill();
   } // for i
@@ -224,7 +224,7 @@ export function drawDashedRect(gd, rectItem){
   // 中间2个
   for( let i = 0; i < 2; i ++ ){
       gd.beginPath();
-      gd.arc(x + width * i, y + height/2, 4, 0, Math.PI * 2, false);
+      gd.arc(x + width * i, y + height/2, 4 * Var.zoomLevel, 0, Math.PI * 2, false);
       gd.fillStyle='#22C';
       gd.fill();
   } // for i
@@ -232,7 +232,7 @@ export function drawDashedRect(gd, rectItem){
   // 下面3个
   for( let i = 0; i < 3; i ++ ){
       gd.beginPath();
-      gd.arc(x + width / 2 * i, y + height, 4, 0, Math.PI * 2, false);
+      gd.arc(x + width / 2 * i, y + height, 4 * Var.zoomLevel, 0, Math.PI * 2, false);
       gd.fillStyle='#22C';
       gd.fill();
   } // for i
