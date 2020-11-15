@@ -128,6 +128,26 @@ export function inView( rect ){
     return true;
   }
 
+  // 上方
+  if( x < 0 && (x+ width > Var.screen.width) && y > 0 && y < Var.screen.height  ){
+    return true;
+  }
+
+  // 下方
+  if( x < 0 && (x+ width > Var.screen.width) && (y + height) > 0 && (y + height < Var.screen.height)  ){
+    return true;
+  }
+
+  // 左方
+  if( y < 0 && (y + height > Var.screen.height) && x > 0 && x < Var.screen.width ){
+    return true;
+  }
+
+  // 右方
+  if( y < 0 && (y + height > Var.screen.height) && (x+width > 0) && (x+width < Var.screen.width) ){
+    return true;
+  }
+
   return false;
 }
 

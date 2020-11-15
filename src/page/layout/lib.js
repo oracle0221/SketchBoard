@@ -93,6 +93,7 @@ export function handleEvents(){
 
     if( Var.Menu_Mode_Left === Mode_Select && e.keyCode === 32){
       Var.SelectMenuAndSpaceBar = true;
+      document.body.style.cursor = 'move';
     }
 
   };
