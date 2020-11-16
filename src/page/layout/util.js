@@ -671,6 +671,9 @@ export const LangUtil = {
       handle();
     };
 
+    // 显示初始化一下当前的语言选项
+    $('J_language_select').value = localStorage['lang'] || 'en';
+
     handle();
 
     function handle(){
