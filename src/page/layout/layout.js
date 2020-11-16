@@ -1,7 +1,7 @@
 /* eslint-disable */
 import {resetCanvas, handleEvents, drawScene, drawCopyScene, drawSvg} from './lib'
 import {leftNavHandle, PanZoom, undoAction, redoAction, initUndoRedo} from './sidebar'
-import {fetchMapJson, LangUtil} from './util'
+import {fetchMapJson, LangUtil, setInitMapJsonMaxXY} from './util'
 import model from './model'
 
 const $ = document.getElementById.bind(document);
@@ -31,6 +31,9 @@ export default function layout(){
 
   (async()=>{
     let data = await getMapJson();
+
+    model.mapData = data; // 保存原始数据
+    setInitMapJsonMaxXY()
 
     let goods = data.filter(item=>item.type === 'wdl_location').map(item=>({...item, text:item.name}));
     let barriers = data.filter(item=>item.type === 'wdl_barrier');

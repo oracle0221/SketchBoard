@@ -541,6 +541,7 @@ export function mouseOverBarrierRect(ev){
 
   let x = ev.clientX - EdgeLeft, y = ev.clientY - EdgeTop;
   let bClick = false;
+  const Range5 = 50 * Var.zoomLevel, Range7 = 70 * Var.zoomLevel, Range8 = 8 * Var.zoomLevel;
 
   for( let i = 0; i < model.data.obstacle.length; i ++ ){
 
@@ -589,35 +590,35 @@ export function mouseOverBarrierRect(ev){
     x30 = SizeUtil.worldToScreenX(x30);
     y30 = SizeUtil.worldToScreenY(y30);
 
-    if( (x - x0)*(x - x0) + (y - y0)*(y - y0) < 50 ){ // 左上角
+    if( (x - x0)*(x - x0) + (y - y0)*(y - y0) < Range5 ){ // 左上角
       document.body.style.cursor = 'nwse-resize';
       bClick = 0;
       break;
-    }else if( (x - x1)*(x - x1) + (y - y1)*(y - y1) < 50 ){ // 右上角
+    }else if( (x - x1)*(x - x1) + (y - y1)*(y - y1) < Range5 ){ // 右上角
       document.body.style.cursor = 'nesw-resize';
       bClick = 1;
       break;
-    }else if( (x - x2)*(x - x2) + (y - y2)*(y - y2) < 50 ){ // 右下角
+    }else if( (x - x2)*(x - x2) + (y - y2)*(y - y2) < Range5 ){ // 右下角
       document.body.style.cursor = 'nwse-resize';
       bClick = 2;
       break;
-    }else if( (x - x3)*(x - x3) + (y - y3)*(y - y3) < 50 ){ // 左下角
+    }else if( (x - x3)*(x - x3) + (y - y3)*(y - y3) < Range5 ){ // 左下角
       document.body.style.cursor = 'nesw-resize';
       bClick = 3;
       break;
-    }else if( (x > x0 + 8) && (x < x1 - 8) && (y - y01)*(y - y01) < 70 ){ // 上方
+    }else if( (x > x0 + 8) && (x < x1 - Range8) && (y - y01)*(y - y01) < Range7 ){ // 上方
       document.body.style.cursor = 'ns-resize';
       bClick = 4;
       break;
-    }else if( (x - x12)*(x - x12) < 70 && ( y > y1 + 8 ) && ( y < y2 - 8 ) ){ // 右方
+    }else if( (x - x12)*(x - x12) < Range7 && ( y > y1 + Range8 ) && ( y < y2 - Range8 ) ){ // 右方
       document.body.style.cursor = 'ew-resize';
       bClick = 5;
       break;
-    }else if( (x > x0 + 8) && (x < x1 - 8) && (y - y23)*(y - y23) < 70 ){ // 下方
+    }else if( (x > x0 + 8) && (x < x1 - 8) && (y - y23)*(y - y23) < Range7 ){ // 下方
       document.body.style.cursor = 'ns-resize';
       bClick = 6;
       break;
-    }else if( (x - x30)*(x - x30) < 70 && ( y > y1 + 8 ) && ( y < y2 - 8 ) ){  // 左方
+    }else if( (x - x30)*(x - x30) < Range7 && ( y > y1 + Range8 ) && ( y < y2 - Range8 ) ){  // 左方
       document.body.style.cursor = 'ew-resize';
       bClick = 7;
       break;
@@ -701,3 +702,16 @@ export const LangUtil = {
 
   }
 };
+
+// 获取地图文件中最大的x, y值
+export function setInitMapJsonMaxXY(){
+  let arr = model.mapData;
+  let maxX = Math.max.apply(null, arr.map(item=>item.x+item.width)),
+      maxY = Math.max.apply(null, arr.map(item=>item.y+item.height));
+
+  // console.log('=======================')
+  // console.log(maxX, maxY);
+
+  Var.worldPosition.width = maxX;
+  Var.worldPosition.height = maxY;
+}

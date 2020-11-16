@@ -106,7 +106,7 @@ export function handleEvents(){
     // 通过键盘移动柜子
     // 要在移动模式下才做键盘行为
     if(Var.Menu_Mode_Left != Mode_Select)return;
-    keyboardForGoods(e);
+    keyboardForGoodsAndBarrier(e);
   };
 
   // 处理弹框中的事件
@@ -610,7 +610,6 @@ function DragRect(){
 
         // 存一下老位置,后面如果与其它柜子碰撞了,则复位
         oldPosArr = Var.selectedRects.map(item=>({x:item.x, y:item.y}));
-
         break;
       } //  if(mouseInRect( e, itemRect ))
 
@@ -1040,23 +1039,39 @@ function getSortedZindexArray(arr){
 }
 
 // 通过键盘移动柜子 微调
-function keyboardForGoods(e){
+function keyboardForGoodsAndBarrier(e){
   let code = e.keyCode;
   // 37 38 39 40 方向键
   if( code == 37 ){
     Var.selectedRects.forEach(itemRect=>{
       itemRect.x --;
     })
+
+    Var.selectedBarrierRects.forEach(itemRect=>{
+      itemRect.x --;
+    })
   }else if( code == 38 ){
     Var.selectedRects.forEach(itemRect=>{
+      itemRect.y --;
+    })
+
+    Var.selectedBarrierRects.forEach(itemRect=>{
       itemRect.y --;
     })
   }else if( code == 39 ){
     Var.selectedRects.forEach(itemRect=>{
       itemRect.x ++;
     })
+
+    Var.selectedBarrierRects.forEach(itemRect=>{
+      itemRect.x ++;
+    })
   }else if( code == 40 ){
     Var.selectedRects.forEach(itemRect=>{
+      itemRect.y ++;
+    })
+
+    Var.selectedBarrierRects.forEach(itemRect=>{
       itemRect.y ++;
     })
   }
