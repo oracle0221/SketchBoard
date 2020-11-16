@@ -1038,19 +1038,10 @@ function StretchBarrier(){
 function ZoomTool(){
 
   this.start = function(e){
-
     if( Var.Menu_Mode_Left !== Mode_Zoom ) return;
-    let screen_x = e.clientX - EdgeLeft, screen_y = e.clientY - EdgeTop;
 
-    let world_x = SizeUtil.screenToWorldX(screen_x);
-    let world_y = SizeUtil.screenToWorldY(screen_y);
-
-
-
-    syncZoomInput(  );
-
+    syncZoomInput(e);
   }
-
 }
 
 function createContextForBatch(e){
