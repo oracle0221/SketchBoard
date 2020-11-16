@@ -13,7 +13,7 @@ export default ()=>{
     <>
       <div className="editor-box" >
           <div className="tools-top" >
-              <div className="main_button" title="主菜单" >
+              <div className="main_button" title="Menu" >
                   <a >MENU</a>
               </div>
               <div className="sep" ></div>
