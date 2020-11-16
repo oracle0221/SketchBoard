@@ -732,6 +732,21 @@ export function syncZoomInput(e){
 
   }
 
+  // for 障碍物
+  for( let i = 0; i < model.data.obstacle.length; i ++ ){
+    let itemRect = model.data.obstacle[i];
+    if( !inView(itemRect) ){
+      continue;
+    }
+
+    if(targetRect) break;
+
+    if(mouseInRect( e, itemRect )){
+      targetRect = itemRect;
+      break;
+    }
+
+  }
 
   if( Var.zoomAction === '+' ){
     fnZoomIn();
