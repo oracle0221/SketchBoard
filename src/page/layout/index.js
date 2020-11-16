@@ -44,10 +44,10 @@ export default ()=>{
                   <li id="J_tool_select" className="tool_button current" title="选择工具" language="tool_select_button" >
                       <div className="img select" ></div>
                   </li>
-                  <li id="J_tool_location" className="tool_button" title="Location" >
+                  <li id="J_tool_location" className="tool_button" title="Location" language="tool_location_button" >
                       <div className="img location" ></div>
                   </li>
-                  <li id="J_tool_barrier" className="tool_button" title="Barrier" >
+                  <li id="J_tool_barrier" className="tool_button" title="Barrier" language="tool_barrier_button" >
                       <div className="img barrier" ></div>
                   </li>
                   <li id="J_tool_text" className="tool_button" title="文字工具" language="tool_text_button" >
@@ -59,7 +59,7 @@ export default ()=>{
                   <li id="J_tool_batch" className="tool_button" title="批量生成" language="tool_batch_button" >
                       <div className="img batch" ></div>
                   </li>
-                  <li id="J_tool_panning" className="tool_button" title="Panning">
+                  <li id="J_tool_panning" className="tool_button" title="Panning" language="tool_pan_button" >
                       <div className="img panning" ></div>
                   </li>
               </ul>
