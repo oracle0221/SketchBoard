@@ -714,27 +714,35 @@ export function setInitMapJsonMaxXY(){
 
 // 传入鼠标事件对象 e, 菜单栏视图放大与缩小,以及与视图同步 J_input_zoom
 export function syncZoomInput(e){
+
+  // 放大后, 点击的位置放在视图的正间, 方便观察
+  let screen_x = e.clientX - EdgeLeft, screen_y = e.clientY - EdgeTop;
+  let targetRect = null;
+  // for 普通柜子
+  for( let i = 0; i < model.data.goods.length; i ++ ){
+    let itemRect = model.data.goods[i];
+    if( !inView(itemRect) ){
+      continue;
+    }
+
+    if(mouseInRect( e, itemRect )){
+      targetRect = itemRect;
+      break;
+    }
+
+  }
+
+
   if( Var.zoomAction === '+' ){
     fnZoomIn();
   }else{
     fnZoomOut();
   }
 
-  // 放大后, 点击的位置放在视图的正间, 方便观察
-  let screen_x = e.clientX - EdgeLeft, screen_y = e.clientY - EdgeTop;
-
-  //
-  let rect = model.data.goods[0];
-  let world_x = SizeUtil.screenToWorldX(screen_x),  world_y = SizeUtil.screenToWorldY(screen_y);
-  // screen_x = (rect.x + Var.worldPosition.x) * Var.zoomLevel;
-  // Var.worldPosition.x = screen_x / Var.zoomLevel -rect.x;
-  // Var.worldPosition.y = screen_y / Var.zoomLevel -rect.y;
-
-  // let x1 = screen_x / Var.zoomLevel - Var.worldPosition.x;
-  // let y1 = screen_y / Var.zoomLevel - Var.worldPosition.y;
-
-  Var.worldPosition.x = screen_x / Var.zoomLevel - world_x;
-  Var.worldPosition.y = screen_y / Var.zoomLevel - world_y;
+  if(targetRect){
+     Var.worldPosition.x = screen_x / Var.zoomLevel - targetRect.x;
+     Var.worldPosition.y = screen_y / Var.zoomLevel - targetRect.y;
+  }
 
 }
 
