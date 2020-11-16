@@ -1,6 +1,6 @@
 // 处理上边与左边以下边这三条栏
-import Var, {ModeEnum, Mode_Location, Mode_Text, Mode_Batch, Mode_Pan} from './constants'
-import {clearSelectedRects, clearSelectedBarrierRects, restoreFromUndoStack, restoreFromRedoStack} from './util'
+import Var, {ModeEnum, Mode_Location, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan} from './constants'
+import {clearSelectedRects, clearSelectedBarrierRects, restoreFromUndoStack, restoreFromRedoStack, fnZoomIn, fnZoomOut} from './util'
 import model from './model'
 
 const $ = document.getElementById.bind(document);
@@ -39,6 +39,12 @@ export function leftNavHandle(){
             //
           }
 
+          // Zoom == Zoom in
+          if( Var.Menu_Mode_Left === Mode_Zoom ){
+            Var.zoomAction = '+';
+            document.body.style.cursor = 'zoom-in';
+          }
+
           if( Var.Menu_Mode_Left === Mode_Text ){
             document.body.style.cursor = 'text';
           }
@@ -69,31 +75,11 @@ export function PanZoom(){
   const J_input_zoom = $('J_input_zoom'), ZoomOut = $('ZoomOut'), ZoomIn = $('ZoomIn');
 
   ZoomOut.onclick = ()=>{
-
-    if( Var.zoomLevel >= 1 ){
-        Var.zoomLevel = ++Var.zoomLevel
-    }else{
-        Var.zoomLevel += 0.2
-        // zoomLevel小于1,让世界居中摆放
-        Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
-        Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
-    }
-
-    J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
+    fnZoomIn();
   };
 
   ZoomIn.onclick = ()=>{
-
-    if(Var.zoomLevel > 1){
-        Var.zoomLevel = --Var.zoomLevel
-    }else{
-        Var.zoomLevel -= 0.2
-        // zoomLevel小于1,让世界居中摆放
-        Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
-        Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
-    }
-
-    J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
+    fnZoomOut();
   };
 
 }
@@ -103,7 +89,7 @@ export function undoAction(){
   const J_tool_undo = $('J_tool_undo');
   J_tool_undo.onclick = ()=>{
 
-    console.log(model.undoStack)
+    // console.log(model.undoStack)
 
     if( model.undoStack.length == 0 ){
       $('J_tool_undo').className = $('J_tool_undo').className.replace(/\s*hover\s*/, ' ');

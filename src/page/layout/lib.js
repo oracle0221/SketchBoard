@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText, scrollView, pushUndoStack, mouseOverBarrierRect, mouseClickBarrierRect} from './util'
+import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText, scrollView, pushUndoStack, mouseOverBarrierRect, mouseClickBarrierRect, syncZoomInput} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Text, Mode_Barrier, Mode_Zoom, Mode_Batch, Mode_Pan, Property} from './constants'
 import {setMenu} from './sidebar'
 
@@ -53,6 +53,7 @@ export function handleEvents(){
   const barrierObject = new BarrierObject();
   const goodsLocation = new GoodsLocation();
   const editText = new EditText();
+  const zoomTool = new ZoomTool();
 
   oCanvas.onmousemove = e=>{
     stretchBarrier.move(e);
@@ -67,6 +68,7 @@ export function handleEvents(){
     barrierObject.start(e); // 生成障碍物
     goodsLocation.start(e); // 点击生成柜子
     editText.start(e); // 点击柜子编辑文字
+    zoomTool.start(e); // 放大与缩小视图
 
     document.onmousemove =e=>{
       svgHandle.move(e);
@@ -96,9 +98,22 @@ export function handleEvents(){
       document.body.style.cursor = 'move';
     }
 
+    // 在视图放大与缩小模式下, 如果按下alt
+    if( Var.Menu_Mode_Left === Mode_Zoom && ( e.ctrlKey === true || e.altKey === true ) ){
+      Var.zoomAction = '-';
+      document.body.style.cursor = 'zoom-out';
+    }
+
   };
 
   document.onkeyup = e=>{
+
+    // 在视图放大与缩小模式下, 如果按下alt
+    if( Var.Menu_Mode_Left === Mode_Zoom ){
+      Var.zoomAction = '+';
+      document.body.style.cursor = 'zoom-in';
+    }
+
     Var.SelectMenuAndSpaceBar = false;
     let tag = e.target.tagName.toLowerCase();
     if(tag === 'input' || tag === 'textarea') return;
@@ -1016,6 +1031,24 @@ function StretchBarrier(){
     this.mouseDown = false;
     Var.stretchBarrier = false;
     stretchDir = false;
+  }
+
+}
+
+function ZoomTool(){
+
+  this.start = function(e){
+
+    if( Var.Menu_Mode_Left !== Mode_Zoom ) return;
+    let screen_x = e.clientX - EdgeLeft, screen_y = e.clientY - EdgeTop;
+
+    let world_x = SizeUtil.screenToWorldX(screen_x);
+    let world_y = SizeUtil.screenToWorldY(screen_y);
+
+
+
+    syncZoomInput(  );
+
   }
 
 }

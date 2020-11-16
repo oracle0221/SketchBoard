@@ -698,7 +698,6 @@ export const LangUtil = {
 
       });
     }
-    // $('J_language_select').value = localStorage['lang'];
 
   }
 };
@@ -709,9 +708,44 @@ export function setInitMapJsonMaxXY(){
   let maxX = Math.max.apply(null, arr.map(item=>item.x+item.width)),
       maxY = Math.max.apply(null, arr.map(item=>item.y+item.height));
 
-  // console.log('=======================')
-  // console.log(maxX, maxY);
-
   Var.worldPosition.width = maxX;
   Var.worldPosition.height = maxY;
+}
+
+// 菜单栏视图放大与缩小,以及与视图同步 J_input_zoom
+export function syncZoomInput(){
+  if( Var.zoomAction === '+' ){
+    fnZoomIn();
+  }else{
+    fnZoomOut();
+  }
+
+}
+
+// zoom in
+export function fnZoomIn(){
+  const J_input_zoom = $('J_input_zoom');
+  if( Var.zoomLevel >= 1 ){
+      Var.zoomLevel = ++Var.zoomLevel
+  }else{
+      Var.zoomLevel += 0.2
+      // zoomLevel小于1,让世界居中摆放
+      Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
+      Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
+  }
+  J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
+}
+
+// zoom out
+export function fnZoomOut(){
+  const J_input_zoom = $('J_input_zoom');
+  if(Var.zoomLevel > 1){
+      Var.zoomLevel = --Var.zoomLevel
+  }else{
+      Var.zoomLevel -= 0.2
+      // zoomLevel小于1,让世界居中摆放
+      Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
+      Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
+  }
+  J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
 }

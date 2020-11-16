@@ -41,6 +41,8 @@ export const Property={
 
 let Var = {
   zoomLevel:1.0,
+  zoomAction:'+', // '+', '-' 两种操作
+
   beBatch: false, // 需要批量操作
   beBatchEnd: false,  // 批量操作结束
   batchPreviewData:{value:'', num:0, cells:0},
