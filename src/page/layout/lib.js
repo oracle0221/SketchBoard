@@ -753,36 +753,38 @@ function DragRect(){
     let bool3 = testHitInGoods( [...model.data.obstacle], [...Var.selectedBarrierRects] );
     let bool4 = testHitInGoods( [...model.data.obstacle], [...Var.selectedRects] );
     // console.log('是否碰了: ', bool)
-    if(bool1 || bool2 || bool3 || bool4){
-      Var.selectedRects.forEach((itemRect, index)=>{
-        Var.selectedRects[index].x=oldPosArr[index].x;
-        Var.selectedRects[index].y=oldPosArr[index].y;
-      });
-      // console.log('Var.selectedBarrierRects: ', Var.selectedBarrierRects);
-      Var.selectedBarrierRects.forEach((itemRect, index)=>{
-        Var.selectedBarrierRects[index].x=oldPosBarrierArr[index].x;
-        Var.selectedBarrierRects[index].y=oldPosBarrierArr[index].y;
-      });
-    }else{
-      // 只有和老位置不同,才进栈
-      let bSame = true;
+    if( beDrag ){
+      if(bool1 || bool2 || bool3 || bool4){
+        Var.selectedRects.forEach((itemRect, index)=>{
+          Var.selectedRects[index].x=oldPosArr[index].x;
+          Var.selectedRects[index].y=oldPosArr[index].y;
+        });
+        // console.log('Var.selectedBarrierRects: ', Var.selectedBarrierRects);
+        Var.selectedBarrierRects.forEach((itemRect, index)=>{
+          Var.selectedBarrierRects[index].x=oldPosBarrierArr[index].x;
+          Var.selectedBarrierRects[index].y=oldPosBarrierArr[index].y;
+        });
+      }else{
+        // 只有和老位置不同,才进栈
+        let bSame = true;
 
-      for( let i = 0; i < Var.selectedRects.length && beDrag; i ++ ){
-        if( Var.selectedRects[i].x!=oldPosArr[i].x || Var.selectedRects[i].y!=oldPosArr[i].y ){
-           bSame = false;
-           break;
+        for( let i = 0; i < Var.selectedRects.length && beDrag; i ++ ){
+          if( Var.selectedRects[i].x!=oldPosArr[i].x || Var.selectedRects[i].y!=oldPosArr[i].y ){
+             bSame = false;
+             break;
+          }
         }
-      }
 
-      for( let i = 0; i < Var.selectedBarrierRects.length && beBarrierDrag; i ++ ){
-        if( Var.selectedBarrierRects[i].x!=oldPosBarrierArr[i].x || Var.selectedBarrierRects[i].y!=oldPosBarrierArr[i].y ){
-           bSame = false;
-           break;
+        for( let i = 0; i < Var.selectedBarrierRects.length && beBarrierDrag; i ++ ){
+          if( Var.selectedBarrierRects[i].x!=oldPosBarrierArr[i].x || Var.selectedBarrierRects[i].y!=oldPosBarrierArr[i].y ){
+             bSame = false;
+             break;
+          }
         }
-      }
 
-      if(!bSame)
-        model.undoStack.push(undoDataStr);
+        if(!bSame)
+          model.undoStack.push(undoDataStr);
+      }
     }
 
     beDrag = false;
