@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText, scrollView, pushUndoStack, mouseOverBarrierRect, mouseClickBarrierRect, syncZoomInput} from './util'
+import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText, scrollView, pushUndoStack, mouseOverBarrierRect, mouseClickBarrierRect, syncZoomInput, generateColSeq, generateRowSeq} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Text, Mode_Barrier, Mode_Zoom, Mode_Batch, Mode_Pan, Property} from './constants'
 import {setMenu} from './sidebar'
 
@@ -314,6 +314,7 @@ function J_batchGoodsEvents(){
   const batch_size_w = $('batch_size_w'), batch_size_h = $('batch_size_h');
   const batch_cell_value = $('batch_cell_value');
   const batch_aisle = $('batch_aisle');
+  const num2Ele = $('batch_cell_startindex'), num3Ele = $('batch_cell_endindex');
 
   batch_row.onchange = function(){
     if(this.checked){
@@ -328,6 +329,14 @@ function J_batchGoodsEvents(){
       createBatchTmpData();
     }
   };
+
+  num2Ele.oninput = function(){
+    createBatchTmpData();
+  }
+
+  num3Ele.oninput = function(){
+    createBatchTmpData();
+  }
 
   batch_num_value.oninput=function(){
     Var.batchPreviewData['num'] = +this.value.trim();
@@ -380,6 +389,10 @@ function clearSvgRectData(){
   const batch_size_w = $('batch_size_w'), batch_size_h = $('batch_size_h');
   batch_size_w.value=80;
   batch_size_h.value=40;
+
+  const batch_cell_startindex = $('batch_cell_startindex'), batch_cell_endindex=$('batch_cell_endindex');
+  batch_cell_startindex.value=''
+  batch_cell_endindex.value=''
 
   const J_batchGoods = $('J_batchGoods');
   J_batchGoods.style.display='none';
@@ -471,6 +484,8 @@ function createBatchTmpData(){
       colNum = cells_value;
       rowNum = +Var.batchPreviewData['num'];
 
+      let rowColIndexes = generateRowSeq(rowNum, colNum);
+
       for( let r = 0; r < rowNum; r ++ ){
 
         for( let c = 0; c < colNum; c ++ ){
@@ -478,10 +493,12 @@ function createBatchTmpData(){
           Var.batchTmpData.push({
             x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV)), width:+batch_size_w.value, height:+batch_size_h.value,
             zIndex:Var.zIndex,
+            text:rowColIndexes[r][c][0],
           });
           Var.batchTmpData.push({
             x : SizeUtil.screenToWorldX(svgRectData.x + c * sizeW), y : SizeUtil.screenToWorldY(svgRectData.y + r * (sizeH*2+spaceV) + sizeH), width:+batch_size_w.value, height:+batch_size_h.value,
             zIndex:Var.zIndex,
+            text:rowColIndexes[r][c][1],
           });
 
         } // for c
@@ -538,16 +555,20 @@ function createBatchTmpData(){
       colNum = +Var.batchPreviewData['num'];
       rowNum = cells_value;
 
+      let rowColIndexes = generateColSeq(rowNum, colNum);
+
       for( let c = 0; c < colNum; c ++ ){
         for( let r = 0; r < rowNum; r ++ ){
 
           Var.batchTmpData.push({
             x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH)), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:+batch_size_w.value, height:+batch_size_h.value,
             zIndex:Var.zIndex,
+            text:rowColIndexes[r][c][0],
           });
           Var.batchTmpData.push({
             x:SizeUtil.screenToWorldX(svgRectData.x + c * (sizeW * 2 + spaceH) + sizeW), y:SizeUtil.screenToWorldY(svgRectData.y + r * sizeH), width:+batch_size_w.value, height:+batch_size_h.value,
             zIndex:Var.zIndex,
+            text:rowColIndexes[r][c][1],
           });
 
         } // for r

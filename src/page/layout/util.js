@@ -406,20 +406,29 @@ export function drawGoodsText(gd){
 
       // gdWrapText(gd, ''+(itemRect.text||i), x, y, 10, FontSize * Var.zoomLevel + 12 );
       let str = ''+(itemRect.text||i);
-      // str = str.replace(/-/g, '-\n')
-      let arrTxt = str.split('-');
-      arrTxt.forEach((objStr, index)=>{
-        if(index == arrTxt.length - 1){
-          gd.fillText( objStr, x, y );
-        }else{
-          gd.fillText( objStr+'-', x, y );
-        }
+      let textWidth = FontSize * Var.zoomLevel * str.length;
 
-        y += FontSize*Var.zoomLevel;
-      });
+      if( textWidth < itemRect.width * Var.zoomLevel ){
+        gd.fillText( ''+(itemRect.text||i), x, y );
+      }else{
+        let arrTxt = str.split('-');
+        arrTxt.forEach((objStr, index)=>{
+          if(index == arrTxt.length - 1){
+            gd.fillText( objStr, x, y );
+          }else{
+            gd.fillText( objStr+'-', x, y );
+          }
+
+          y += FontSize*Var.zoomLevel;
+        });
+      }
+
+
+      // str = str.replace(/-/g, '-\n')
+
       // console.log(str);
 
-      // gd.fillText( ''+(itemRect.text||i), x, y );
+      //
     }
 
   }
@@ -787,4 +796,48 @@ export function fnZoomOut(){
       Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
   }
   J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
+}
+
+// 产生行模式下的批量编号
+export function generateRowSeq(R, C){
+  // num2 - num3
+  let arr = Array(R).fill(0).map(item=>Array(C).fill(0));
+  const num2Ele = $('batch_cell_startindex'), num3Ele = $('batch_cell_endindex');
+
+  let num2_start = (+num2Ele.value) || model.data.goods.length, num3_start = (+num3Ele.value)  || model.data.goods.length ;
+
+  let maxNum3 = num3_start + 2 * (C - 1);
+  num3_start = maxNum3 + 1;
+
+  for( let r = 0; r < R; r ++ ){
+    for( let c = 0; c < C; c ++ ){
+      arr[r][c] = [`${num2_start + r * 1}-${num3_start+(-2) * c}`, `${num2_start + r * 1 + 1}-${num3_start+(-2) * c-1}`]
+    }
+  }
+
+  return arr;
+}
+
+// 产生列模式下的批量编号
+export function generateColSeq(R, C){
+  // num2 - num3
+  let arr = Array(R).fill(0).map(item=>Array(C).fill(0));
+  const num2Ele = $('batch_cell_startindex'), num3Ele = $('batch_cell_endindex');
+
+  let num2_start = (+num2Ele.value) || model.data.goods.length, num3_start = (+num3Ele.value)  || model.data.goods.length ;
+
+  let maxNum3 = num3_start + 2 * (R - 1);
+
+  num3_start = maxNum3 + 1;
+
+  for( let c = 0; c < C; c ++ ){
+
+    for( let r = 0; r < R; r ++ ){
+
+      arr[r][c] = [`${num2_start + c * 1}-${num3_start+(-2) * r}`, `${num2_start + c * 1 + 1}-${num3_start+(-2) * r-1}`]
+    } // end for r
+
+  } // end for c
+
+  return arr;
 }

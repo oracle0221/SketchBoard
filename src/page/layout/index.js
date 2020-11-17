@@ -111,8 +111,8 @@ export default ()=>{
                     <span language="label_vertical" >纵向</span>
                     <input type="radio" name="radio_input" value="col" id="batch_col" />
                   </label>
-                  <div className="section" ><input type="number" defaultValue="" id="batch_cell_value" /><span language="label_cell" >单元格</span></div>
-                  <div className="section" ><input type="number" defaultValue="" id="batch_num_value" /><span language="label_Rows" >排</span></div>
+                  <div className="section" ><input type="number" defaultValue="" id="batch_cell_value" /><span className="sec-span" language="label_cell" >单元格</span><input placeholder="起始编号" type="number" defaultValue="" id="batch_cell_startindex" /></div>
+                  <div className="section" ><input type="number" defaultValue="" id="batch_num_value" /><span className="sec-span" language="label_Rows" >排</span><input placeholder="结束编号" type="number" defaultValue="" id="batch_cell_endindex" /></div>
                   <div className="w_h_div section" >
                     <div>
                       <span language="label_width" >宽</span>: <div><input type="number" defaultValue={80} id="batch_size_w" /></div>

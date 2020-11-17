@@ -136,6 +136,11 @@ textarea{resize:none;text-indent:2px;}
 
     .section{
       margin-bottom: 4px;
+      .sec-span{
+        width:22px;
+        display: inline-block;
+        transform: translateY(4px);
+      }
     }
   }
 
@@ -145,6 +150,8 @@ textarea{resize:none;text-indent:2px;}
     button{margin-right:2px;}
   }
 }
+
+#batch_cell_startindex, #batch_cell_endindex{width:70px;}
 
 // 周边工具栏
 
