@@ -93,6 +93,11 @@ export function handleEvents(){
   // 在选中模式下 Mode_Select, 同时按住空格SpaceBar即可换成拖动视图模式 Pan Move
   document.onkeydown = e=>{
 
+    // 阻止空格键按下发生的一些默认行为
+    if(e.keyCode === 32){
+      e.preventDefault();
+    }
+
     if( Var.Menu_Mode_Left === Mode_Select && e.keyCode === 32){
       Var.SelectMenuAndSpaceBar = true;
       document.body.style.cursor = 'move';

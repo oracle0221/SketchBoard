@@ -778,9 +778,9 @@ export function fnZoomIn(){
       Var.zoomLevel = Var.zoomLevel > 20 ? 20 : Var.zoomLevel
   }else{
       Var.zoomLevel += 0.1
-      // zoomLevel小于1,让世界居中摆放
-      Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
-      Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
+
+      // Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
+      // Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
   }
 
   setSlider();
@@ -795,31 +795,78 @@ export function fnZoomOut(){
   }else{
       Var.zoomLevel -= 0.1
       Var.zoomLevel = Var.zoomLevel < 0.1 ? 0.1 : Var.zoomLevel
-      // zoomLevel小于1,让世界居中摆放
-      Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
-      Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
+
+      // Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
+      // Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
   }
 
   setSlider();
   J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
 }
 
-export function setZoom(){
-  /*
-    scale - 0                  1-0
-    --------------------  = ------------------
-    Var.zoomLevel - 0.1       20-0.1
-  */
-
-  Var.zoomLevel = (20-0.1) * Var.sliderScale + 0.1;
-}
-
 // 设置滑块
 export function setSlider(){
 
+  // zoomLevel小于1,让世界居中摆放
+  if( Var.zoomLevel < 1 ){
+    Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
+    Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
+  }else{
+
+    let centerItemRect = getCenterObjectInView();
+    // console.log(centerItemRect)
+    if( centerItemRect){
+      Var.worldPosition.x = (Var.screen.width / 2) / Var.zoomLevel - centerItemRect.x;
+      Var.worldPosition.y = (Var.screen.height / 2) / Var.zoomLevel - centerItemRect.y;
+    }else{
+      Var.worldPosition.x = Var.worldPosition.y = 0;
+      // Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
+      // Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
+    }
+  }
+
   const J_slider_grab = $('J_slider_grab');
   const minY = Var.sliderMinY, maxY = Var.sliderMaxY;
-  J_slider_grab.style.top = `${maxY - maxY * (Var.sliderScale - 0.1) / (20-0.1)}px`;
+  J_slider_grab.style.top = `${maxY - maxY * (Var.zoomLevel - 0.1) / (20-0.1)}px`;
+}
+
+// 得到当前视窗中在中间的柜子
+export function getCenterObjectInView(){
+
+  let targetRect=null;
+  for( let i = 0; i < model.data.goods.length; i ++ ){
+    let itemRect = model.data.goods[i];
+    if( !inView(itemRect) ){
+      continue;
+    }
+    let x = SizeUtil.worldToScreenX(itemRect.x), y = SizeUtil.worldToScreenY(itemRect.y);
+
+    var centerX = Var.screen.width / 2, centerY = Var.screen.height / 2;
+    if( (x - centerX) * (x - centerX) + (y - centerY) * (y - centerY) < 50 * 50 ){
+      targetRect = itemRect;
+      break;
+    }
+
+  }
+
+  for( let i = 0; i < model.data.obstacle.length; i ++ ){
+    let itemRect = model.data.goods[i];
+    if( !inView(itemRect) ){
+      continue;
+    }
+
+    if(targetRect) break;
+
+    let x = SizeUtil.worldToScreenX(itemRect.x), y = SizeUtil.worldToScreenY(itemRect.y);
+
+    var centerX = Var.screen.width / 2, centerY = Var.screen.height / 2;
+    if( (x - centerX) * (x - centerX) + (y - centerY) * (y - centerY) < 50 * 50 ){
+      targetRect = itemRect;
+      break;
+    }
+  }
+
+  return targetRect;
 }
 
 // 产生行模式下的批量编号

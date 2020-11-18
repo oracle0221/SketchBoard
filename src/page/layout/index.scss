@@ -259,14 +259,43 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
 // 右侧放大与缩小工具条
 .widget-zoom{
   // background:white;
-  height:215px;
+  // height:215px;
+  height: 57px;
   position: absolute;
   bottom: 60px;
   right:20px;
   width: 29px;
   z-index: 8;
   border-radius: 8px;
-  overflow:hidden;
+  // overflow:hidden;
+
+  .show-zoom-slider{
+    display:none;
+    background:#000;
+    position:absolute;
+    padding:10px;
+    z-index:2;
+    white-space: nowrap;
+    right:30px;
+    p{
+      color:white;
+    }
+
+    a{
+      color:#1A73E8;
+    }
+
+    &:after{
+      content:"";
+      border:6px solid transparent;
+      border-left-color:black;
+      width:0;
+      height:0;
+      position:absolute;
+      left:100%;
+      top:22px;
+    }
+  }
 
   .slider{
     width: 3px;
@@ -276,6 +305,7 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
     margin-top: 29px;
     background-color: rgb(255,255,255);
     box-shadow: 0px 1px 4px rgba(0,0,0,0.3);
+    display:none;
 
     a{
       width: 25px;

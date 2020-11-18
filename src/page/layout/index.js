@@ -141,12 +141,20 @@ export default ()=>{
               <input type="number" defaultValue={1} id="J_input_zoom" readOnly={true} />
               <span className="btn" id="ZoomOut" >-</span>
           </div>
-          <div className="widget-zoom">
+          <div className="widget-zoom" id="J_widget_zoom" >
               <button type="button" className="zoomin"  id="J_zoomin" >+</button>
-              <div className="slider" >
+              <div className="slider" id="J_slider_box" >
                 <a id="J_slider_grab" ></a>
               </div>
               <button type="button" className="zoomout" id="J_zoomout" >-</button>
+              <div className="show-zoom-slider" id="J_toShowSlider" >
+                <p>缩放</p>
+                <a>显示滑块</a>
+              </div>
+              <div className="show-zoom-slider" id="J_toHideSlider" >
+                <p>缩放</p>
+                <a>隐藏滑块</a>
+              </div>
           </div>
       </div>
     </>

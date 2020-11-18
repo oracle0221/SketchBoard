@@ -1,6 +1,6 @@
 // 处理上边与左边以下边这三条栏
 import Var, {ModeEnum, Mode_Location, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan} from './constants'
-import {clearSelectedRects, clearSelectedBarrierRects, restoreFromUndoStack, restoreFromRedoStack, fnZoomIn, fnZoomOut, setSlider, setZoom} from './util'
+import {clearSelectedRects, clearSelectedBarrierRects, restoreFromUndoStack, restoreFromRedoStack, fnZoomIn, fnZoomOut, setSlider} from './util'
 import model from './model'
 
 const $ = document.getElementById.bind(document);
@@ -74,7 +74,13 @@ export function setMenu( mode ){
 export function PanZoom(){
   const J_input_zoom = $('J_input_zoom'), ZoomOut = $('ZoomOut'), ZoomIn = $('ZoomIn');
   const J_zoomin = $('J_zoomin'), J_zoomout = $('J_zoomout');
+  const J_toShowSlider = $('J_toShowSlider'), J_toHideSlider = $('J_toHideSlider');
+  const J_slider_box = $('J_slider_box');
+  const J_widget_zoom = $('J_widget_zoom');
   const minY = Var.sliderMinY, maxY = Var.sliderMaxY;
+  let beSliderVisible = false;
+
+  let timer;
 
   J_zoomout.onclick = ZoomOut.onclick = ()=>{
     fnZoomOut();
@@ -82,6 +88,77 @@ export function PanZoom(){
 
   J_zoomin.onclick = ZoomIn.onclick = ()=>{
     fnZoomIn();
+  };
+
+  J_zoomout.onmouseenter = ()=>{
+    clearTimeout(timer);
+    if( beSliderVisible ){
+      J_toHideSlider.style.display="block"
+
+      J_toHideSlider.style.top='160px'
+
+    }else{
+      J_toShowSlider.style.display="block"
+    }
+  };
+  J_zoomin.onmouseenter = ()=>{
+    clearTimeout(timer);
+    if( beSliderVisible ){
+      J_toHideSlider.style.display="block"
+      J_toHideSlider.style.top='0px'
+    }else{
+      J_toShowSlider.style.display="block"
+    }
+
+
+  };
+
+  J_zoomout.onmouseleave = ()=>{
+    clearTimeout(timer);
+    timer = setTimeout(()=>{
+      J_toShowSlider.style.display="none"
+      J_toHideSlider.style.display="none"
+    }, 1000);
+  };
+  J_zoomin.onmouseleave = ()=>{
+    clearTimeout(timer);
+    timer = setTimeout(()=>{
+      J_toShowSlider.style.display="none"
+      J_toHideSlider.style.display="none"
+    }, 1000);
+  };
+
+  J_toShowSlider.onmouseenter = J_toHideSlider.onmouseenter = ()=>{
+    clearTimeout(timer);
+    if( beSliderVisible ){
+      J_toHideSlider.style.display="block"
+    }else{
+      J_toShowSlider.style.display="block"
+    }
+  };
+
+  J_toShowSlider.onmouseleave = J_toHideSlider.onmouseleave = ()=>{
+    clearTimeout(timer);
+    timer = setTimeout(()=>{
+      J_toShowSlider.style.display="none"
+      J_toHideSlider.style.display="none"
+    }, 1000);
+  };
+
+  J_toShowSlider.onclick = ()=>{
+    beSliderVisible = true;
+    J_slider_box.style.display='block';
+    J_widget_zoom.style.height='215px'
+    J_toShowSlider.style.display="none"
+    J_toHideSlider.style.display="none"
+  };
+
+  J_toHideSlider.onclick = ()=>{
+    beSliderVisible = false;
+    J_slider_box.style.display='none';
+    J_widget_zoom.style.height='57px'
+    J_toShowSlider.style.display="none"
+    J_toHideSlider.style.display="none"
   };
 
   // 调动滑块进行缩放视图
@@ -113,16 +190,15 @@ export function PanZoom(){
       let dy = e.clientY - startY;
       let endTop = startTop + dy;
 
-      // console.log('endTop: ', endTop)
-
       if(endTop < 0) endTop = 0;
       if(endTop > maxY) endTop = maxY;
 
       let scale = (20-0.1) * (maxY - endTop) / maxY + 0.1
-      // console.log(scale)
-      // Var.sliderScale = scale;
-      // setZoom();
+
       Var.zoomLevel = scale;
+      // Var.worldPosition.x=Var.worldPosition.y=0;
+
+      // console.log(scale)
       setSlider();
 
       return false;
