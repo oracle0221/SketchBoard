@@ -111,8 +111,8 @@ export default ()=>{
                     <span language="label_vertical" >纵向</span>
                     <input type="radio" name="radio_input" value="col" id="batch_col" />
                   </label>
-                  <div className="section" ><input type="number" defaultValue="" id="batch_cell_value" /><span className="sec-span" language="label_cell" >单元格</span><input placeholder="起始编号" type="number" defaultValue="" id="batch_cell_startindex" /></div>
-                  <div className="section" ><input type="number" defaultValue="" id="batch_num_value" /><span className="sec-span" language="label_Rows" >排</span><input placeholder="结束编号" type="number" defaultValue="" id="batch_cell_endindex" /></div>
+                  <div className="section" ><input type="number" defaultValue="" id="batch_cell_value" /><span className="sec-span" language="label_cell" >单元格</span><input placeholder="列起始编号" type="number" defaultValue="" id="batch_cell_startindex" /></div>
+                  <div className="section" ><input type="number" defaultValue="" id="batch_num_value" /><span className="sec-span" language="label_Rows" >排</span><input placeholder="行起始编号" type="number" defaultValue="" id="batch_cell_endindex" /></div>
                   <div className="w_h_div section" >
                     <div>
                       <span language="label_width" >宽</span>: <div><input type="number" defaultValue={80} id="batch_size_w" /></div>
@@ -136,10 +136,17 @@ export default ()=>{
             </div>
             <textarea type="text" autoComplete="off"  id="J_fill_text" />
           </div>
-          <div className="tools-bottom">
-              <span className="btn" id="ZoomOut" >+</span>
+          <div className="tools-bottom" >
+              <span className="btn" id="ZoomIn" >+</span>
               <input type="number" defaultValue={1} id="J_input_zoom" readOnly={true} />
-              <span className="btn" id="ZoomIn" >-</span>
+              <span className="btn" id="ZoomOut" >-</span>
+          </div>
+          <div className="widget-zoom">
+              <button type="button" className="zoomin"  id="J_zoomin" >+</button>
+              <div className="slider" >
+                <a id="J_slider_grab" ></a>
+              </div>
+              <button type="button" className="zoomout" id="J_zoomout" >-</button>
           </div>
       </div>
     </>

@@ -1,6 +1,6 @@
 // 处理上边与左边以下边这三条栏
 import Var, {ModeEnum, Mode_Location, Mode_Text, Mode_Zoom, Mode_Batch, Mode_Pan} from './constants'
-import {clearSelectedRects, clearSelectedBarrierRects, restoreFromUndoStack, restoreFromRedoStack, fnZoomIn, fnZoomOut} from './util'
+import {clearSelectedRects, clearSelectedBarrierRects, restoreFromUndoStack, restoreFromRedoStack, fnZoomIn, fnZoomOut, setSlider, setZoom} from './util'
 import model from './model'
 
 const $ = document.getElementById.bind(document);
@@ -73,13 +73,66 @@ export function setMenu( mode ){
 // 视图放大与缩小
 export function PanZoom(){
   const J_input_zoom = $('J_input_zoom'), ZoomOut = $('ZoomOut'), ZoomIn = $('ZoomIn');
+  const J_zoomin = $('J_zoomin'), J_zoomout = $('J_zoomout');
+  const minY = Var.sliderMinY, maxY = Var.sliderMaxY;
 
-  ZoomOut.onclick = ()=>{
+  J_zoomout.onclick = ZoomOut.onclick = ()=>{
+    fnZoomOut();
+  };
+
+  J_zoomin.onclick = ZoomIn.onclick = ()=>{
     fnZoomIn();
   };
 
-  ZoomIn.onclick = ()=>{
-    fnZoomOut();
+  // 调动滑块进行缩放视图
+  const J_slider_grab = $('J_slider_grab');
+
+  // 滑块 top:  0 - 146 => 0.1-20
+  /*
+    t - 0          146-0
+    ---------- = ------------
+    scale-0.1      20-0.1
+
+    t * (20-0.1) = 146 * (scale - 0.1)
+    t = 146 * (scale - 0.1) / (20-0.1)
+--------------------------------------------------
+    (scale - 0.1) * 146 = (20-0.1) * t
+    (scale - 0.1) = (20-0.1) * t / 146
+    scale = (20-0.1) * t / 146 + 0.1
+  */
+
+  // J_slider_grab.style.top = `${maxY - maxY * (1.0 - 0.1) / (20-0.1)}px`;
+  Var.sliderScale = 1.0;
+  setSlider();
+
+  J_slider_grab.onmousedown = e=>{
+
+    let startY = e.clientY;
+    let startTop = J_slider_grab.offsetTop;
+    document.onmousemove = e=>{
+      let dy = e.clientY - startY;
+      let endTop = startTop + dy;
+
+      // console.log('endTop: ', endTop)
+
+      if(endTop < 0) endTop = 0;
+      if(endTop > maxY) endTop = maxY;
+
+      let scale = (20-0.1) * (maxY - endTop) / maxY + 0.1
+      // console.log(scale)
+      // Var.sliderScale = scale;
+      // setZoom();
+      Var.zoomLevel = scale;
+      setSlider();
+
+      return false;
+    };
+
+    document.onmouseup = e=>{
+      document.onmousemove = document.onmouseup = null;
+    };
+
+    return false;
   };
 
 }

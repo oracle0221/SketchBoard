@@ -775,12 +775,15 @@ export function fnZoomIn(){
   const J_input_zoom = $('J_input_zoom');
   if( Var.zoomLevel >= 1 ){
       Var.zoomLevel = ++Var.zoomLevel
+      Var.zoomLevel = Var.zoomLevel > 20 ? 20 : Var.zoomLevel
   }else{
-      Var.zoomLevel += 0.2
+      Var.zoomLevel += 0.1
       // zoomLevel小于1,让世界居中摆放
       Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
       Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
   }
+
+  setSlider();
   J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
 }
 
@@ -790,12 +793,33 @@ export function fnZoomOut(){
   if(Var.zoomLevel > 1){
       Var.zoomLevel = --Var.zoomLevel
   }else{
-      Var.zoomLevel -= 0.2
+      Var.zoomLevel -= 0.1
+      Var.zoomLevel = Var.zoomLevel < 0.1 ? 0.1 : Var.zoomLevel
       // zoomLevel小于1,让世界居中摆放
       Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
       Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
   }
+
+  setSlider();
   J_input_zoom.value = (Var.zoomLevel >= 1 ? Var.zoomLevel : Var.zoomLevel.toFixed(2) )+'';
+}
+
+export function setZoom(){
+  /*
+    scale - 0                  1-0
+    --------------------  = ------------------
+    Var.zoomLevel - 0.1       20-0.1
+  */
+
+  Var.zoomLevel = (20-0.1) * Var.sliderScale + 0.1;
+}
+
+// 设置滑块
+export function setSlider(){
+
+  const J_slider_grab = $('J_slider_grab');
+  const minY = Var.sliderMinY, maxY = Var.sliderMaxY;
+  J_slider_grab.style.top = `${maxY - maxY * (Var.sliderScale - 0.1) / (20-0.1)}px`;
 }
 
 // 产生行模式下的批量编号

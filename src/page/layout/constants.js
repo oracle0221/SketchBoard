@@ -42,6 +42,9 @@ export const Property={
 let Var = {
   zoomLevel:1.0,
   zoomAction:'+', // '+', '-' 两种操作
+  sliderMinY:0,
+  sliderMaxY:146,
+  sliderScale:1.0,
 
   beBatch: false, // 需要批量操作
   beBatchEnd: false,  // 批量操作结束
