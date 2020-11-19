@@ -917,6 +917,13 @@ function GoodsLocation(){
 function EditText(){
   this.start = function(e){
     if(Var.Menu_Mode_Left != Mode_Text)return;
+
+    if(isRightMouseClick(e)){
+      setMenu(Mode_Select);
+      handleContextMenu(e);
+      return;
+    }
+
     let x = e.clientX - EdgeLeft, y = e.clientY - EdgeTop;
 
     resetEditText();
