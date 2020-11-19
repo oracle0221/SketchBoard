@@ -991,14 +991,16 @@ export function handleContextMenu(e){
   });
 
   // inner function
-  function getBaseRect(arr){
+  function getBaseRect( ){
+
+    let arr = Var.clipBoard ;
     // 以x值最小为准
     let minX = Number.MAX_VALUE
     let minIndex = Number.MAX_VALUE
     for( let i = 0; i < arr.length; i++ ){
 
       let {x} = arr[i];
-      if(x > minX){
+      if(x < minX){
         minX = x;
         minIndex = i;
       }
@@ -1006,10 +1008,15 @@ export function handleContextMenu(e){
     } // end for i
 
     let baseRect = arr[minIndex]
+    // clipBoardRectsOffset
+    Var.clipBoardRectsOffset = [];
 
     for( let i = 0; i < arr.length; i++ ){
 
-
+      Var.clipBoardRectsOffset[i] = {
+        x: arr[i].x - baseRect.x,
+        y: arr[i].y - baseRect.y,
+      };
 
     } // end for i
 
@@ -1020,7 +1027,6 @@ export function handleContextMenu(e){
 
     if( Var.selectedRects.length > 0 ){
       Var.clipBoard = Var.selectedRects;
-
     }
 
     if( Var.selectedBarrierRects.length > 0 ){
@@ -1056,17 +1062,22 @@ export function handleContextMenu(e){
   oPaste.onclick = e=>{
 
     if( Var.clipBoard ){
+      getBaseRect();
+
       Var.selectedRects = [];
+      // Var.selectedRectsIndex = [];
       //
       for( let i = 0; i < Var.clipBoard.length; i ++ ){
         let itemRect = {
           ...Var.clipBoard[i],
-          x:SizeUtil.screenToWorldX(left - EdgeLeft), y:SizeUtil.screenToWorldY(top - EdgeTop),
+          x:SizeUtil.screenToWorldX(left - EdgeLeft) + Var.clipBoardRectsOffset[i].x, y:SizeUtil.screenToWorldY(top - EdgeTop) + Var.clipBoardRectsOffset[i].y,
         };
 
         model.data.goods.push(itemRect);
         Var.selectedRects.push(itemRect)
       }
+
+      console.log('Var.selectedRects: ', Var.selectedRects)
 
     }
 

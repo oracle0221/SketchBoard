@@ -1150,6 +1150,10 @@ function keyboardForGoodsAndBarrier(e){
   // 8 退格键
   if( code == 8 ){
     // 普通柜子
+    Var.selectedRectsIndex = [];
+    for( let i = 0; i < Var.selectedRects.length; i ++ ){
+      Var.selectedRectsIndex.push( model.data.goods.indexOf( Var.selectedRects[i]) );
+    }
     let sortedIndexArr = [...Var.selectedRectsIndex];
     sortedIndexArr.sort((a, b)=>b-a);
 
@@ -1163,6 +1167,10 @@ function keyboardForGoodsAndBarrier(e){
     }
 
     // 障碍物
+    Var.selectedBarrierRectsIndex = [];
+    for( let i = 0; i < Var.selectedBarrierRects.length; i ++ ){
+      Var.selectedBarrierRectsIndex.push( model.data.obstacle.indexOf( Var.selectedBarrierRects[i]) );
+    }
     let sortedBarrierIndexArr = [...Var.selectedBarrierRectsIndex];
     sortedBarrierIndexArr.sort((a, b)=>b-a);
 
