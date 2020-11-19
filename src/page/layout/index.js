@@ -76,6 +76,10 @@ export default ()=>{
                 </svg>
               </div>
               <ul className="contextAlign" id="J_select_contextAlign" >
+                <li data-copy="" ><a>复制</a></li>
+                <li data-cut="" ><a>剪切</a></li>
+                <li data-paste="" ><a>粘贴</a></li>
+                <li data-align="" className="separator" ></li>
                 <li data-align="topAlign" ><a language="top_align" >顶部对齐</a></li>
                 <li data-align="leftAlign" ><a language="left_align" >居左对齐</a></li>
                 <li data-align="bottomAlign" ><a language="bottom_align" >底部对齐</a></li>

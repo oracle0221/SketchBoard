@@ -77,6 +77,10 @@ let Var = {
   // 是否需要编辑文字
   editGoodsTextIndex:-1, // 当前在编辑哪一个柜子
 
+  // 剪切板
+  clipBoard:null,
+  clipBoardRectsIndex:[],
+  clipBoardRectsOffset:[],
 };
 
 export default Var;

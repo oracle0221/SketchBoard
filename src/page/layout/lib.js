@@ -1,6 +1,6 @@
 /* eslint-disable */
 import model from './model'
-import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText, scrollView, pushUndoStack, mouseOverBarrierRect, mouseClickBarrierRect, syncZoomInput, generateColSeq, generateRowSeq} from './util'
+import {SizeUtil, AlignUtil, inView, mouseInRect, drawDashedRect, getSelectedRects, drawBackgroundLines, getWorldCollideTest, testHitInGoods, clearSelectedRects, clearSelectedBarrierRects, drawBarrierObject, isRightMouseClick, drawGoodsText, resetEditText, startEditText, scrollView, pushUndoStack, mouseOverBarrierRect, mouseClickBarrierRect, syncZoomInput, generateColSeq, generateRowSeq, handleContextMenu} from './util'
 import Var, {EdgeTop, EdgeLeft, Mode_Select, Mode_Location, Mode_Text, Mode_Barrier, Mode_Zoom, Mode_Batch, Mode_Pan, Property} from './constants'
 import {setMenu} from './sidebar'
 
@@ -811,6 +811,12 @@ function PanMove(){
       return;
     }
 
+    if(isRightMouseClick(e)){
+      setMenu(Mode_Select);
+      handleContextMenu(e);
+      return;
+    }
+
     startX = e.clientX - EdgeLeft;
     startY = e.clientY - EdgeTop;
 
@@ -1066,7 +1072,13 @@ function StretchBarrier(){
 function ZoomTool(){
 
   this.start = function(e){
+
     if( Var.Menu_Mode_Left !== Mode_Zoom ) return;
+    if(isRightMouseClick(e)){
+      setMenu(Mode_Select);
+      handleContextMenu(e);
+      return;
+    }
 
     syncZoomInput(e);
   }
@@ -1175,26 +1187,6 @@ function createContextForGoodsLocation(e){
 }
 
 function createContextForSelectAlign(e){
-
   // 当所选择超出1个时,可以做对齐选项了
-  if( Var.selectedRects.length > 1 ){
-    $('J_select_contextAlign').style.display='block';
-    let left = e.clientX, top = e.clientY;
-
-    $('J_select_contextAlign').style.top = top+'px';
-    $('J_select_contextAlign').style.left = left+10+'px';
-
-    // 绑定点击事件
-    Array.from($('J_select_contextAlign').getElementsByTagName('li')).forEach(itemLi=>{
-      itemLi.onclick = ()=>{
-        let alignFn = itemLi.dataset.align;
-        if(!alignFn) return; // align=''为辅助线
-
-        AlignUtil[alignFn]();
-        $('J_select_contextAlign').style.display='none';
-      };
-    });
-
-  }
-
+  handleContextMenu(e);
 }

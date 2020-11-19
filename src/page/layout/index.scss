@@ -74,6 +74,10 @@ textarea{resize:none;text-indent:2px;}
   	color: #999;
   }
 
+  li.disabled:hover a {
+  	background-color: transparent;
+  }
+
   li.hover.disabled a {
   	background-color: transparent;
   }

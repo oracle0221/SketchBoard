@@ -929,8 +929,147 @@ export function magneticAdsorbing(){
     if( !inView(itemRect) ) continue;
     if( itemRect === targetRect ) continue;
 
-    
+
 
   } // end for i
 
+}
+
+// 选择模式下右键菜单
+export function handleContextMenu(e){
+
+  const J_select_contextAlign = $('J_select_contextAlign');
+  const oCopy = J_select_contextAlign.querySelector('[data-copy]');
+  const oCut = J_select_contextAlign.querySelector('[data-cut]');
+  const oPaste = J_select_contextAlign.querySelector('[data-paste]');
+
+  J_select_contextAlign.style.display='block';
+  let left = e.clientX, top = e.clientY; // 右键菜单点击的位置
+
+  J_select_contextAlign.style.top = top+'px';
+  J_select_contextAlign.style.left = left+10+'px';
+
+  Array.from(J_select_contextAlign.querySelectorAll('[data-align]'))
+  .forEach( dom=>{
+    dom.classList.add('disabled');
+  } );
+
+  if( Var.selectedRects.length > 1 ){
+    Array.from(J_select_contextAlign.querySelectorAll('[data-align]'))
+    .forEach( dom=>{
+      dom.classList.remove('disabled');
+    } );
+  }
+
+  //
+  oCopy.classList.add('disabled')
+  oCut.classList.add('disabled')
+  oPaste.classList.add('disabled')
+
+  if( Var.clipBoard ){
+    oCopy.classList.add('disabled')
+    oCut.classList.add('disabled')
+    oPaste.classList.remove('disabled')
+  }else{
+    oPaste.classList.add('disabled')
+  }
+
+  if(Var.selectedRects.length){
+    oCopy.classList.remove('disabled')
+    oCut.classList.remove('disabled')
+  }
+
+  // 绑定点击事件
+  Array.from($('J_select_contextAlign').querySelectorAll('[data-align]')).forEach(itemLi=>{
+    itemLi.onclick = ()=>{
+      let alignFn = itemLi.dataset.align;
+      if(!alignFn) return; // align=''为辅助线
+
+      AlignUtil[alignFn]();
+      $('J_select_contextAlign').style.display='none';
+    };
+  });
+
+  // inner function
+  function getBaseRect(arr){
+    // 以x值最小为准
+    let minX = Number.MAX_VALUE
+    let minIndex = Number.MAX_VALUE
+    for( let i = 0; i < arr.length; i++ ){
+
+      let {x} = arr[i];
+      if(x > minX){
+        minX = x;
+        minIndex = i;
+      }
+
+    } // end for i
+
+    let baseRect = arr[minIndex]
+
+    for( let i = 0; i < arr.length; i++ ){
+
+
+
+    } // end for i
+
+  }
+
+  // 复制
+  oCopy.onclick = e=>{
+
+    if( Var.selectedRects.length > 0 ){
+      Var.clipBoard = Var.selectedRects;
+
+    }
+
+    if( Var.selectedBarrierRects.length > 0 ){
+      Var.clipBoard = Var.selectedBarrierRects;
+    }
+
+    $('J_select_contextAlign').style.display='none';
+  };
+
+  // 剪切
+  oCut.onclick = e=>{
+    oCopy.onclick();
+
+    // 既然是剪切, 那么选择好后就要作删除动作
+    if( Var.selectedRects.length > 0 ){
+
+      // console.log(Var.selectedRectsIndex)
+      let sortedIndexes = [...Var.selectedRectsIndex].sort((a,b)=>b-a);
+
+      for( let i = 0; i < sortedIndexes.length; i ++ ){
+        model.data.goods.splice( sortedIndexes[i], 1 );
+      }
+
+      Var.selectedRects = [];
+    }
+
+    if( Var.selectedBarrierRects.length > 0 ){
+
+    }
+  };
+
+  // 粘贴
+  oPaste.onclick = e=>{
+
+    if( Var.clipBoard ){
+      Var.selectedRects = [];
+      //
+      for( let i = 0; i < Var.clipBoard.length; i ++ ){
+        let itemRect = {
+          ...Var.clipBoard[i],
+          x:SizeUtil.screenToWorldX(left - EdgeLeft), y:SizeUtil.screenToWorldY(top - EdgeTop),
+        };
+
+        model.data.goods.push(itemRect);
+        Var.selectedRects.push(itemRect)
+      }
+
+    }
+
+    $('J_select_contextAlign').style.display='none';
+  };
 }
