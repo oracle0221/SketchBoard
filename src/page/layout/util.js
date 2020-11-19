@@ -912,3 +912,8 @@ export function generateColSeq(R, C){
 
   return arr;
 }
+
+// 磁性吸附
+export function magneticAdsorbing(){
+  
+}

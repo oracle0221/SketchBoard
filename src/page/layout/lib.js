@@ -278,7 +278,7 @@ function SvgHandle(){
       clearSvgRectData();
     }else if( Var.Menu_Mode_Left === Mode_Batch ){
       // 先查看是否需要处理批量生成
-      if(Var.beBatch && svgRectData.width > 100 && svgRectData.height > 100){
+      if(Var.beBatch && svgRectData.width > Number.MAX_VALUE && svgRectData.height > Number.MAX_VALUE){
         handleBatchCreate();
       }else{
         // console.log(svgRectData)
