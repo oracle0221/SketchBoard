@@ -178,7 +178,6 @@ export function PanZoom(){
   */
 
   // J_slider_grab.style.top = `${maxY - maxY * (1.0 - 0.1) / (20-0.1)}px`;
-  Var.sliderScale = 1.0;
   setSlider();
 
   J_slider_grab.onmousedown = e=>{
