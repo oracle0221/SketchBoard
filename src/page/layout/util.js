@@ -915,5 +915,22 @@ export function generateColSeq(R, C){
 
 // 磁性吸附
 export function magneticAdsorbing(){
-  
+  // 对选中的对象与其它周边元素进行碰撞检测
+  // Var.selectedRects
+  // 目前先对拖动一个物体的时候做磁性吸附
+  if( Var.selectedRects.length !== 1 ) return;
+
+  const Delta = 10;
+
+  let targetRect = Var.selectedRects[0];
+  for( let i = 0; i < model.data.goods.length; i ++ ){
+
+    let itemRect = model.data.goods[i];
+    if( !inView(itemRect) ) continue;
+    if( itemRect === targetRect ) continue;
+
+    
+
+  } // end for i
+
 }

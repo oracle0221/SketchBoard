@@ -985,7 +985,7 @@ function StretchBarrier(){
       // 可以做伸缩动作
       if(stretchDir === 0){ // 左上角
 
-        Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldY((x - startX) + oldX);
+        Var.selectedBarrierRects[0].x = SizeUtil.screenToWorldX((x - startX) + oldX);
         Var.selectedBarrierRects[0].y = SizeUtil.screenToWorldY((y - startY) + oldY);
         Var.selectedBarrierRects[0].width = SizeUtil.calcFromScreen(oldW - (x - startX));
         Var.selectedBarrierRects[0].height = SizeUtil.calcFromScreen(oldH - (y - startY));
