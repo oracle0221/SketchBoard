@@ -109,8 +109,6 @@ export function PanZoom(){
     }else{
       J_toShowSlider.style.display="block"
     }
-
-
   };
 
   J_zoomout.onmouseleave = ()=>{
@@ -128,8 +126,9 @@ export function PanZoom(){
     }, 1000);
   };
 
-  J_toShowSlider.onmouseenter = J_toHideSlider.onmouseenter = ()=>{
+  J_toShowSlider.onmouseenter = J_toHideSlider.onmouseenter = function(){
     clearTimeout(timer);
+    this.style.cursor = 'default';
     if( beSliderVisible ){
       J_toHideSlider.style.display="block"
     }else{
@@ -197,8 +196,6 @@ export function PanZoom(){
 
       Var.zoomLevel = scale;
       // Var.worldPosition.x=Var.worldPosition.y=0;
-
-      // console.log(scale)
       setSlider();
 
       return false;
