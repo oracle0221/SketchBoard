@@ -1113,7 +1113,7 @@ function getSortedZindexArray(arr){
 function keyboardForGoodsAndBarrier(e){
   let code = e.keyCode;
   // 37 38 39 40 方向键
-  if( code == 37 ){
+  if( code == 37 ){ // 左方向键
     Var.selectedRects.forEach(itemRect=>{
       itemRect.x --;
     })
@@ -1121,7 +1121,7 @@ function keyboardForGoodsAndBarrier(e){
     Var.selectedBarrierRects.forEach(itemRect=>{
       itemRect.x --;
     })
-  }else if( code == 38 ){
+  }else if( code == 38 ){  // 上方向键
     Var.selectedRects.forEach(itemRect=>{
       itemRect.y --;
     })
@@ -1129,7 +1129,7 @@ function keyboardForGoodsAndBarrier(e){
     Var.selectedBarrierRects.forEach(itemRect=>{
       itemRect.y --;
     })
-  }else if( code == 39 ){
+  }else if( code == 39 ){  // 右方向键
     Var.selectedRects.forEach(itemRect=>{
       itemRect.x ++;
     })
@@ -1137,7 +1137,7 @@ function keyboardForGoodsAndBarrier(e){
     Var.selectedBarrierRects.forEach(itemRect=>{
       itemRect.x ++;
     })
-  }else if( code == 40 ){
+  }else if( code == 40 ){ // 下方向键
     Var.selectedRects.forEach(itemRect=>{
       itemRect.y ++;
     })

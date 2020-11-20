@@ -163,7 +163,23 @@ export default ()=>{
           </div>
           {/* 多语言 */}
           <div className="translations-div" >
-            <div className="inner-div" ></div>
+            <div className="inner-div" >
+              <span></span>
+              <ol>
+                <li>
+                  <label>
+                    <input type="radio" name="translations_input" value="en" defaultChecked/>
+                    <b>ENG</b>
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="radio" name="translations_input" value="ko" />
+                    <b>한국어</b>
+                  </label>
+                </li>
+              </ol>
+            </div>
           </div>
           <div className="section-cardbox" id="J_section_cardbox" >
             <ul>

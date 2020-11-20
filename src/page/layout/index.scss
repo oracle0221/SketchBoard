@@ -378,9 +378,51 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
   position: absolute;
   bottom:20px;
   right:20px;
+  z-index:9;
 
   .inner-div{
-    
+    span{
+      display:block;
+      background:white url(../../assets/translation.svg) center no-repeat;
+      width:28px;
+      height:28px;
+      background-size:28px;
+      border-radius:8px;
+      box-shadow: 0px 1px 4px rgba(0,0,0,0.3);
+      cursor: pointer;
+    }
+
+    input{display:none;}
+    input:checked+b{
+      color:#129EAF;
+    }
+
+    ol{
+      position: absolute;
+      right: 30px;
+      top: -22px;
+      background: white;
+      width: 40px;
+      text-align: center;
+      border-radius: 8px;
+      border: 1px solid black;
+      display:none;
+
+      li{
+        height:30px;
+        line-height:30px;
+        &:first-child{
+          border-bottom:1px solid #EEE;
+        }
+      }
+      b{
+        color:#333;
+      }
+    }
+
+    &:hover ol{
+      display:block;
+    }
   }
 }
 
@@ -412,7 +454,7 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
 .tools-left, .tools-top{display:none;}
 .section-cardbox{
   width:66px;
-  background:rgba(255, 255, 255, 0.4);
+  background:rgba(255, 255, 255, 1.0);
   position:absolute;
   z-index:10;
   top:50px;
@@ -465,8 +507,6 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
   .zoom{background:url(../../assets/tool_zoom.svg) center no-repeat;}
   .batch{background:url(../../assets/tool_batch.svg) center no-repeat;background-size: 28px;}
   .panning{background:url(../../assets/tool_panning.svg) center no-repeat;}
-  // .tool_button:hover{background-color:#ffc;}
-  // .tool_button.current{background-color: #f4e284;box-shadow: inset 1px 1px 2px rgba(0,0,0,0.4), 1px 1px 0 white;}
 
   button{
     position: absolute;
@@ -478,10 +518,9 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
     width: 24px;
     height: 48px;
     cursor: pointer;
-    background: rgba(255,255,255,0.9) 7px center/7px 10px no-repeat;
+    background: rgba(255,255,255,0.6) 7px center/7px 10px no-repeat;
     border-left: 1px solid #D4D4D4;
     display:none;
-    // box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
   }
 
   .show-side-nav{

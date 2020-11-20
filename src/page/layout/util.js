@@ -216,7 +216,7 @@ export function drawDashedRect(gd, rectItem){
   // 上面3个
   for( let i = 0; i < 3; i ++ ){
       gd.beginPath();
-      gd.arc(x + width / 2 * i, y, 4 * Var.zoomLevel, 0, Math.PI * 2, false);
+      gd.arc(x + width / 2 * i, y, 2 * Var.zoomLevel, 0, Math.PI * 2, false);
       gd.fillStyle='#22C';
       gd.fill();
   } // for i
@@ -224,7 +224,7 @@ export function drawDashedRect(gd, rectItem){
   // 中间2个
   for( let i = 0; i < 2; i ++ ){
       gd.beginPath();
-      gd.arc(x + width * i, y + height/2, 4 * Var.zoomLevel, 0, Math.PI * 2, false);
+      gd.arc(x + width * i, y + height/2, 2 * Var.zoomLevel, 0, Math.PI * 2, false);
       gd.fillStyle='#22C';
       gd.fill();
   } // for i
@@ -232,7 +232,7 @@ export function drawDashedRect(gd, rectItem){
   // 下面3个
   for( let i = 0; i < 3; i ++ ){
       gd.beginPath();
-      gd.arc(x + width / 2 * i, y + height, 4 * Var.zoomLevel, 0, Math.PI * 2, false);
+      gd.arc(x + width / 2 * i, y + height, 2 * Var.zoomLevel, 0, Math.PI * 2, false);
       gd.fillStyle='#22C';
       gd.fill();
   } // for i
@@ -280,7 +280,7 @@ export function drawBackgroundLines(gd){
 
 // 两个矩形方块的碰撞检测  tolerance=2是容差值
 export function getCollideTest(rect1, rect2){
-    const tolerance = 2;
+    const tolerance = 2 * Var.zoomLevel;
     if( rect1.x + rect1.width - tolerance <= rect2.x  ||
         rect1.y + rect1.height - tolerance <= rect2.y ||
         rect1.x >= rect2.x + rect2.width - tolerance ||
