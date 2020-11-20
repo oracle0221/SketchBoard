@@ -6,8 +6,32 @@ import model from './model'
 const $ = document.getElementById.bind(document);
 
 export function leftNavHandle(){
-  const J_tools_ul = $('J_tools_ul');
+  // const J_tools_ul = $('J_tools_ul');
+  const J_tools_ul = $('J_section_cardbox');
   const a_tools_li = Array.from(J_tools_ul.getElementsByTagName('li'));
+
+  const J_show_sideNav = $('J_show_sideNav'), J_hide_sideNav = $('J_hide_sideNav');
+  let beShowSideNav = true;
+
+  J_show_sideNav.onclick = ()=>{
+    beShowSideNav = true;
+    J_tools_ul.style.left="30px";
+  };
+  J_hide_sideNav.onclick = ()=>{
+    beShowSideNav = false;
+    J_tools_ul.style.left="-66px";
+  };
+
+  J_tools_ul.addEventListener('transitionend', ()=>{
+    J_show_sideNav.style.display='none';
+    J_hide_sideNav.style.display='none';
+
+    if(!beShowSideNav){
+      J_show_sideNav.style.display='block';
+    }else{
+      J_hide_sideNav.style.display='block';
+    }
+  });
 
   a_tools_li.forEach((objLi, index)=>{
       objLi.onclick=()=>{
@@ -63,7 +87,8 @@ export function leftNavHandle(){
 
 // 将menu设成另外一个
 export function setMenu( mode ){
-  const J_tools_ul = $('J_tools_ul');
+  // const J_tools_ul = $('J_tools_ul');
+  const J_tools_ul = $('J_section_cardbox');
   const a_tools_li = Array.from(J_tools_ul.getElementsByTagName('li'));
 
   // 触发点击

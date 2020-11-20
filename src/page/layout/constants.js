@@ -13,8 +13,8 @@ export const Mode_Zoom=4;
 export const Mode_Batch=5;
 export const Mode_Pan=6;
 
-export const EdgeTop = 50;
-export const EdgeLeft = 50;
+export const EdgeTop = 0;
+export const EdgeLeft = 0;
 
 export const ModeEnum={
   0:Mode_Select,

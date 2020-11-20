@@ -39,7 +39,7 @@ export default ()=>{
                 </select>
               </div>
           </div>
-          <div className="tools-left" >
+          {/*<div className="tools-left" >
               <ul id="J_tools_ul">
                   <li id="J_tool_select" className="tool_button current" title="选择工具" language="tool_select_button" >
                       <div className="img select" ></div>
@@ -63,7 +63,7 @@ export default ()=>{
                       <div className="img panning" ></div>
                   </li>
               </ul>
-          </div>
+          </div>*/}
           <div className="workarea" >
             <div>
               <div className="canvas" id="canvas" >
@@ -145,6 +145,7 @@ export default ()=>{
               <input type="number" defaultValue={1} id="J_input_zoom" readOnly={true} />
               <span className="btn" id="ZoomOut" >-</span>
           </div>
+          {/* 放大与缩小 */}
           <div className="widget-zoom" id="J_widget_zoom" >
               <button type="button" className="zoomin"  id="J_zoomin" >+</button>
               <div className="slider" id="J_slider_box" >
@@ -159,6 +160,86 @@ export default ()=>{
                 <p>缩放</p>
                 <a>隐藏滑块</a>
               </div>
+          </div>
+          {/* 多语言 */}
+          <div className="translations-div" >
+            <div className="inner-div" ></div>
+          </div>
+          <div className="section-cardbox" id="J_section_cardbox" >
+            <ul>
+              <li className="current" >
+                <div>
+                  <dt>
+                    <div className="img select" title="选择工具" language="tool_select_button" ></div>
+                  </dt>
+                  <dd>
+                    {/*<p language="tool_select_button"></p>*/}
+                  </dd>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <dt>
+                    <div className="img location" title="Location" language="tool_location_button" ></div>
+                  </dt>
+                  <dd>
+                    {/*<p language="tool_location_button"></p>*/}
+                  </dd>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <dt>
+                    <div className="img barrier" title="Barrier" language="tool_barrier_button" ></div>
+                  </dt>
+                  <dd>
+                    {/*<p language="tool_barrier_button"></p>*/}
+                  </dd>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <dt>
+                    <div className="img text" title="文字工具" language="tool_text_button" ></div>
+                  </dt>
+                  <dd>
+                    {/*<p language="tool_text_button"></p>*/}
+                  </dd>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <dt>
+                    <div className="img zoom" title="缩放工具" language="tool_zoom_button" ></div>
+                  </dt>
+                  <dd>
+                    {/*<p language="tool_zoom_button"></p>*/}
+                  </dd>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <dt>
+                    <div className="img batch" title="批量生成" language="tool_batch_button" ></div>
+                  </dt>
+                  <dd>
+                    {/*<p language="tool_batch_button"></p>*/}
+                  </dd>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <dt>
+                    <div className="img panning" title="Panning" language="tool_pan_button" ></div>
+                  </dt>
+                  <dd>
+                    {/*<p language="tool_pan_button"></p>*/}
+                  </dd>
+                </div>
+              </li>
+            </ul>
+            <button className="show-side-nav side-nav" id="J_show_sideNav" ></button>
+            <button className="hide-side-nav side-nav" id="J_hide_sideNav" ></button>
           </div>
       </div>
     </>

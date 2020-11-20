@@ -250,8 +250,8 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
 /* 主工作区域 */
 .workarea{
     position:absolute;
-    top:50px;
-    left: 50px;
+    top:0px;
+    left: 0px;
     right: 0px;
     // bottom: 40px;
     bottom:0px;
@@ -373,6 +373,17 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
   }
 }
 
+// 多语言
+.translations-div{
+  position: absolute;
+  bottom:20px;
+  right:20px;
+
+  .inner-div{
+    
+  }
+}
+
 .tools-bottom{
     position: absolute;
     left: 50px;
@@ -395,3 +406,107 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
     /* background:white url(./assets/tool_zoom.svg) left center no-repeat;background-size: 20px; */
 }
 .tools-bottom span{cursor: pointer;}
+
+
+// 新版UI
+.tools-left, .tools-top{display:none;}
+.section-cardbox{
+  width:66px;
+  background:rgba(255, 255, 255, 0.4);
+  position:absolute;
+  z-index:10;
+  top:50px;
+  left:30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  border: 1px solid #E8EAED;
+  cursor: default;
+
+  transition:left 300ms;
+
+  ul{
+    li>div{
+      padding:8px 15px;
+    }
+
+    li{
+      padding:5px 5px;
+
+      &.current{
+        >div{
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          background:rgba(255, 160, 0, 0.2);
+        }
+      }
+
+      &:hover{
+        >div{
+          // box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          background:rgba(255, 160, 0, 0.1);
+        }
+      }
+    }
+
+    dt{
+
+    }
+  }
+
+   .img{
+
+      width:24px;
+      height: 24px;
+  }
+
+  .select{background:url(../../assets/tool_select.svg) center no-repeat;}
+  .location{background:url(../../assets/tool_location.svg) center no-repeat;}
+  .barrier{background:url(../../assets/tool_barrier.svg) center no-repeat;}
+  .text{background:url(../../assets/tool_text.svg) center no-repeat;}
+  .zoom{background:url(../../assets/tool_zoom.svg) center no-repeat;}
+  .batch{background:url(../../assets/tool_batch.svg) center no-repeat;background-size: 28px;}
+  .panning{background:url(../../assets/tool_panning.svg) center no-repeat;}
+  // .tool_button:hover{background-color:#ffc;}
+  // .tool_button.current{background-color: #f4e284;box-shadow: inset 1px 1px 2px rgba(0,0,0,0.4), 1px 1px 0 white;}
+
+  button{
+    position: absolute;
+    z-index: 0;
+    top: 8px;
+    left: 101%;
+    border-radius: 0;
+    outline:0;
+    width: 24px;
+    height: 48px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.9) 7px center/7px 10px no-repeat;
+    border-left: 1px solid #D4D4D4;
+    display:none;
+    // box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .show-side-nav{
+
+    &:after{
+      content:"";
+      display:block;
+      width:0;
+      height:0;
+      border:6px solid transparent;
+      border-left-color:#333;
+      transform:translateX(3px);
+    }
+  }
+
+  .hide-side-nav{
+    display:block;
+    &:after{
+      content:"";
+      display:block;
+      width:0;
+      height:0;
+      border:6px solid transparent;
+      border-right-color:#333;
+      transform:translateX(0px);
+    }
+  }
+}
