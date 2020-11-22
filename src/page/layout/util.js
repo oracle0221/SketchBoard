@@ -684,6 +684,21 @@ export const LangUtil = {
     // 显示初始化一下当前的语言选项
     $('J_language_select').value = localStorage['lang'] || 'en';
 
+    // 新多语言控件
+    let aTranslationInputs = document.getElementsByName('translations_input')
+
+    aTranslationInputs[0].checked = $('J_language_select').value === 'en';
+    aTranslationInputs[1].checked = $('J_language_select').value === 'ko';
+
+    // console.log(aTranslationInputs)
+    Array.from(aTranslationInputs).forEach(eleInput=>{
+      eleInput.onchange = function(){
+        // alert(this.value)
+        localStorage['lang'] = this.value;
+        handle();
+      };
+    });
+
     handle();
 
     function handle(){
