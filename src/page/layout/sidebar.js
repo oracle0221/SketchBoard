@@ -285,9 +285,6 @@ export function initUndoRedo(){
   const J_tool_undo = $('J_tool_undo');
   const J_tool_redo = $('J_tool_redo');
 
-  // J_tool_undo.style.opacity = 0.5;
-  // J_tool_redo.style.opacity = 0.5;
-
   J_tool_undo.onmouseenter = function(){
     if( model.undoStack.length ){
       this.className += ' active';

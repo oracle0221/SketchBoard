@@ -800,9 +800,6 @@ export function fnZoomIn(){
       Var.zoomLevel = Var.zoomLevel > 20 ? 20 : Var.zoomLevel
   }else{
       Var.zoomLevel += 0.1
-
-      // Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
-      // Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
   }
 
   setSlider();
@@ -817,9 +814,6 @@ export function fnZoomOut(){
   }else{
       Var.zoomLevel -= 0.1
       Var.zoomLevel = Var.zoomLevel < 0.1 ? 0.1 : Var.zoomLevel
-
-      // Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
-      // Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
   }
 
   setSlider();
@@ -835,16 +829,14 @@ export function setSlider(){
     Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
   }else{
 
-    let centerItemRect = getCenterObjectInView();
-    // console.log(centerItemRect)
-    if( centerItemRect){
-      Var.worldPosition.x = (Var.screen.width / 2) / Var.zoomLevel - centerItemRect.x;
-      Var.worldPosition.y = (Var.screen.height / 2) / Var.zoomLevel - centerItemRect.y;
-    }else{
-      Var.worldPosition.x = Var.worldPosition.y = 0;
-      // Var.worldPosition.x = ((Var.screen.width - Var.zoomLevel * Var.worldPosition.width) / 2) / Var.zoomLevel;
-      // Var.worldPosition.y = ((Var.screen.height - Var.zoomLevel * Var.worldPosition.height) / 2) / Var.zoomLevel;
+    if( Var.worldPosition.x > 0 ){
+      Var.worldPosition.x = 0
     }
+
+    if( Var.worldPosition.y > 0 ){
+      Var.worldPosition.y = 0
+    }
+
   }
 
   const J_slider_grab = $('J_slider_grab');
