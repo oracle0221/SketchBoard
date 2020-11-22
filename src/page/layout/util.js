@@ -407,28 +407,35 @@ export function drawGoodsText(gd){
       // gdWrapText(gd, ''+(itemRect.text||i), x, y, 10, FontSize * Var.zoomLevel + 12 );
       let str = ''+(itemRect.text||i);
       let textWidth = FontSize * Var.zoomLevel * str.length;
+      let textHeight = FontSize * Var.zoomLevel * str.split('-').length;
 
       if( textWidth < itemRect.width * Var.zoomLevel ){
         gd.fillText( ''+(itemRect.text||i), x, y );
       }else{
-        let arrTxt = str.split('-');
-        arrTxt.forEach((objStr, index)=>{
-          if(index == arrTxt.length - 1){
-            gd.fillText( objStr, x, y );
-          }else{
-            gd.fillText( objStr+'-', x, y );
-          }
 
-          y += FontSize*Var.zoomLevel;
-        });
+        let arrTxt = str.split('-');
+        if( textHeight > itemRect.height * Var.zoomLevel ){
+
+          // xxx-xxx
+          // xxx
+          gd.fillText( arrTxt[0]+'-'+arrTxt[1], x, y );
+          gd.fillText( arrTxt[2], x, y + FontSize*Var.zoomLevel);
+
+        }else{
+
+          arrTxt.forEach((objStr, index)=>{
+            if(index == arrTxt.length - 1){
+              gd.fillText( objStr, x, y );
+            }else{
+              gd.fillText( objStr+'-', x, y );
+            }
+
+            y += FontSize*Var.zoomLevel;
+          });
+        }
+
       }
 
-
-      // str = str.replace(/-/g, '-\n')
-
-      // console.log(str);
-
-      //
     }
 
   }
