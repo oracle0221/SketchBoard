@@ -137,7 +137,7 @@ export function drawScene(mainGd){
   let mainCanvas = mainGd.canvas;
   mainGd.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
 
-  mainGd.fillStyle='white';
+  mainGd.fillStyle='rgb(233, 233, 255)';
   mainGd.fillRect( Var.worldPosition.x * Var.zoomLevel, Var.worldPosition.y * Var.zoomLevel, Var.worldPosition.width * Var.zoomLevel, Var.worldPosition.height * Var.zoomLevel );
 
   const gd = mainGd;
