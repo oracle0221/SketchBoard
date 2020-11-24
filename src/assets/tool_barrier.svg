@@ -1,8 +1,1 @@
-<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" xmlns:xlink="http://www.w3.org/1999/xlink" class="svg_icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <line fill="none" stroke="#666666" stroke-width="null" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x1="10.5" y1="1.5" x2="5.5" y2="6.5" id="svg_3"/>
-      <line fill="none" stroke-width="null" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x1="15.5" y1="1.5" x2="5.5" y2="11.5" id="svg_4" stroke="#666666"/>
-      <line fill="none" stroke-width="null" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x1="17.6" y1="3.9" x2="5.5" y2="16.5" id="svg_5" stroke="#666666"/>
-      <line fill="none" stroke-width="null" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x1="17.6" y1="8.7" x2="5.5" y2="21.5" id="svg_6" stroke="#666666"/>
-      <line fill="none" stroke-width="null" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x1="17.3" y1="13.7" x2="10.2" y2="21.3" id="svg_7" stroke="#666666"/>
-      <rect fill-opacity="0" x="5.5" y="1.4" width="12" height="20" id="svg_1" fill="#000000" stroke="#000000"/>
-    </svg></svg>
+<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="icon" width="200px" height="200.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="#333333" d="M128 549.333h256V704H128zM576 320l-448 3.732v150.935h448zM896 256v-90.667C896 146.667 877.333 128 858.667 128h-432v128H896zM128 768v90.667C128 877.333 146.667 896 165.333 896H576V768H128zM384 128H154.134C135.467 128 128 146.667 128 165.333V256h256V128zM643.735 896h218.667C881.068 896 896 881.068 896 866.134V768H640l3.735 128zM643.735 323.732L640 474.667h256V323.732zM426.667 549.333H896V704H426.667z" /></svg>

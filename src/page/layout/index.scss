@@ -494,11 +494,7 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
     }
   }
 
-   .img{
 
-      width:24px;
-      height: 24px;
-  }
 
   .select{background:url(../../assets/tool_select.svg) center no-repeat;}
   .location{background:url(../../assets/tool_location.svg) center no-repeat;}
@@ -507,6 +503,12 @@ canvas{display:block;border: 1px solid black;margin:auto;background:#A0A0A0;}
   .zoom{background:url(../../assets/tool_zoom.svg) center no-repeat;}
   .batch{background:url(../../assets/tool_batch.svg) center no-repeat;background-size: 28px;}
   .panning{background:url(../../assets/tool_panning.svg) center no-repeat;}
+
+  .img{
+     width:24px;
+     height: 24px;
+     background-size:24px;
+ }
 
   button{
     position: absolute;

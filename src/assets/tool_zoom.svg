@@ -1,12 +1,1 @@
-<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" xmlns:xlink="http://www.w3.org/1999/xlink" class="svg_icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 150">
-	 <defs>
-	  <linearGradient id="svg_30" x1="0" y1="0" x2="1" y2="0">
-	   <stop offset="0" stop-color="#d3d3d3" stop-opacity="1"/>
-	   <stop offset="1" stop-color="#424242" stop-opacity="1"/>
-	  </linearGradient>
-	 </defs>
-	  <path d="m107.14774,101.03477l-0.64774,43.96523c5.00857,4.72089 14.00811,5.27188 19,0l-0.31667,-44.16l-9.61514,-19.84l-8.42046,20.03477z" id="svg_29" fill="url(#svg_30)" stroke="#202020" stroke-width="2" transform="rotate(-45, 116, 114)"/>
-	  <circle cx="58" cy="58" r="51" id="svg_22" fill="#c0c0c0" stroke="#202020" stroke-width="5"/>
-	  <circle cx="58" cy="58" r="43" id="svg_27" fill="#aaccff" stroke="none"/>
-	  <path d="m15.68604,61.46511c38.13954,17.67442 48.13954,15.34883 85.11628,-0.46511c1.39536,18.60465 -19.30231,41.86047 -42.7907,40.93023c-21.6279,-0.93023 -42.7907,-21.86046 -42.32558,-40.46511z" id="svg_28" fill="#8cbaff" stroke="none"/>
-	</svg></svg>
+<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="icon" width="200px" height="200.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="#333333" d="M442.181818 186.181818A256 256 0 0 0 186.181818 442.181818a23.272727 23.272727 0 0 1-46.545454 0A302.545455 302.545455 0 0 1 442.181818 139.636364a23.272727 23.272727 0 1 1 0 46.545454z m567.342546 823.319273a48.197818 48.197818 0 0 1-68.165819 0l-136.354909-136.331636a48.197818 48.197818 0 0 1 68.165819-68.165819l136.331636 136.331637a48.197818 48.197818 0 0 1 0.023273 68.165818zM442.181818 884.363636a442.181818 442.181818 0 1 1 442.181818-442.181818 442.181818 442.181818 0 0 1-442.181818 442.181818z m0-791.272727a349.090909 349.090909 0 1 0 349.090909 349.090909A349.090909 349.090909 0 0 0 442.181818 93.090909z" /></svg>
